@@ -93,6 +93,9 @@ L'action "Écrire sans aide" (panneau reconquérir) est le seul moyen de couper 
 Si le joueur ne fait rien pendant 15 secondes, Écho intervient avec un message adapté à l'état du jeu. Un seul message par période d'inactivité — chaque action remet le compteur à zéro. Les messages varient : temps accumulé inutilisé ("X minutes libérées. Tu ne les utilises pas encore."), projet disponible ("Tu n'as pas encore regardé à droite."), début de partie ("Tu peux écrire. Ou me laisser faire."), agentivité basse ("Tu hésites. C'est normal. Je peux m'en occuper."). La relance est désactivée quand Écho est hors service.
 
 ---
+## Test en ligne
+[https://uneiaparjour.github.io/echo/](https://uneiaparjour.github.io/echo/)
+---
 
 ## Architecture technique
 
