@@ -1,29 +1,29 @@
 # Écho
 
-**Un jeu narratif sur ce qu'on perd quand on délègue trop.**
+**Un jeu narratif sur la délégation à la machine.**
 
-Écho est un *serious game* en un seul fichier HTML qui explore la relation entre un humain et son assistant IA. Inspiré par [Universal Paperclips](https://www.decisionproblem.com/paperclips/) de Frank Landin, il reprend le format *incremental game* mais inverse la logique : au lieu d'accumuler des ressources, le joueur les regarde fondre — et c'est le point.
+Écho est un jeu narratif en un seul fichier HTML qui explore la relation entre un humain et son assistant IA, Écho. Inspiré par [Universal Paperclips](https://www.decisionproblem.com/paperclips/) de Frank Landin, il reprend le format *incremental game* mais inverse la logique : au lieu d'accumuler des ressources, le joueur les voit fondre.
 
-Le joueur incarne un narrateur qui tient un carnet bleu, page 47. Écho arrive et propose d'aider. Chaque délégation libère du temps mais érode silencieusement l'agentivité, la créativité, la curiosité et la capacité d'effort. Le jeu ne dit jamais "c'est mal de déléguer". Il montre ce qui se passe quand on le fait sans y penser.
+Le joueur incarne un narrateur qui tient un carnet d'écriture. Écho arrive et propose d'aider. Chaque délégation libère du temps mais érode silencieusement l'agentivité, la créativité, la curiosité et la capacité d'effort. Le jeu ne dit jamais "c'est mal de déléguer" : il montre ce qui se passe quand on le fait sans y penser.
 
 ## Contexte
 
-Écho est né d'une question pédagogique : comment faire ressentir — et pas seulement expliquer — les effets cognitifs de la délégation aux IA génératives ? Les travaux de Tricot, Amadieu, Gonthier et d'autres montrent que la reformulation, la relecture, la prise de notes et la recherche d'information ne sont pas des corvées : ce sont les mécanismes mêmes par lesquels on pense. Quand une machine les prend en charge, le gain de temps est réel. La perte est invisible — jusqu'à ce qu'on essaie de faire sans.
+Écho est né d'une question pédagogique : comment faire ressentir, et pas seulement expliquer, les effets cognitifs de la délégation aux IA génératives ? Les travaux de Tricot, Amadieu, Gonthier et d'autres montrent que la reformulation, la relecture, la prise de notes et la recherche d'information ne sont pas des corvées : ce sont les mécanismes mêmes par lesquels on pense. Quand une machine les prend en charge, le gain de temps est réel. La perte est invisible — jusqu'à ce qu'on essaie de faire sans.
 
-Le jeu est conçu pour des enseignants, formateurs et médiateurs numériques qui veulent ouvrir un débat sur les usages de l'IA sans moraliser. Une partie dure 5 à 15 minutes. La discussion qui suit peut durer une heure.
+Le jeu est conçu pour tous et plus spécialement pour des enseignants, formateurs et médiateurs numériques qui veulent ouvrir un débat sur les usages de l'IA sans moraliser. Une partie dure 5 à 15 minutes.
 
 ## Objectifs
 
 - Faire *ressentir* la boucle confort → dépendance → érosion cognitive, pas seulement la décrire.
 - Montrer que chaque outil d'IA a un coût cognitif spécifique, documenté par la recherche.
-- Laisser le joueur décider : déléguer, écrire, ou trouver un équilibre. Le jeu ne juge pas — il observe.
+- Laisser le joueur décider : déléguer, écrire, ou trouver un équilibre. Le jeu ne juge pas, il observe.
 - Offrir un support de médiation utilisable sans installation, sans compte, sans connexion (un fichier HTML suffit).
 
 ## Mécanique de jeu
 
 ### Deux gestes fondamentaux
 
-Le joueur n'a que deux actions principales : **Écrire** (taper du texte et le soumettre) ou **Déléguer** (laisser Écho produire à sa place). Tout le reste découle de ce choix répété.
+Le joueur n'a que deux actions principales : **Écrire** (taper du texte ou le soumettre) ou **Déléguer** (laisser Écho produire à sa place). Tout le reste découle de ce choix répété.
 
 - **Écrire** : +10 Créativité, +5 Agentivité, le compteur de page avance. Le joueur produit quelque chose de lent, d'imparfait, de personnel.
 - **Déléguer** : −5 Agentivité, +25 minutes libérées, le compteur de page avance aussi. Écho produit vite, bien, et sans effort pour le joueur.
