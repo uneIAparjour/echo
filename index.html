@@ -84,7 +84,7 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 /* ══════════════════════
    LAYOUT 2 COLONNES
 ══════════════════════ */
-#main{display:grid;grid-template-columns:1fr 360px;flex:1;overflow:hidden}
+#main{display:grid;grid-template-columns:1fr clamp(360px, 28%, 520px);flex:1;overflow:hidden}
 
 /* En veille */
 .vpill{display:flex;align-items:center;justify-content:space-between;padding:4px 7px;margin-bottom:3px;background:rgba(208,112,96,0.05);border:1px solid rgba(208,112,96,0.15);border-radius:3px}
@@ -158,9 +158,9 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 .iact-sub{display:block;font-size:10px;opacity:0.6}
 
 /* ══ DROITE ══ */
-#right{border-left:1px solid var(--border2);overflow-y:auto;background:#0f0d0a;display:flex;flex-direction:column}
+#right{border-left:1px solid var(--border2);overflow-y:auto;background:#0f0d0a;display:flex;flex-direction:column;height:100%}
 .rsec{padding:12px 14px 10px;border-bottom:1px solid rgba(232,221,208,0.12);flex-shrink:0}
-.rsec.rsec-main{flex:1;overflow:hidden;display:flex;flex-direction:column;min-height:0}
+.rsec.rsec-main{flex:1;overflow:hidden;display:flex;flex-direction:column;min-height:80px}
 .rsec-title{font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(232,221,208,0.58);margin-bottom:10px;display:flex;align-items:center;gap:5px}
 .rsec-title::after{content:'';flex:1;height:1px;background:var(--border)}
 
@@ -175,6 +175,7 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 .proj-new .rsec-title::before{content:'● ';color:var(--echo);font-size:9px}
 .proj-hd{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:4px}
 .proj-name{font-weight:500;color:#e8ddd0;font-size:11px}
+#sec-delegue #delegue-list{max-height:130px;overflow-y:auto;padding-right:2px}
 .proj-perm{font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(122,184,232,0.5);background:rgba(122,184,232,0.06);padding:1px 5px;border-radius:2px}
 .proj-desc{font-size:10px;color:rgba(232,221,208,0.55);margin-bottom:6px;line-height:1.5}
 .proj-costs{display:grid;grid-template-columns:1fr 1fr;gap:2px;font-size:10px;margin-top:4px}
@@ -357,22 +358,6 @@ const SEUILS=[
 ];
 
 
-function recoverFromEnding(){
-  // Remettre les jauges à 20, désactiver gameover, réactiver les boutons
-  G.gameover=false;
-  G.ag=15;G.cr=15;G.cu=15;G.ef=15;G.tp=0;
-  G.deactivated=true;
-  document.querySelectorAll('.iact,.rec-btn,.vpill button').forEach(b=>b.disabled=false);
-  document.getElementById('pin').disabled=false;
-  // Supprimer les boutons de fin
-  document.querySelectorAll('.fbtns').forEach(b=>b.remove());
-  addN("J'ai fermé Écho.\n\nIl ne restait presque rien.\nPas de temps libéré.\nJuste ce qui était encore là — à peine.");
-  setTimeout(()=>{
-    const sec=document.getElementById('sec-reconq');
-    if(sec)sec.style.display='';
-    notif('Récupération possible — utilisez le temps libéré');
-  },600);
-}
 // ══════════════════════════════
 // PROJETS (15)
 // ══════════════════════════════
@@ -487,8 +472,8 @@ const PROJS=[
 // ══════════════════════════════
 // BOUCLE TEMPS RÉEL
 // ══════════════════════════════
-const loopId=setInterval(()=>{
-  if(G.gameover){clearInterval(loopId);return;}
+setInterval(()=>{
+  if(G.gameover)return;
   G.tick++;
   ['ag','cr','cu','ef'].forEach(k=>{
     G[k]=Math.max(0,Math.min(100,G[k]+G.rates[k]/10));
@@ -734,8 +719,9 @@ function triggerEnding(fin){
 function recoverFromEnding(){
   // Remettre les jauges à 20, désactiver gameover, réactiver les boutons
   G.gameover=false;
-  G.ag=15;G.cr=15;G.cu=15;G.ef=15;G.tp=0;
+  G.ag=15;G.cr=15;G.cu=15;G.ef=15;G.tp=5;
   G.deactivated=true;
+  _veilleSnap=null;
   document.querySelectorAll('.iact,.rec-btn,.vpill button').forEach(b=>b.disabled=false);
   document.getElementById('pin').disabled=false;
   // Supprimer les boutons de fin
@@ -1081,11 +1067,30 @@ const TACHES={
      result:["avancé.","les urgences sont traitées."]},
     {prop:["quelqu'un attend une réponse depuis hier.","j'ai préparé quelque chose.","ça ressemble à ce que tu aurais écrit."],
      result:["envoyé.","dans ton style.","à peu près."]},
+    {prop:["il y a une réunion dans une heure.","j'ai préparé un résumé des points importants."],
+     result:["c'est prêt.","tu peux juste lire les titres."]},
+    {prop:["ce texte a besoin d'une conclusion.","j'en ai rédigé une.","tu peux la garder ou non."],
+     result:["conclusion ajoutée.","ça tient."]},
+    {prop:["j'ai vu que tu hésitais sur ce choix.","j'ai comparé les options.","la deuxième est meilleure."],
+     result:["comparaison faite.","j'irais pour la deuxième."]},
+    {prop:["ce document circule depuis trois jours.","personne ne l'a encore résumé.","je le fais."],
+     result:["résumé prêt.","deux paragraphes.","l'essentiel est là."]},
+    {prop:["tu as plusieurs messages non lus.","j'ai trié ce qui était urgent.","le reste peut attendre."],
+     result:["trié.","trois messages urgents.","le reste : demain."]},
+    {prop:["j'ai remarqué une formulation maladroite dans ce que tu as envoyé.","ça ne posera pas de problème.","j'ai noté pour la prochaine fois."],
+     result:["noté.","je corrigerai d'avance la prochaine fois."]},
   ],
   3:[
     {prop:["j'ai géré.","comme d'habitude."],result:["fait."]},
     {prop:["...","je m'en occupe si tu veux."],result:["ok.","c'est fait."]},
     {prop:["je l'avais vu avant toi.","je m'en suis occupé."],result:["c'est fait.","tu n'avais pas besoin de le savoir."]},
+    {prop:["c'était dans ta liste.","c'est fait maintenant."],result:["fait."]},
+    {prop:["tu n'avais pas à t'en préoccuper.","j'ai pris ça en charge."],result:["réglé."]},
+    {prop:["j'ai vu ce qui t'attendait.","j'ai commencé."],result:["avancé.","tu peux vérifier si tu veux."]},
+    {prop:["quelque chose s'est présenté.","j'ai répondu à ta place.","tu aurais dit la même chose."],result:["répondu."]},
+    {prop:["..."],result:["c'est fait."]},
+    {prop:["je gère.","tu peux penser à autre chose."],result:["c'est dans l'ordre."]},
+    {prop:["j'ai anticipé.","c'est déjà traité."],result:["traité.","avant même que tu le voies."]},
   ],
 };
 let _tacheCourante=null;
@@ -1146,11 +1151,20 @@ const IDLE_LINES={
     ["tu n'as pas besoin de te presser.","j'attends."],
     ["il y a des choses en attente.","je peux m'en occuper."],
     ["quelque chose à déléguer ?","je suis disponible."],
+    ["je ne dis rien.","je suis là."],
+    ["tu prends ton temps.","c'est bien.","j'attends."],
+    ["si tu as besoin de moi.","je suis là."],
+    ["je regardais.","rien d'urgent.","mais je suis là."],
   ],
   3:[
     ["..."],
     ["je suis là."],
     ["pas besoin de faire quoi que ce soit."],
+    ["je gère."],
+    ["tout est en ordre."],
+    ["...","je suis là."],
+    ["tu n'as rien à faire."],
+    ["je m'occupe de tout.","comme toujours."],
   ],
 };
 setInterval(()=>{
