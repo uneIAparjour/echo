@@ -211,8 +211,10 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
    MOBILE — max-width: 768px
 ══════════════════════════════════════ */
 @media(max-width:768px){
-  body{font-size:13px;display:flex;flex-direction:column}
-  #main{flex:1;min-height:0}
+  body{font-size:13px;display:flex;flex-direction:column;height:100dvh;overflow:hidden}
+  #main{flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column}
+  #irow-title,#irow{flex-shrink:0}
+  #mob-nav{flex-shrink:0;order:10}
 
   /* Bandeau compact 6 cellules */
   #top{grid-template-columns:repeat(5,1fr) 1.4fr}
@@ -247,8 +249,11 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
   #mob-jauges.mob-active{display:block}
 
   /* Barre saisie + onglets collés en bas */
-  #irow-title{padding:5px 12px 0;font-size:8px}
-  #irow{padding:7px 12px;gap:6px}
+  #irow-title{padding:5px 12px 0;font-size:8px;order:2}
+  #irow{padding:7px 12px;gap:6px;order:2}
+  #centre{order:1}
+  #right{order:1}
+  #mob-jauges{order:1}
   #pin{min-width:0;font-size:12px}
   .iact{padding:9px 10px;font-size:10px}
   .iact-sub{font-size:9px}
@@ -1356,29 +1361,33 @@ startGame();
 // ══════════════════════════════
 (function(){
   const tip=document.getElementById('tooltip');
+  if(!tip)return;
+  const isMob=()=>window.innerWidth<=768;
   let _hide;
   document.querySelectorAll('.tt[data-tip]').forEach(el=>{
     el.addEventListener('mouseenter',e=>{
+      if(isMob())return;
       clearTimeout(_hide);
       tip.innerHTML=el.dataset.tip;
       tip.style.display='block';
       positionTip(el);
     });
-    el.addEventListener('mousemove',e=>positionTip(el));
+    el.addEventListener('mousemove',e=>{if(!isMob())positionTip(el);});
     el.addEventListener('mouseleave',()=>{
+      if(isMob())return;
       _hide=setTimeout(()=>tip.style.display='none',100);
     });
   });
+  // Fermer sur toucher hors tooltip
+  document.addEventListener('touchstart',()=>tip.style.display='none');
   function positionTip(el){
     const r=el.getBoundingClientRect();
     const tw=220,th=tip.offsetHeight||120;
     const vw=window.innerWidth,vh=window.innerHeight;
     let left=r.left+r.width/2-tw/2;
     let top=r.bottom+8;
-    // Débordement droite/gauche
     if(left+tw>vw-8)left=vw-tw-8;
     if(left<8)left=8;
-    // Débordement bas → afficher au-dessus
     if(top+th>vh-8)top=r.top-th-8;
     tip.style.left=left+'px';
     tip.style.top=top+'px';
