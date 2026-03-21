@@ -142,6 +142,8 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 .irow-pulse{animation:irowp 0.8s ease 2}
 @keyframes echop{0%,100%{color:rgba(232,221,208,0.58)}50%{color:var(--echo)}}
 .echo-pulse{animation:echop 0.9s ease 3}
+@keyframes secpulse{0%,100%{border-color:rgba(232,221,208,0.12)}50%{border-color:rgba(138,184,122,0.45)}}
+.sec-pulse{animation:secpulse 1.2s ease 3}
 #irow{border-top:none;padding:8px 14px;display:flex;align-items:center;gap:6px;flex-shrink:0;background:var(--bg2)}
 #irow .ipfx{color:var(--text3);font-size:13px;flex-shrink:0}
 #pin{flex:1;background:transparent;border:none;border-bottom:1px solid rgba(232,221,208,0.18);outline:none;color:var(--text);font-family:inherit;font-size:12px;min-width:0;width:0;padding-bottom:2px;transition:border-color 0.2s}
@@ -469,6 +471,35 @@ const PROJS=[
  e3:['Tu hésitais.','J\'ai choisi.','C\'était la bonne option.']},
 ];
 
+
+// ══════════════════════════════
+// SIGNAL RÉCUPÉRATION
+// ══════════════════════════════
+let _signalFired=false;
+let _signalTimer=null;
+function checkSignalRecovery(){
+  if(_signalFired||G.acte!==3||G.ag>40||G.ag<20)return;
+  _signalFired=true;
+  // Narrateur ouvre la fenêtre
+  setTimeout(()=>addN("Il restait quelque chose.\n\nPas grand-chose.\nMais encore là."),400);
+  // Écho observe
+  setTimeout(()=>addE(["tu n'as pas encore tout délégué.","...","il reste quelque chose."]),2000);
+  // Pulse la section reconquérir pour attirer l'œil
+  setTimeout(()=>{
+    const sec=document.getElementById('sec-reconq');
+    if(sec){
+      sec.style.display='';
+      sec.classList.add('sec-pulse');
+      setTimeout(()=>sec.classList.remove('sec-pulse'),3000);
+    }
+  },3200);
+  // La fenêtre se referme après 45s sans action
+  _signalTimer=setTimeout(()=>{
+    if(G.written===0&&!G.deactivated){
+      addN("La fenêtre s'est refermée.\n\nJe n'ai pas bougé.");
+    }
+  },45000);
+}
 // ══════════════════════════════
 // BOUCLE TEMPS RÉEL
 // ══════════════════════════════
@@ -479,11 +510,13 @@ setInterval(()=>{
     G[k]=Math.max(0,Math.min(100,G[k]+G.rates[k]/10));
   });
   G.tp=Math.max(0,G.tp+G.rates.tp/10);
-  if(G.delegated>0){G.ag=Math.max(0,G.ag-0.004);G.cr=Math.max(0,G.cr-0.002);}
+  const decay=G.acte===3&&G.ag<20?0.012:G.delegated>0?0.004:0;
+  if(decay>0){G.ag=Math.max(0,G.ag-decay);G.cr=Math.max(0,G.cr-decay*0.6);G.cu=Math.max(0,G.cu-decay*0.4);}
   updateDisplay();
   checkSeuils();
   checkVeille();
   checkActe();
+  checkSignalRecovery();
   checkEnding();
 },100);
 
@@ -688,7 +721,7 @@ function checkEnding(){
   if(G.gameover)return;
   if(G.deactivated&&G.ag>45&&G.cr>45&&G.cu>45&&G.written>=5){G.gameover=true;triggerEnding('B');return;}
   if(G.acte>=2&&G.ag>=52&&G.cr>=52&&G.cu>=52&&G.ef>=45&&G.delegated+G.written>15&&G.written>=5){G.gameover=true;triggerEnding('C');return;}
-  if(G.ag<=5&&G.cr<=15&&G.cu<=15){G.gameover=true;triggerEnding('A');return;}
+  if(G.acte===3&&(G.ag+G.cr+G.cu)<25){G.gameover=true;triggerEnding('A');return;}
 }
 function triggerEnding(fin){
   const fins={
@@ -988,6 +1021,7 @@ const ECHO_REACT={
 };
 function playerWrite(){
   clearConCursor();resetIdle();
+  if(_signalTimer){clearTimeout(_signalTimer);_signalTimer=null;}
   const inp=document.getElementById('pin');
   const txt=inp.value.trim();
   const isFirst=G.written===0&&G.delegated===0;
