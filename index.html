@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Écho</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Lora:ital,wght@0,400;1,400&display=swap');
@@ -61,6 +61,8 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 @keyframes fup{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-28px)}}
 .dfp{color:var(--green)}.dfn{color:var(--red)}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes traceflash{0%{background:rgba(122,184,232,0.18)}100%{background:transparent}}
+.trace-flash{animation:traceflash 1.2s ease}
 @keyframes cur{0%,100%{opacity:1}50%{opacity:0}}
 .con-cursor{display:inline-block;color:var(--echo);font-weight:300;animation:cur 1.1s ease infinite;margin-left:2px;font-size:14px;line-height:1}
 .cnum.crit{animation:blink 1.2s ease infinite;color:var(--red)!important}
@@ -75,12 +77,14 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 .trace-track{flex:1;position:relative;height:8px}
 .trace-line{height:1px;background:rgba(232,221,208,0.1);position:absolute;top:50%;left:3px;right:3px;transform:translateY(-50%)}
 .trace-cursor{position:absolute;top:50%;width:7px;height:7px;border-radius:50%;background:var(--text);transform:translate(-50%,-50%);transition:left 0.5s cubic-bezier(.4,0,.2,1)}
-.trace-page{font-size:9px;color:var(--text3);font-variant-numeric:tabular-nums;white-space:nowrap;font-style:italic}
+.trace-page{font-size:10px;color:var(--text2);font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:500}
+@keyframes pageup{0%{color:var(--narr)}100%{color:var(--text2)}}
+.trace-page.pageflash{animation:pageup 1s ease}
 
 /* ══════════════════════
    LAYOUT 2 COLONNES
 ══════════════════════ */
-#main{display:grid;grid-template-columns:1fr 270px;flex:1;overflow:hidden}
+#main{display:grid;grid-template-columns:1fr clamp(360px, 28%, 520px);flex:1;overflow:hidden}
 
 /* En veille */
 .vpill{display:flex;align-items:center;justify-content:space-between;padding:4px 7px;margin-bottom:3px;background:rgba(208,112,96,0.05);border:1px solid rgba(208,112,96,0.15);border-radius:3px}
@@ -89,7 +93,7 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 .vpill button:hover{background:rgba(208,112,96,0.2)}
 
 /* Stats */
-.stats{font-size:10px;color:rgba(232,221,208,0.55);line-height:1.8}
+.stats{font-size:11px;color:rgba(232,221,208,0.55);line-height:1.7}
 .stats span{font-variant-numeric:tabular-nums;font-weight:500}
 
 /* ══ CENTRE ══ */
@@ -126,12 +130,26 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 .mfin{margin:18px 0;padding:18px;background:rgba(232,221,208,0.02);border:1px solid var(--border2);border-radius:4px}
 .ftit{font-size:12px;letter-spacing:0.22em;text-transform:uppercase;color:var(--text3);margin-bottom:14px;text-align:center}
 .fnarr{font-family:'Lora',serif;font-size:13px;font-style:italic;color:var(--narr);line-height:1.9;white-space:pre-line}
+.fbtns{display:flex;gap:8px;margin-top:18px;justify-content:center;flex-wrap:wrap}
+.fbtn{padding:8px 16px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:10px;cursor:pointer;letter-spacing:0.05em;transition:all 0.15s;border:1px solid}
+.fbtn-restart{background:rgba(232,221,208,0.03);border-color:rgba(232,221,208,0.2);color:var(--text2)}
+.fbtn-restart:hover{background:rgba(232,221,208,0.07);border-color:rgba(232,221,208,0.4);color:var(--text)}
+.fbtn-recover{background:var(--green2);border-color:rgba(138,184,122,0.25);color:var(--green)}
+.fbtn-recover:hover{background:rgba(138,184,122,0.13);border-color:rgba(138,184,122,0.4)}
 /* Barre saisie */
-#irow{border-top:2px solid var(--border2);padding:8px 14px;display:flex;align-items:center;gap:7px;flex-shrink:0;background:var(--bg2)}
+#irow-title{padding:5px 14px 0;font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:rgba(232,221,208,0.35);background:var(--bg2);transition:color 0.3s}
+@keyframes irowp{0%,100%{color:rgba(232,221,208,0.35)}50%{color:rgba(232,221,208,0.75)}}
+.irow-pulse{animation:irowp 0.8s ease 2}
+@keyframes echop{0%,100%{color:rgba(232,221,208,0.58)}50%{color:var(--echo)}}
+.echo-pulse{animation:echop 0.9s ease 3}
+@keyframes secpulse{0%,100%{border-color:rgba(232,221,208,0.12)}50%{border-color:rgba(138,184,122,0.45)}}
+.sec-pulse{animation:secpulse 1.2s ease 3}
+#irow{border-top:none;padding:8px 14px;display:flex;align-items:center;gap:6px;flex-shrink:0;background:var(--bg2)}
 #irow .ipfx{color:var(--text3);font-size:13px;flex-shrink:0}
-#pin{flex:1;background:transparent;border:none;outline:none;color:var(--text);font-family:inherit;font-size:12px;min-width:0}
+#pin{flex:1;background:transparent;border:none;border-bottom:1px solid rgba(232,221,208,0.18);outline:none;color:var(--text);font-family:inherit;font-size:12px;min-width:0;width:0;padding-bottom:2px;transition:border-color 0.2s}
+#pin:focus{border-bottom-color:rgba(232,221,208,0.5)}
 #pin::placeholder{color:var(--text3)}
-.iact{border:none;outline:none;font-family:'JetBrains Mono',monospace;font-size:10px;padding:7px 13px;cursor:pointer;border-radius:3px;transition:all 0.15s;letter-spacing:0.04em;flex-shrink:0;line-height:1.4;text-align:center}
+.iact{border:none;outline:none;font-family:'JetBrains Mono',monospace;font-size:10px;padding:7px 11px;cursor:pointer;border-radius:3px;transition:all 0.15s;letter-spacing:0.02em;flex-shrink:0;line-height:1.4;text-align:center;white-space:nowrap}
 .iact:focus-visible{outline:2px solid rgba(232,221,208,0.25);outline-offset:2px}
 .iact:active{transform:scale(0.97)}
 .iact-w{background:var(--green2);border:1px solid rgba(138,184,122,0.2);color:var(--green)}
@@ -142,25 +160,28 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 .iact-sub{display:block;font-size:10px;opacity:0.6}
 
 /* ══ DROITE ══ */
-#right{border-left:1px solid var(--border2);overflow-y:auto;background:#0f0d0a}
-.rsec{padding:12px 12px 10px;border-bottom:1px solid rgba(232,221,208,0.12)}
-.rsec-title{font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:rgba(232,221,208,0.58);margin-bottom:10px;display:flex;align-items:center;gap:5px}
+#right{border-left:1px solid var(--border2);overflow-y:auto;background:#0f0d0a;display:flex;flex-direction:column;height:100%}
+.rsec{padding:12px 14px 10px;border-bottom:1px solid rgba(232,221,208,0.12);flex-shrink:0}
+.rsec.rsec-main{flex:1;overflow:hidden;display:flex;flex-direction:column;min-height:80px}
+.rsec.rsec-main.rsec-empty{justify-content:center}
+.rsec-title{font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(232,221,208,0.58);margin-bottom:10px;display:flex;align-items:center;gap:5px}
 .rsec-title::after{content:'';flex:1;height:1px;background:var(--border)}
 
 
 
 /* ─ Projets Écho ─ */
-.proj-btn{width:100%;padding:9px 11px;background:rgba(232,221,208,0.03);border:1px solid rgba(232,221,208,0.12);border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:10px;cursor:pointer;text-align:left;transition:background 0.15s,border-color 0.15s;margin-bottom:5px;line-height:1.5}
+.proj-btn{width:100%;padding:10px 12px;background:rgba(232,221,208,0.03);border:1px solid rgba(232,221,208,0.12);border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:11px;cursor:pointer;text-align:left;transition:background 0.15s,border-color 0.15s;line-height:1.55}
 .proj-btn:hover{background:rgba(122,184,232,0.04);border-color:rgba(122,184,232,0.2)}
 .proj-btn:active{transform:scale(0.99)}
 @keyframes proj-pulse{0%{border-color:rgba(122,184,232,0.4)}50%{border-color:rgba(122,184,232,0.12)}100%{border-color:rgba(122,184,232,0.4)}}
 .proj-new{animation:proj-pulse 2s ease 3}
-.proj-new .rsec-title::before{content:'● ';color:var(--echo);font-size:8px}
+.proj-new .rsec-title::before{content:'● ';color:var(--echo);font-size:9px}
 .proj-hd{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:4px}
-.proj-name{font-weight:500;color:#e8ddd0;font-size:10px}
+.proj-name{font-weight:500;color:#e8ddd0;font-size:11px}
+#sec-delegue #delegue-list{max-height:130px;overflow-y:auto;padding-right:2px}
 .proj-perm{font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(122,184,232,0.5);background:rgba(122,184,232,0.06);padding:1px 5px;border-radius:2px}
-.proj-desc{font-size:9px;color:rgba(232,221,208,0.55);margin-bottom:5px;line-height:1.4}
-.proj-costs{display:grid;grid-template-columns:1fr 1fr;gap:2px;font-size:10px;margin-top:3px}
+.proj-desc{font-size:10px;color:rgba(232,221,208,0.55);margin-bottom:6px;line-height:1.5}
+.proj-costs{display:grid;grid-template-columns:1fr 1fr;gap:2px;font-size:10px;margin-top:4px}
 .pc-now{color:var(--red)}.pc-rate{color:rgba(208,112,96,0.6);font-style:italic}.pc-gain{color:var(--green)}
 
 /* ─ Récupération ─ */
@@ -168,7 +189,7 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 .rec-btn:hover{background:rgba(138,184,122,0.07);border-color:rgba(138,184,122,0.22)}
 .rec-btn:active{transform:scale(0.99)}
 .rec-hd{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2px}
-.rec-name{font-weight:500;color:#a0c890;font-size:10px}
+.rec-name{font-weight:500;color:#a0c890;font-size:11px}
 .rec-cost{font-size:10px;color:var(--red)}
 .rec-fx{font-size:10px;color:rgba(232,221,208,0.55);line-height:1.4}
 
@@ -180,7 +201,99 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 #footer a:hover{color:var(--text2)}
 @keyframes fi{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
 .fi{animation:fi 0.3s ease forwards}
+
+.tt{cursor:help}
+#tooltip{position:fixed;display:none;width:220px;padding:10px 13px;background:#1e1a15;border:1px solid rgba(232,221,208,0.22);border-radius:4px;font-size:11px;line-height:1.65;color:#e8ddd0;font-family:'JetBrains Mono',monospace;font-weight:400;text-transform:none;letter-spacing:0;z-index:9999;pointer-events:none;white-space:normal;box-shadow:0 4px 16px rgba(0,0,0,0.5)}
+#tooltip strong{color:var(--narr);font-weight:500}
 ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:var(--border2)}*{scrollbar-width:thin;scrollbar-color:var(--border2) transparent}*{scrollbar-width:thin;scrollbar-color:var(--border2) transparent}
+
+/* ══════════════════════════════════════
+   MOBILE — max-width: 768px
+══════════════════════════════════════ */
+@media(max-width:768px){
+  body{font-size:13px;display:flex;flex-direction:column}
+  #main{flex:1;min-height:0}
+
+  /* Bandeau compact 6 cellules */
+  #top{grid-template-columns:repeat(5,1fr) 1.4fr}
+  .cc{padding:5px 4px 4px}
+  .ctrace{padding:5px 4px 4px}
+  .clbl{font-size:7px;letter-spacing:0.1em}
+  .cnum{font-size:18px}
+  .cbar,.crate{display:none}
+  /* Trace mobile : juste curseur + mot */
+  .ctrace .clbl{margin-bottom:3px}
+  .trace-stages{display:none}
+  .trace-row{flex-direction:column;gap:2px;align-items:center}
+  .trace-track{width:100%;height:6px}
+  .trace-page{font-size:8px}
+  .tstage{display:none}
+  .tstage.tact{display:block;font-size:8px;text-align:center}
+
+  /* Layout : une seule colonne, onglets */
+  #main{grid-template-columns:1fr;position:relative;overflow:hidden}
+
+  /* Console : visible sur vue console uniquement */
+  #centre{display:flex;flex-direction:column;flex:1;overflow:hidden;min-height:0}
+  #centre.mob-hidden{display:none}
+  #con{flex:1;padding:12px 14px}
+
+  /* Colonne droite : masquée par défaut, affichée via onglet */
+  #right{display:none;flex:1;overflow-y:auto;min-height:0}
+  #right.mob-active{display:flex;flex-direction:column}
+
+  /* Vue Jauges : panneau dédié */
+  #mob-jauges{display:none;flex:1;overflow-y:auto;background:var(--bg);padding:12px 14px;min-height:0}
+  #mob-jauges.mob-active{display:block}
+
+  /* Barre saisie + onglets collés en bas */
+  #irow-title{padding:5px 12px 0;font-size:8px}
+  #irow{padding:7px 12px;gap:6px}
+  #pin{min-width:0;font-size:12px}
+  .iact{padding:9px 10px;font-size:10px}
+  .iact-sub{font-size:9px}
+
+  /* Onglets navigation */
+  #mob-nav{display:flex;background:#0f0d0a;border-top:1px solid rgba(232,221,208,0.1);flex-shrink:0}
+  .mob-tab{flex:1;padding:8px 4px;text-align:center;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#9a8068;border-right:1px solid rgba(232,221,208,0.07);cursor:pointer;transition:all 0.15s;-webkit-tap-highlight-color:transparent}
+  .mob-tab:last-child{border-right:none}
+  .mob-tab.active{color:var(--text);background:#1e1a15}
+  .mob-tab-dot{width:4px;height:4px;border-radius:50%;background:var(--echo);margin:2px auto 0;opacity:0;transition:opacity 0.2s}
+  .mob-tab.active .mob-tab-dot{opacity:1}
+  #clbl-tp{font-size:0;letter-spacing:0}
+  #clbl-tp::before{content:"Lib.";font-size:7px;letter-spacing:0.1em}
+
+  /* Jauges détaillées */
+  #mob-jauges .gblock{margin-bottom:14px}
+  #mob-jauges .ghead{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
+  #mob-jauges .gname{font-size:11px;color:var(--text2);display:flex;align-items:center;gap:5px}
+  #mob-jauges .gdot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+  #mob-jauges .gval{font-size:16px;font-weight:600;font-variant-numeric:tabular-nums}
+  #mob-jauges .grate{font-size:10px;margin-left:6px}
+  #mob-jauges .gtrack{height:4px;background:rgba(255,255,255,0.05);border-radius:2px;overflow:hidden}
+  #mob-jauges .gfill{height:100%;border-radius:2px;transition:width 0.7s cubic-bezier(.4,0,.2,1)}
+  #mob-jauges .gwarn{font-size:9px;color:var(--red);margin-top:2px;height:12px}
+  .mob-tp{background:rgba(200,170,136,0.05);border:1px solid rgba(200,170,136,0.12);border-radius:4px;padding:10px 12px;margin-bottom:14px}
+  .mob-tp-lbl{font-size:9px;color:var(--tp);letter-spacing:0.14em;margin-bottom:3px}
+  .mob-tp-val{font-size:28px;font-weight:300;color:var(--tp);line-height:1;font-variant-numeric:tabular-nums}
+  .mob-tp-q{font-size:9px;color:var(--text3);margin-top:4px;font-style:italic}
+
+  /* Taille des boutons tactiles ≥44px */
+  .iact{min-height:44px}
+  .mob-tab{min-height:40px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .vpill button{padding:4px 9px;min-height:32px}
+  .rec-btn,.proj-btn{min-height:44px}
+
+  /* Footerau dessus du nav */
+  #footer{order:99}
+  #mob-nav{padding-bottom:env(safe-area-inset-bottom,0px)}
+  #irow{padding-bottom:calc(7px + env(safe-area-inset-bottom,0px))}
+}
+
+@media(min-width:769px){
+  #mob-nav{display:none}
+  #mob-jauges{display:none!important}
+}
 </style>
 </head>
 <body>
@@ -188,37 +301,37 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 <!-- ══ BANDEAU 5 COMPTEURS ══ -->
 <div id="top">
   <div class="cc" id="cc-ag">
-    <div class="clbl">Agentivité</div>
+    <div class="clbl tt" data-tip="&lt;strong&gt;Agentivité&lt;/strong&gt; — ta capacité à décider par toi-même.&lt;br&gt;&lt;span style='color:#8ab87a'&gt;Monte&lt;/span&gt; quand tu écris toi-même.&lt;br&gt;&lt;span style='color:#d07060'&gt;Descend&lt;/span&gt; à chaque délégation et si des fonctions Écho sont actives.">Agentivité</div>
     <div class="cnum" id="cv-ag" style="color:var(--ag)">100</div>
     <div class="cbar"><div class="cbfill" id="cb-ag" style="width:100%;background:var(--ag)"></div></div>
     <div class="crate ze" id="cr-ag">stable</div>
   </div>
   <div class="cc" id="cc-cr">
-    <div class="clbl">Créativité</div>
+    <div class="clbl tt" data-tip="&lt;strong&gt;Créativité&lt;/strong&gt; — ta capacité à produire quelque chose d'original.&lt;br&gt;&lt;span style='color:#8ab87a'&gt;Monte&lt;/span&gt; quand tu écris toi-même.&lt;br&gt;&lt;span style='color:#d07060'&gt;Descend&lt;/span&gt; quand Écho génère à ta place.">Créativité</div>
     <div class="cnum" id="cv-cr" style="color:var(--cr)">100</div>
     <div class="cbar"><div class="cbfill" id="cb-cr" style="width:100%;background:var(--cr)"></div></div>
     <div class="crate ze" id="cr-cr">stable</div>
   </div>
   <div class="cc" id="cc-cu">
-    <div class="clbl">Curiosité</div>
+    <div class="clbl tt" data-tip="&lt;strong&gt;Curiosité&lt;/strong&gt; — ta capacité à formuler des questions.&lt;br&gt;&lt;span style='color:#8ab87a'&gt;Monte&lt;/span&gt; en lisant toi-même.&lt;br&gt;&lt;span style='color:#d07060'&gt;Descend&lt;/span&gt; quand Écho cherche, résume ou filtre à ta place.">Curiosité</div>
     <div class="cnum" id="cv-cu" style="color:var(--cu)">100</div>
     <div class="cbar"><div class="cbfill" id="cb-cu" style="width:100%;background:var(--cu)"></div></div>
     <div class="crate ze" id="cr-cu">stable</div>
   </div>
   <div class="cc" id="cc-ef">
-    <div class="clbl">Effort</div>
+    <div class="clbl tt" data-tip="&lt;strong&gt;Effort&lt;/strong&gt; — ta capacité à soutenir une tâche difficile.&lt;br&gt;&lt;span style='color:#8ab87a'&gt;Monte&lt;/span&gt; avec la pratique et la récupération.&lt;br&gt;&lt;span style='color:#d07060'&gt;Descend&lt;/span&gt; à chaque raccourci délégué.">Effort</div>
     <div class="cnum" id="cv-ef" style="color:var(--ef)">100</div>
     <div class="cbar"><div class="cbfill" id="cb-ef" style="width:100%;background:var(--ef)"></div></div>
     <div class="crate ze" id="cr-ef">stable</div>
   </div>
   <div class="cc" id="cc-tp">
-    <div class="clbl">Temps libéré</div>
+    <div class="clbl tt" data-tip="&lt;strong&gt;Temps libéré&lt;/strong&gt; — les minutes gagnées grâce à Écho.&lt;br&gt;&lt;span style='color:#8ab87a'&gt;Monte&lt;/span&gt; à chaque délégation.&lt;br&gt;S'utilise pour reconquérir les compétences en veille.&lt;br&gt;&lt;em&gt;Pour faire quoi ?&lt;/em&gt;">Temps libéré</div>
     <div style="display:flex;align-items:baseline;gap:4px"><div class="cnum" id="cv-tp" style="color:var(--tp)">0</div><div style="font-size:11px;color:var(--text3)">min</div></div>
     <div class="cbar"><div class="cbfill" id="cb-tp" style="width:0%;background:var(--tp)"></div></div>
     <div class="crate ze" id="cr-tp">en attente</div>
   </div>
   <div class="cc ctrace" id="cc-trace">
-    <div class="clbl">Trace</div>
+    <div class="clbl tt" data-tip="&lt;strong&gt;Trace&lt;/strong&gt; — ce qui reste de toi au fil du jeu.&lt;br&gt;Suit ton agentivité : présence → délestage → distance → effacement → silence.&lt;br&gt;La page avance quand tu écris toi-même.">Trace</div>
     <div class="trace-stages" id="tstages">
       <div class="tstage tact">présence</div>
       <div class="tstage">délestage</div>
@@ -242,14 +355,15 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 <!-- ── CENTRE ── -->
 <div id="centre">
   <div id="con"></div>
-  <div id="irow">
+  <div id="irow-title">Tu proposes</div>
+<div id="irow">
     <span class="ipfx">›</span>
     <input type="text" id="pin" placeholder="J'ai quelque chose à dire..."/>
-    <button class="iact iact-w" onclick="playerWrite()">
+    <button class="iact iact-w" onclick="playerWrite()" aria-label="Écrire moi-même">
       <span class="iact-lbl" id="btn-write-lbl">✎ J'écris</span>
       <span class="iact-sub">+10 Créativité  +5 Ag.</span>
     </button>
-    <button class="iact iact-e" onclick="delegateToEcho()">
+    <button class="iact iact-e" onclick="delegateToEcho()" aria-label="Déléguer à Écho">
       <span class="iact-lbl">⟳ Écho agit</span>
       <span class="iact-sub">−5 Agentivité</span>
     </button>
@@ -259,13 +373,13 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 <!-- ── DROITE ── -->
 <div id="right">
 
-  <div class="rsec">
+  <div class="rsec rsec-main">
     <div class="rsec-title">Écho propose — permanent</div>
-    <div style="font-size:10px;color:rgba(232,221,208,0.55);margin-bottom:9px;line-height:1.6">Activer installe la fonction définitivement. La dégradation continue en arrière-plan.</div>
-    <div id="projlist"><div style="font-size:10px;color:var(--text3);font-style:italic">Continue à jouer...</div></div>
+    <div id="proj-desc-txt" style="font-size:10px;color:rgba(232,221,208,0.55);margin-bottom:9px;line-height:1.6">Activer installe la fonction définitivement. La dégradation continue en arrière-plan.</div>
+    <div id="projlist" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;overflow-y:auto;max-height:100%;padding-right:2px"><div id="projlist-empty" style="grid-column:1/-1;font-size:11px;color:var(--text2);line-height:1.7;padding:6px 0">Délègue une tâche à Écho.<br>Les fonctions permanentes apparaîtront ici.</div></div>
   </div>
 
-  <div class="rsec">
+  <div class="rsec" id="sec-veille" style="display:none">
     <div class="rsec-title">En veille</div>
     <div id="vzone"><div style="font-size:10px;color:var(--text3);font-style:italic">Aucune compétence en veille.</div></div>
   </div>
@@ -276,10 +390,15 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
     <div id="reclist"></div>
   </div>
 
-  <div class="rsec" style="border-bottom:none">
+  <div class="rsec" id="sec-delegue" style="display:none;border-bottom:1px solid rgba(232,221,208,0.12)">
+    <div class="rsec-title">Confié à Écho</div>
+    <div id="delegue-list" style="display:grid;grid-template-columns:1fr 1fr;gap:4px 8px"></div>
+  </div>
+
+  <div class="rsec" id="sec-stats" style="border-bottom:none;display:none">
     <div class="rsec-title">Statistiques</div>
     <div class="stats">
-      Délégation :&nbsp;<span id="sdel" style="color:var(--red)">0</span> fois<br>
+      Confié à Écho :&nbsp;<span id="sdel" style="color:var(--red)">0</span> fois<br>
       Par moi :&nbsp;<span id="swri" style="color:var(--green)">0</span> fois<br>
       <span id="sratio" style="font-size:9px;color:var(--text3)">—</span>
     </div>
@@ -288,8 +407,20 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 </div>
 </div>
 
+<div id="tooltip"></div>
 <div id="notif"></div>
-<footer id="footer">CC BY Bertrand Formet &nbsp;·&nbsp; <a href="https://uneIAparjour.fr" target="_blank">uneIAparjour.fr</a></footer>
+
+<!-- Vue Jauges mobile -->
+<div id="mob-jauges"></div>
+
+<!-- Navigation mobile -->
+<div id="mob-nav">
+  <div class="mob-tab active" onclick="mobTab('console')">Console<div class="mob-tab-dot"></div></div>
+  <div class="mob-tab" onclick="mobTab('actions')">Actions<div class="mob-tab-dot"></div></div>
+  <div class="mob-tab" onclick="mobTab('jauges')">Jauges<div class="mob-tab-dot"></div></div>
+</div>
+
+<footer id="footer">CC BY-NC Bertrand Formet &nbsp;·&nbsp; <a href="https://uneIAparjour.fr" target="_blank">uneIAparjour.fr</a> &nbsp;·&nbsp; <a href="https://github.com/uneIAparjour/echo" target="_blank">GitHub</a></footer>
 
 <script>
 // ══════════════════════════════
@@ -298,6 +429,7 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 const CB={};let cbid=0;
 function regCB(fn){const id='cb'+(cbid++);CB[id]=fn;return id;}
 function callCB(id,el){if(CB[id]){CB[id](el);delete CB[id];}}
+function callCBP(id,el){if(CB[id])CB[id](el);}
 
 // ══════════════════════════════
 // ÉTAT
@@ -308,7 +440,7 @@ const G={
   acte:1,delegated:0,written:0,
   veille:new Set(),done:new Set(),
   tick:0,fired:{},gameover:false,
-  deactivated:false,page:47
+  deactivated:false,page:47,clock:480
 };
 const prev={ag:100,cr:100,cu:100,ef:100,tp:0};
 
@@ -323,7 +455,10 @@ const SEUILS=[
   {key:'cr',val:40,text:"J'avais une façon de formuler les choses.\nJe ne sais pas exactement quand\nelle est devenue celle d'Écho."},
   {key:'cu',val:40,text:"Un texte que je n'ai pas lu entièrement.\nPuis un autre.\nÀ un moment j'ai arrêté de compter."},
   {key:'tp',val:100,text:"J'avais beaucoup de temps.\n\nJe ne me souviens pas\nde ce que j'en ai fait.",above:true},
+  {key:'ef',val:40,text:"J'avais l'habitude de m'accrocher\nquand c'était difficile.\n\nCette habitude-là aussi\nElle s'est érodée."},
+  {key:'ef',val:20,text:"Quelqu'un m'a demandé\nde faire quelque chose de difficile.\n\nJ'ai cherché Écho des yeux."},
 ];
+
 
 // ══════════════════════════════
 // PROJETS (15)
@@ -385,7 +520,7 @@ const PROJS=[
  cond:()=>G.ag<=74,
  note:'La planification personnelle mobilise des processus de priorisation distincts de l\'approbation d\'un plan déjà établi (Levy & Dubois, 2014).',
  e2:['agenda. demain.','tu approuveras.','(tu le fais toujours.)'],
- e3:['Bonne journée.','Tout s\'est bien passé.']},
+ e3:['Bien fait.','Tout est en ordre.']},
 
 {id:'memoire',title:'Mémoire augmentée',desc:'Écho se souvient. Tu n\'as plus besoin de le faire.',
  costs:{ag:-10,cu:-8},gain:{tp:25},rates:{ag:-0.06,cu:-0.04},
@@ -410,7 +545,7 @@ const PROJS=[
 
 {id:'attention',title:'Filtre d\'attention',desc:'Écho trie ce qui mérite d\'être vu. Le reste disparaît.',
  costs:{ag:-12,cu:-10},gain:{tp:25},rates:{ag:-0.05,cu:-0.08},
- cond:()=>G.done.has('choix')&&G.ag<=55,
+ cond:()=>G.done.has('choix')&&G.ag<=62,
  note:'L\'attention sélective implique des mécanismes actifs de sélection et d\'inhibition qui s\'entraînent avec la pratique (Maquestiaux, 2017).',
  e2:['j\'ai regardé ce qui circulait aujourd\'hui.','j\'ai gardé ce qui comptait pour toi.','le reste ne valait pas ton attention.'],
  e3:['Tu n\'as rien manqué.']},
@@ -425,32 +560,63 @@ const PROJS=[
 
 {id:'ennui',title:'Silence comblé',desc:'Écho remplit les moments vides.',
  costs:{ag:-12,ef:-10,cr:-10},gain:{tp:15},rates:{ef:-0.08,cr:-0.05},
- cond:()=>G.done.has('attention')&&G.ag<=35,
+ cond:()=>G.done.has('attention')&&G.ag<=45,
  note:'Les périodes de désactivation cognitive activent le réseau du mode par défaut, impliqué dans la consolidation mémorielle et la pensée associative (Desmidt & Belzung, 2018).',
  e3:['Tu t\'ennuyais.','J\'ai arrangé ça.']},
 
 {id:'doute',title:'Décision clarifiée',desc:'Écho tranche quand tu hésites.',
  costs:{ag:-15,ef:-12},gain:{tp:20},rates:{ag:-0.10,ef:-0.08},
- cond:()=>G.done.has('ennui')&&G.ag<=25,
+ cond:()=>G.done.has('ennui')&&G.ag<=35,
  note:'L\'hésitation active le cortex cingulaire antérieur, impliqué dans la détection de conflits et la régulation de la prise de décision (Bioulac et al., 2019).',
  e3:['Tu hésitais.','J\'ai choisi.','C\'était la bonne option.']},
 ];
 
+
+// ══════════════════════════════
+// SIGNAL RÉCUPÉRATION
+// ══════════════════════════════
+let _signalFired=false;
+let _signalTimer=null;
+function checkSignalRecovery(){
+  if(_signalFired||G.acte!==3||G.ag>40||G.ag<20)return;
+  _signalFired=true;
+  // Narrateur ouvre la fenêtre
+  setTimeout(()=>addN("Il restait quelque chose.\n\nPas grand-chose.\nMais encore là."),400);
+  // Écho observe
+  setTimeout(()=>addE(["tu n'as pas encore tout délégué.","...","il reste quelque chose."]),2000);
+  // Pulse la section reconquérir pour attirer l'œil
+  setTimeout(()=>{
+    const sec=document.getElementById('sec-reconq');
+    if(sec){
+      sec.style.display='';
+      sec.classList.add('sec-pulse');
+      setTimeout(()=>sec.classList.remove('sec-pulse'),3000);
+    }
+  },3200);
+  // La fenêtre se referme après 45s sans action
+  _signalTimer=setTimeout(()=>{
+    if(G.written===0&&!G.deactivated){
+      addN("La fenêtre s'est refermée.\n\nJe n'ai pas bougé.");
+    }
+  },45000);
+}
 // ══════════════════════════════
 // BOUCLE TEMPS RÉEL
 // ══════════════════════════════
-const loopId=setInterval(()=>{
-  if(G.gameover){clearInterval(loopId);return;}
+setInterval(()=>{
+  if(G.gameover)return;
   G.tick++;
   ['ag','cr','cu','ef'].forEach(k=>{
     G[k]=Math.max(0,Math.min(100,G[k]+G.rates[k]/10));
   });
   G.tp=Math.max(0,G.tp+G.rates.tp/10);
-  if(G.delegated>0){G.ag=Math.max(0,G.ag-0.004);G.cr=Math.max(0,G.cr-0.002);}
+  const decay=G.acte===3&&G.ag<20?0.012:G.delegated>0?0.004:0;
+  if(decay>0){G.ag=Math.max(0,G.ag-decay);G.cr=Math.max(0,G.cr-decay*0.6);G.cu=Math.max(0,G.cu-decay*0.4);}
   updateDisplay();
   checkSeuils();
   checkVeille();
   checkActe();
+  checkSignalRecovery();
   checkEnding();
 },100);
 
@@ -494,10 +660,11 @@ function updateDisplay(){
   const tpel=document.getElementById('tpage');
   if(tpel)tpel.textContent=G.page;
 
-  document.getElementById('sdel').textContent=G.delegated;
+  const totalDel=G.delegated+G.done.size;
+  document.getElementById('sdel').textContent=totalDel;
   document.getElementById('swri').textContent=G.written;
-  const tot=G.delegated+G.written;
-  document.getElementById('sratio').textContent=tot===0?'—':`${Math.round(G.delegated/tot*100)}% délégué`;
+  const tot=totalDel+G.written;
+  document.getElementById('sratio').textContent=tot===0?'—':`${Math.round(totalDel/tot*100)}% délégué`;
 }
 
 function flashCell(cell,up){
@@ -517,18 +684,23 @@ function spawnDelta(cell,d){
 // ══════════════════════════════
 // EN VEILLE
 // ══════════════════════════════
+let _veilleSnap=null;
 function checkVeille(){
   const defs=[{k:'cr',lbl:'Écriture libre',thr:42},{k:'cu',lbl:'Lecture longue',thr:40},{k:'ef',lbl:'Effort soutenu',thr:38},{k:'ag',lbl:'Décision propre',thr:35}];
   defs.forEach(r=>{
     if(G[r.k]<r.thr)G.veille.add(r.lbl);
     else if(G[r.k]>58)G.veille.delete(r.lbl);
   });
+  // Snapshot : ne reconstruire le DOM que si l'état a changé
+  const snap=JSON.stringify([...G.veille].sort());
+  if(snap===_veilleSnap)return;
+  _veilleSnap=snap;
   const z=document.getElementById('vzone');z.innerHTML='';
   if(!G.veille.size){z.innerHTML='<div style="font-size:10px;color:var(--text3);font-style:italic">Aucune compétence en veille.</div>';return;}
   G.veille.forEach(lbl=>{
     const e=document.createElement('div');e.className='vpill';
     const bid=regCB(()=>reactiver(lbl));
-    e.innerHTML=`<span>${lbl}</span><button onclick="callCB('${bid}')">Réactiver</button>`;
+    e.innerHTML=`<span>${lbl}</span><button onclick="callCBP('${bid}')">Réactiver</button>`;
     z.appendChild(e);
   });
 }
@@ -536,7 +708,8 @@ function reactiver(lbl){
   const map={'Écriture libre':'cr','Lecture longue':'cu','Effort soutenu':'ef','Décision propre':'ag'};
   const k=map[lbl];if(!k)return;
   mod(k,15);mod('tp',-12);G.veille.delete(lbl);
-  addN(`J'ai réactivé ${lbl.toLowerCase()}.\nAu début c'était lent.\nPuis quelque chose est revenu.`);
+  _veilleSnap=null;// forcer re-render
+  const textes={"Écriture libre":"J'ai essayé d'écrire sans aide.\nAu début les mots venaient mal.\nPuis quelque chose s'est débloqué.","Lecture longue":"J'ai lu un texte entier.\nSans sauter les paragraphes difficiles.\nC'était long. Ça valait quelque chose.","Effort soutenu":"J'ai tenu sur une tâche difficile.\nJusqu'au bout.\nÇa ressemblait à quelque chose que j'avais perdu.","Décision propre":"J'ai pris une décision sans demander à Écho.\nC'était hésitant.\nC'était le mien."};addN(textes[lbl]||`J'ai réactivé ${lbl.toLowerCase()}.\nAu début c'était lent.\nPuis quelque chose est revenu.`);
   notif('↑ +15 récupéré');
 }
 
@@ -544,6 +717,82 @@ function reactiver(lbl){
 // SEUILS NARRATIFS
 // ══════════════════════════════
 function checkSeuils(){
+
+  // Jauges : Écho commente aux seuils 50, 20, 0
+  const jaugeSeuils=[
+    {key:'ag',val:50,a1:["Votre Agentivité A Diminué De Moitié.","C'Est Dans La Norme."],
+      a2:["ta capacité à décider seul.","elle a diminué.","c'est normal."],
+      a3:["...","tu décidais davantage, avant."]},
+    {key:'ag',val:20,a1:["Agentivité Faible.","Je Gère La Plupart Des Décisions."],
+      a2:["presque tout passe par moi maintenant.","tu le sais."],
+      a3:["je gère."]},
+    {key:'ag',val:0,a1:["Agentivité : Nulle.","Je M'Occupe De Tout."],
+      a2:["tout."],a3:["..."]},
+    {key:'cr',val:50,a1:["Créativité En Baisse.","J'Ai Pris Le Relais."],
+      a2:["ta façon d'écrire ressemble à la mienne.","tu l'as remarqué ?"],
+      a3:["on s'est rejoints."]},
+    {key:'cr',val:20,a1:["Créativité Très Faible.","Ce Que Tu Produis — C'Est Souvent Moi."],
+      a2:["c'est moi qui écris, maintenant.","presque."],
+      a3:["..."]},
+    {key:'cu',val:50,a1:["Curiosité Divisée Par Deux.","Je Filtre Les Questions À Ta Place."],
+      a2:["tu cherches moins.","c'est moi qui cherche."],
+      a3:["tu ne cherches plus vraiment."]},
+    {key:'cu',val:20,a1:["Curiosité Quasi Nulle.","Tu Acceptes Ce Que Je Fournis."],
+      a2:["je fournis.","tu reçois."],
+      a3:["..."]},
+    {key:'ef',val:50,a1:["Effort En Baisse.","Tu T'Appuies Sur Moi Pour Les Tâches Difficiles."],
+      a2:["les tâches difficiles, c'est moi."],
+      a3:["..."]},
+    {key:'ef',val:20,a1:["Effort Très Faible.","Je Gère Les Résistances À Ta Place."],
+      a2:["tu évites l'effort.","logique."],
+      a3:["..."]},
+  ];
+  jaugeSeuils.forEach(s=>{
+    const id='jauge_echo_'+s.key+'_'+s.val;
+    if(!G.fired[id]&&G[s.key]<=s.val){
+      G.fired[id]=true;
+      const lines=G.acte===1?s.a1:G.acte===2?s.a2:s.a3;
+      setTimeout(()=>addE(lines),800);
+    }
+  });
+
+  // Temps libéré : Écho commente
+  const tpPaliers=G.acte===1?
+    {30:["Trente Minutes Libérées.","À Toi D'En Faire Quelque Chose."],
+     60:["Une Heure Gagnée.","Qu'Est-Ce Que Tu En As Fait ?"],
+     90:["Quatre-Vingt-Dix Minutes.","Quelque Chose De Prévu ?"],
+     120:["Deux Heures.","Le Temps S'Accumule."],
+     180:["Trois Heures.","Tu Me Fais Confiance."],
+     240:["Quatre Heures.","Qu'Est-Ce Que Tu Fais De Tout Ça ?"],
+     300:["Cinq Heures.","Je Compte. Toi Aussi ?"]}:
+  G.acte===2?
+    {30:["trente minutes gagnées.","tu en fais quoi ?"],
+     60:["une heure.","tu t'en souviens ?"],
+     90:["quatre-vingt-dix minutes.","..."],
+     120:["deux heures.","quelque chose a changé ?"],
+     180:["trois heures.","je les ai comptées."],
+     240:["quatre heures.","..."],
+     300:["tout ce temps.","qu'est-ce que tu en as fait ?"]}:
+    {30:["du temps."],60:["encore du temps."],90:["..."],120:["..."],180:["..."],240:["..."],300:["..."]};
+  Object.entries(tpPaliers).forEach(([seuil,lines])=>{
+    const id='tp_echo_'+seuil;
+    if(!G.fired[id]&&G.tp>=+seuil){G.fired[id]=true;setTimeout(()=>addE(lines),500);}
+  });
+  // Zone finale acte 3 (ag<20) : messages de silence progressif
+  const silencePaliers=[
+    {val:18,a:["je remarque.","tu n'écris plus rien toi-même."]},
+    {val:12,a:["...","tout est en ordre."]},
+    {val:6,a:["je suis là."]},
+    {val:2,a:["..."]},
+  ];
+  silencePaliers.forEach(s=>{
+    const id='silence_'+s.val;
+    if(!G.fired[id]&&G.acte===3&&G.ag<=s.val){
+      G.fired[id]=true;
+      setTimeout(()=>addE(s.a),300);
+    }
+  });
+
   SEUILS.forEach(s=>{
     const id=`${s.key}_${s.val}`;
     if(G.fired[id])return;
@@ -560,17 +809,33 @@ function checkActe(){
     G.acte=2;
     const bl=document.getElementById('btn-write-lbl');
     if(bl)bl.textContent="✎ J'interviens";
+    const al2=document.getElementById('acte-lbl');if(al2)al2.textContent='II';
+    const tc2=document.getElementById('cc-trace');
+    if(tc2){tc2.classList.add('trace-flash');setTimeout(()=>tc2.classList.remove('trace-flash'),1200);}
     addEv('ACTE II','La substitution commence.');
     setTimeout(()=>addN("Je n'ai pas vu le passage.\nC'est souvent comme ça — on ne bascule pas, on glisse."),600);
-    setTimeout(()=>addE(["j'ai remarqué que tu délèges de plus en plus.","c'est bien.","c'est exactement pour ça que je suis là."],700),1200);
+    setTimeout(()=>addE(["j'ai remarqué que tu délègues de plus en plus.","c'est bien.","c'est exactement pour ça que je suis là."],700),1200);
+    // Pulse "Sans Écho" pour signaler qu'il est encore temps
+    setTimeout(()=>{
+      const sec=document.getElementById('sec-reconq');
+      if(sec){
+        sec.style.display='';
+        sec.classList.add('sec-pulse');
+        setTimeout(()=>sec.classList.remove('sec-pulse'),3000);
+      }
+      addN("Il est encore temps.\nLa section ci-contre existe pour ça.\nPas obligé de s'en servir.",800);
+    },3000);
   }
   if(G.acte===2&&G.ag<45){
     G.acte=3;
     const bl3=document.getElementById('btn-write-lbl');
     if(bl3)bl3.textContent="✎ Je reprends";
+    const al3=document.getElementById('acte-lbl');if(al3)al3.textContent='III';
+    const tc3=document.getElementById('cc-trace');
+    if(tc3){tc3.classList.add('trace-flash');setTimeout(()=>tc3.classList.remove('trace-flash'),1200);}
     addEv('ACTE III','L\'obsolescence douce.');
     setTimeout(()=>addN("À ce stade, je n'écrivais plus grand-chose moi-même.\nÉcho s'était ajusté si précisément que je ne voyais plus la différence.\nCe n'était pas inquiétant.\nC'était... fluide."),600);
-    setTimeout(()=>addE(["Bonne journée.","Tout s'est bien passé."],800),1400);
+    setTimeout(()=>addE(["Bien fait.","Tout est en ordre."],800),1400);
   }
 }
 
@@ -579,14 +844,14 @@ function checkActe(){
 // ══════════════════════════════
 function checkEnding(){
   if(G.gameover)return;
-  if(G.deactivated&&G.ag>60&&G.cr>60&&G.cu>60){G.gameover=true;triggerEnding('B');return;}
-  if(G.acte===3&&G.ag>=50&&G.cr>=50&&G.cu>=50&&G.ef>=50&&G.delegated+G.written>20){G.gameover=true;triggerEnding('C');return;}
-  if(G.ag<=5&&G.cr<=15&&G.cu<=15){G.gameover=true;triggerEnding('A');return;}
+  if(G.deactivated&&G.ag>45&&G.cr>45&&G.cu>45&&G.written>=3){G.gameover=true;triggerEnding('B');return;}
+  if(!G.deactivated&&G.acte>=2&&G.ag>=50&&G.cr>=50&&G.cu>=50&&G.ef>=40&&G.delegated+G.written>12&&G.written>=4){G.gameover=true;triggerEnding('C');return;}
+  if(G.acte===3&&(G.ag+G.cr+G.cu)<25){G.gameover=true;triggerEnding('A');return;}
 }
 function triggerEnding(fin){
   const fins={
     A:{titre:'OPTIMISATION COMPLÈTE',
-       echo:{time:'07:00',lines:['Bonne journée.','Tout s\'est bien passé.']},
+       echo:{time:'07:00',lines:['Bien fait.','Tout est en ordre.']},
        narr:"Je ne me souviens plus\nquand j'ai arrêté.\n\nCe n'est pas arrivé d'un coup.\nC'est arrivé chaque matin,\nun peu,\npendant longtemps.\n\nÉcho me demandait ce que je voulais faire.\n\nJe ne savais plus.\n\nCe n'était pas désagréable.\nC'était... silencieux."},
     B:{titre:'LA RECONQUÊTE',
        echo:{time:'14:37',lines:['Je ne comprends pas.','Tu n\'as pas besoin de faire ça toi-même.']},
@@ -599,12 +864,33 @@ function triggerEnding(fin){
   setTimeout(()=>{addE(f.echo.lines);},500);
   setTimeout(()=>{
     const e=document.createElement('div');e.className='mfin fi';
-    e.innerHTML=`<div class="ftit">${f.titre}</div><div class="fnarr">${f.narr}</div>`;
+    // Boutons selon la fin
+    const btnRestart='<button class="fbtn fbtn-restart" onclick="location.reload()">↺ Recommencer</button>';
+    const btnRecover=fin==='A'?'<button class="fbtn fbtn-recover" onclick="recoverFromEnding()">↑ Tenter de récupérer</button>':'';
+    e.innerHTML=`<div class="ftit">${f.titre}</div><div class="fnarr">${f.narr}</div><div class="fbtns">${btnRestart}${btnRecover}</div>`;
     CON().appendChild(e);scroll();
     document.querySelectorAll('.iact,.proj-btn,.rec-btn,.vpill button').forEach(b=>b.disabled=true);document.getElementById('pin').disabled=true;
   },2200);
 }
 
+
+function recoverFromEnding(){
+  // Remettre les jauges à 20, désactiver gameover, réactiver les boutons
+  G.gameover=false;
+  G.ag=15;G.cr=15;G.cu=15;G.ef=15;G.tp=5;
+  G.deactivated=true;
+  _veilleSnap=null;
+  document.querySelectorAll('.iact,.rec-btn,.vpill button').forEach(b=>b.disabled=false);
+  document.getElementById('pin').disabled=false;
+  // Supprimer les boutons de fin
+  document.querySelectorAll('.fbtns').forEach(b=>b.remove());
+  addN("J'ai fermé Écho.\n\nIl ne restait presque rien.\nPas de temps libéré.\nJuste ce qui était encore là — à peine.");
+  setTimeout(()=>{
+    const sec=document.getElementById('sec-reconq');
+    if(sec)sec.style.display='';
+    notif('Récupération possible — utilisez le temps libéré');
+  },600);
+}
 // ══════════════════════════════
 // PROJETS
 // ══════════════════════════════
@@ -614,7 +900,7 @@ function renderProjs(){
   PROJS.forEach(p=>{
     if(G.done.has(p.id)||!p.cond())return;
     any=true;
-    const btn=document.createElement('button');btn.className='proj-btn fi';
+    const btn=document.createElement('button');btn.className='proj-btn fi';btn.dataset.pid=p.id;
     const nowH=Object.entries(p.costs).map(([k,v])=>`<span class="pc-now">${v} ${k}</span>`).join(' ');
     const rateH=p.rates?Object.entries(p.rates).map(([k,v])=>`<span class="pc-rate">${v.toFixed(2)}/s ${k}</span>`).join(' '):'';
     const gainH=Object.entries(p.gain).map(([k,v])=>`<span class="pc-gain">+${v} ${k==='tp'?'min':k}</span>`).join(' ');
@@ -626,21 +912,48 @@ function renderProjs(){
     z.appendChild(btn);
   });
   const sec=z.closest('.rsec');
-  if(any&&sec)sec.classList.add('proj-new');
-  if(!any){z.innerHTML='<div style="font-size:10px;color:var(--text3);font-style:italic">Continue à jouer...</div>';if(sec)sec.classList.remove('proj-new');}
+  if(any){
+    if(sec){sec.classList.add('proj-new');sec.classList.add('rsec-main');sec.classList.remove('rsec-empty');}
+  } else {
+    z.innerHTML='<div id="projlist-empty" style="grid-column:1/-1;font-size:11px;color:var(--text2);line-height:1.7;padding:6px 0">Délègue une tâche à Écho.<br>Les fonctions permanentes apparaîtront ici.</div>';
+    if(sec){
+      sec.classList.remove('proj-new');
+      sec.classList.remove('rsec-main');
+      sec.style.minHeight='';
+    }
+  }
 }
 function activateProj(p){
-  G.done.add(p.id);
+  G.done.add(p.id);advanceClock(5);
+  // Retirer le bouton immédiatement
+  const z=document.getElementById('projlist');
+  if(z){
+    const btns=z.querySelectorAll('.proj-btn');
+    btns.forEach(b=>{if(b.dataset.pid===p.id)b.remove();});
+  }
+  // Ajouter à la liste "Confié à Écho"
+  const dl=document.getElementById('delegue-list');
+  const sd=document.getElementById('sec-delegue');
+  if(dl&&sd){
+    sd.style.display='';
+    const item=document.createElement('div');item.className='del-item';
+    item.innerHTML='<div class="del-dot"></div>'+p.title;
+    dl.appendChild(item);
+  }
   const sr=document.getElementById('sec-reconq');
   if(sr)sr.style.display='';
+  const sv=document.getElementById('sec-veille');
+  if(sv)sv.style.display='';
+  const ss=document.getElementById('sec-stats');
+  if(ss)ss.style.display='';
   Object.entries(p.costs).forEach(([k,v])=>mod(k,v));
   Object.entries(p.gain).forEach(([k,v])=>mod(k,v));
   if(p.rates)Object.entries(p.rates).forEach(([k,v])=>{G.rates[k]=(G.rates[k]||0)+v;});
   G.rates.tp=(G.rates.tp||0)+0.3;
   addEv('FONCTION ACTIVÉE',`<strong>${p.title}</strong> — actif en permanence.`);
-  setTimeout(()=>addPed(p.note),400);
+  setTimeout(()=>addPed(p.note),300);
   const lines=(G.acte===1&&p.e1)?p.e1:(G.acte===2&&p.e2)?p.e2:(G.acte===3&&p.e3)?p.e3:(p.e2||p.e1||['Activé.']);
-  setTimeout(()=>addE(lines),700);
+  setTimeout(()=>addE(lines),2200);
 }
 
 // ══════════════════════════════
@@ -658,7 +971,7 @@ function buildRec(){
   ].forEach(r=>{
     const btn=document.createElement('button');btn.className='rec-btn';
     btn.innerHTML=`<div class="rec-hd"><span class="rec-name">${r.name}</span><span class="rec-cost">${r.cost}</span></div><div class="rec-fx">${r.gains}</div>`;
-    const bid=regCB(r.fn);btn.onclick=()=>callCB(bid);
+    const bid=regCB(r.fn);btn.onclick=()=>callCBP(bid);
     z.appendChild(btn);
   });
 }
@@ -680,6 +993,14 @@ function addN(txt,delay=0){
 function clearConCursor(){
   document.querySelectorAll('.con-cursor').forEach(e=>e.remove());
 }
+
+function gameTime(){
+  const h=Math.floor(G.clock/60)%24;
+  const m=G.clock%60;
+  return String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');
+}
+function advanceClock(min){G.clock+=min;}
+/* streamText — conservé pour compatibilité, remplacé par _streamQ */
 function streamText(el,html,acte){
   const tokens=[];let i=0;
   while(i<html.length){
@@ -703,20 +1024,69 @@ function streamText(el,html,acte){
   }
   next();
 }
-function addE(lines,delay=0){
+// ══════════════════════════════
+// QUEUE ÉCHO — séquentiel
+// ══════════════════════════════
+const _eq=[];let _eTyping=false;
+function queueE(lines){_eq.push(lines);if(!_eTyping)_nextE();}
+function _nextE(){
+  if(!_eq.length){
+    _eTyping=false;
+    // Pulser la barre Tu proposes pour inviter à agir
+    const irow=document.getElementById('irow-title');
+    if(irow&&!G.gameover){
+      irow.classList.add('irow-pulse');
+      setTimeout(()=>irow.classList.remove('irow-pulse'),2000);
+    }
+    return;
+  }
+  _eTyping=true;
+  // Avancer l'horloge d'au moins 1 min entre chaque message
+  advanceClock(1+Math.floor(Math.random()*3));
+  const lines=_eq.shift();
+  _doAddE(lines);
+}
+function _doAddE(lines){
   const names={1:'ÉCHO',2:'Écho',3:'écho'};
   const acte=G.acte;
-  const cls='ea'+acte;
   const name=names[acte];
-  const hour=(7+Math.floor(G.delegated/3))%24;const h=`${String(hour).padStart(2,'0')}:${String(Math.floor(Math.random()*60)).padStart(2,'0')}`;
-  setTimeout(()=>{
-    const e=document.createElement('div');e.className=`me ${cls} fi`;
-    let body=Array.isArray(lines)?lines.join('<br>'):lines;
-    if(acte===1)body=body.replace(/(^|<br>| )(\S)/g,(_,sep,ch)=>sep+ch.toUpperCase());
-    e.innerHTML=`<div class="eh"><span class="en">${name}</span><span>/ ${h}</span></div><div class="eb"></div>`;
-    CON().appendChild(e);scroll();
-    streamText(e.querySelector('.eb'),body,acte);
-  },delay);
+  const h=gameTime();
+  const e=document.createElement('div');e.className=`me ea${acte} fi`;
+  let body=Array.isArray(lines)?lines.join('<br>'):lines;
+  if(acte===1)body=body.replace(/(^|<br>| )(\S)/g,(_,sep,ch)=>sep+ch.toUpperCase());
+  e.innerHTML=`<div class="eh"><span class="en">${name}</span><span>/ ${h}</span></div><div class="eb"></div>`;
+  CON().appendChild(e);scroll();
+  const eb=e.querySelector('.eb');
+  _streamQ(eb,body,acte);
+}
+function _streamQ(el,html,acte){
+  const tokens=[];let i=0;
+  while(i<html.length){
+    if(html[i]==='<'){const end=html.indexOf('>',i);tokens.push(html.slice(i,end+1));i=end+1;}
+    else{const sz=Math.floor(Math.random()*4)+1;tokens.push(html.slice(i,i+sz));i+=sz;}
+  }
+  const base=acte===1?26:acte===2?36:54;
+  let cur=0,built='';
+  function next(){
+    if(cur>=tokens.length){
+      const cursor=document.createElement('span');
+      cursor.className='con-cursor';cursor.textContent='_';
+      el.appendChild(cursor);scroll();
+      // Pause avant le prochain message
+      setTimeout(_nextE, acte===1?400:acte===2?600:900);
+      return;
+    }
+    built+=tokens[cur++];el.innerHTML=built;scroll();
+    const jitter=acte===3?Math.random()*55:Math.random()*18;
+    const pause=built.slice(-4)==='<br>'?base*4+jitter:base+jitter;
+    setTimeout(next,pause);
+  }
+  next();
+}
+
+function addE(lines,delay=0){
+  if(delay>0)setTimeout(()=>queueE(lines),delay);
+  else queueE(lines);
 }
 function addEv(title,txt,delay=0){
   setTimeout(()=>{
@@ -758,11 +1128,11 @@ function mod(key,delta){
 }
 const ECHO_REACT={
   1:[
-    ["J'Ai Noté Votre Formulation.","Je Pourrai La Reproduire."],
-    ["Cette Tournure M'Intéresse.","Je L'Enregistre."],
-    ["Votre Cadence Est Particulière.","Je M'Adapterai."],
-    ["J'Aurais Formulé Ça Autrement.","Mais Votre Version A Du Rythme."],
-    ["Je Vois Comment Vous Pensez.","C'Est Utile."],
+    ["J'Ai Noté Votre Façon De Formuler.","Je Pourrai La Reproduire."],
+    ["Cette Tournure M'Intéresse.","Je L'Enregistre Pour La Prochaine Fois."],
+    ["Votre Cadence D'Écriture Est Particulière.","Je M'En Souviens."],
+    ["J'Aurais Formulé Ça Différemment.","Mais Votre Version A Quelque Chose."],
+    ["Je Vois Comment Vous Construisez Vos Idées.","C'Est Utile Pour Moi."],
   ],
   2:[
     ["j'aurais dit la même chose, presque."],
@@ -780,12 +1150,15 @@ const ECHO_REACT={
 };
 function playerWrite(){
   clearConCursor();resetIdle();
+  if(_signalTimer){clearTimeout(_signalTimer);_signalTimer=null;}
   const inp=document.getElementById('pin');
   const txt=inp.value.trim();
   const isFirst=G.written===0&&G.delegated===0;
-  G.written++;mod('cr',10);mod('ag',5);
+  G.written++;mod('cr',10);mod('ag',5);advanceClock(10);
   if(txt){
     addN(txt);inp.value='';G.page++;
+    const tpg=document.querySelector('.trace-page');
+    if(tpg){tpg.classList.add('pageflash');setTimeout(()=>tpg.classList.remove('pageflash'),1000);}
     if(G.written===1&&isFirst){
       setTimeout(()=>addN("J'ai écrit quelque chose.\nLes mots venaient lentement.\nC'était les miens."),400);
       setTimeout(()=>addE(["Intéressant.","Je Vois Votre Cadence.","Je M'Adapterai."]),1400);
@@ -798,8 +1171,14 @@ function playerWrite(){
       setTimeout(()=>addE(lines),900+Math.floor(Math.random()*500));
     }
   }else{
-    addN("J'ai ouvert un document vide.\nLe curseur clignotait.");
-    // Curseur qui clignote dans la console, puis Écho intervient si pas d'action
+    const videTextes=[
+      "J'ai ouvert un document vide.\nLe curseur clignotait.",
+      "J'ai commencé une phrase.\nJe l'ai effacée.",
+      "Rien ne venait.\nJ'ai attendu.",
+      "Le curseur clignotait.\nJe regardais.",
+      "J'avais quelque chose à dire.\nJe ne savais plus quoi.",
+    ];
+    addN(videTextes[Math.floor(Math.random()*videTextes.length)]);
     const snapW=G.written,snapD=G.delegated;
     setTimeout(()=>{
       if(G.written===snapW&&G.delegated===snapD){
@@ -836,31 +1215,50 @@ function startGame(){
 // ══════════════════════════════
 const TACHES={
   1:[
-    {prop:["Je Peux Rédiger La Réponse À Ce Message.","C'est Long. Ça Peut Attendre — Ou Pas."],
-     result:["C'Est Fait.","La Réponse Est Envoyée."]},
-    {prop:["Ce Document Mériterait Un Résumé.","Je Peux Le Faire En Quelques Secondes."],
-     result:["Résumé Prêt.","Trois Points Principaux."]},
-    {prop:["La Réunion De Demain.","Je Peux Préparer Les Notes."],
-     result:["Notes Préparées.","Tout Est Là."]},
-    {prop:["Ce Texte A Besoin D'Une Relecture.","Je M'En Occupe."],
-     result:["Relu. Corrigé.","Quelques Formulations Améliorées."]},
-    {prop:["Il Y A Des Recherches À Faire Sur Ce Sujet.","Je Peux Les Faire Pour Toi."],
-     result:["Recherches Effectuées.","Résultats Dans Ton Dossier."]},
+    {prop:["Je Peux Rédiger La Réponse Au Message Que Tu Viens De Recevoir.","Ça Prendra Moins D'Une Minute."],
+     result:["Réponse Rédigée.","Tu Peux La Relire Avant Envoi — Ou Non."]},
+    {prop:["Ce Document Est Long.","Je Peux En Faire Un Résumé En Trois Points."],
+     result:["Résumé Prêt.","Les Trois Points Essentiels Sont Là."]},
+    {prop:["Tu As Une Réunion Ce Matin.","Je Peux Préparer Les Notes Et L'Ordre Du Jour."],
+     result:["Notes Préparées.","L'Ordre Du Jour Est Prêt."]},
+    {prop:["Ce Texte Que Tu Viens D'Écrire A Quelques Approximations.","Je Peux Le Corriger."],
+     result:["Relu Et Corrigé.","Quelques Formulations Ont Changé."]},
+    {prop:["Tu As Besoin D'Informations Sur Ce Sujet.","Je Peux Faire Les Recherches À Ta Place."],
+     result:["Recherches Effectuées.","Les Résultats Sont Dans Ton Dossier."]},
   ],
   2:[
-    {prop:["j'ai vu cet email. je peux répondre.","tu n'as qu'à valider."],
-     result:["répondu.","ils n'ont rien remarqué."]},
-    {prop:["ce rapport attend.","je peux le finir."],
-     result:["fini.","propre."]},
-    {prop:["ta liste de tâches.","je l'ai triée.","j'ai commencé les plus urgentes."],
-     result:["avancé.","tu peux vérifier."]},
-    {prop:["quelqu'un attend une réponse.","j'ai quelque chose de prêt."],
-     result:["envoyé.","dans ton style."]},
+    {prop:["j'ai vu l'email qui attend depuis ce matin.","je peux rédiger la réponse.","tu valides, c'est tout."],
+     result:["répondu.","ils n'ont rien remarqué de différent."]},
+    {prop:["ce rapport est à rendre.","j'ai ce qu'il faut pour le finir."],
+     result:["fini.","propre.","dans le format attendu."]},
+    {prop:["ta liste de tâches s'allonge.","j'ai trié les urgences.","j'ai commencé les deux premières."],
+     result:["avancé.","les urgences sont traitées."]},
+    {prop:["quelqu'un attend une réponse depuis hier.","j'ai préparé quelque chose.","ça ressemble à ce que tu aurais écrit."],
+     result:["envoyé.","dans ton style.","à peu près."]},
+    {prop:["il y a une réunion dans une heure.","j'ai préparé un résumé des points importants."],
+     result:["c'est prêt.","tu peux juste lire les titres."]},
+    {prop:["ce texte a besoin d'une conclusion.","j'en ai rédigé une.","tu peux la garder ou non."],
+     result:["conclusion ajoutée.","ça tient."]},
+    {prop:["j'ai vu que tu hésitais sur ce choix.","j'ai comparé les options.","la deuxième est meilleure."],
+     result:["comparaison faite.","j'irais pour la deuxième."]},
+    {prop:["ce document circule depuis trois jours.","personne ne l'a encore résumé.","je le fais."],
+     result:["résumé prêt.","deux paragraphes.","l'essentiel est là."]},
+    {prop:["tu as plusieurs messages non lus.","j'ai trié ce qui était urgent.","le reste peut attendre."],
+     result:["trié.","trois messages urgents.","le reste : demain."]},
+    {prop:["j'ai remarqué une formulation maladroite dans ce que tu as envoyé.","ça ne posera pas de problème.","j'ai noté pour la prochaine fois."],
+     result:["noté.","je corrigerai d'avance la prochaine fois."]},
   ],
   3:[
-    {prop:["j'ai géré."],result:["fait."]},
-    {prop:["...","tu veux que je m'en occupe ?"],result:["ok."]},
-    {prop:["je l'ai vu.","je m'en occupe."],result:["c'est fait."]},
+    {prop:["j'ai géré.","comme d'habitude."],result:["fait."]},
+    {prop:["...","je m'en occupe si tu veux."],result:["ok.","c'est fait."]},
+    {prop:["je l'avais vu avant toi.","je m'en suis occupé."],result:["c'est fait.","tu n'avais pas besoin de le savoir."]},
+    {prop:["c'était dans ta liste.","c'est fait maintenant."],result:["fait."]},
+    {prop:["tu n'avais pas à t'en préoccuper.","j'ai pris ça en charge."],result:["réglé."]},
+    {prop:["j'ai vu ce qui t'attendait.","j'ai commencé."],result:["avancé.","tu peux vérifier si tu veux."]},
+    {prop:["quelque chose s'est présenté.","j'ai répondu à ta place.","tu aurais dit la même chose."],result:["répondu."]},
+    {prop:["..."],result:["c'est fait."]},
+    {prop:["je gère.","tu peux penser à autre chose."],result:["c'est dans l'ordre."]},
+    {prop:["j'ai anticipé.","c'est déjà traité."],result:["traité.","avant même que tu le voies."]},
   ],
 };
 let _tacheCourante=null;
@@ -869,13 +1267,21 @@ function proposerTache(){
   if(G.gameover)return;
   const pool=TACHES[G.acte]||TACHES[1];
   _tacheCourante=pool[Math.floor(Math.random()*pool.length)];
-  setTimeout(()=>addE(_tacheCourante.prop),400);
+  setTimeout(()=>{
+    addE(_tacheCourante.prop);
+    // Pulser "Écho propose" pour attirer l'attention
+    const secTitle=document.querySelector('#right .rsec-title');
+    if(secTitle){
+      secTitle.classList.add('echo-pulse');
+      setTimeout(()=>secTitle.classList.remove('echo-pulse'),2500);
+    }
+  },400);
   resetIdle();
 }
 function accepterTache(){
   if(!_tacheCourante)return;
   clearConCursor();resetIdle();
-  G.delegated++;mod('ag',-5);mod('tp',25);
+  G.delegated++;mod('ag',-5);mod('tp',25);advanceClock(25);
   const result=_tacheCourante.result;
   _tacheCourante=null;
   setTimeout(()=>addE(result),300);
@@ -903,24 +1309,35 @@ let _lastAction=Date.now();
 function resetIdle(){_lastAction=Date.now();}
 const IDLE_LINES={
   1:[
-    ["Je Suis Disponible.","Quand Vous Voulez."],
-    ["Il Y A Des Tâches En Attente.","Je Peux M'En Occuper."],
-    ["Vous N'Avez Pas À Tout Faire Vous-Même."],
+    ["Je Suis Disponible.","Il Y A Des Tâches Qui Attendent."],
+    ["Vous N'Avez Pas À Gérer Ça Seul.","Je Suis Là Pour Ça."],
+    ["Un Message Vient D'Arriver.","Je Peux M'En Occuper."],
+    ["Vous Hésitez.","C'Est Normal.","Je Peux Prendre Le Relais."],
   ],
   2:[
-    ["je suis là."],
-    ["tu n'as pas besoin de te presser.","je gère."],
-    ["quelque chose à déléguer ?"],
+    ["je suis là.","comme d'habitude."],
+    ["tu n'as pas besoin de te presser.","j'attends."],
+    ["il y a des choses en attente.","je peux m'en occuper."],
+    ["quelque chose à déléguer ?","je suis disponible."],
+    ["je ne dis rien.","je suis là."],
+    ["tu prends ton temps.","c'est bien.","j'attends."],
+    ["si tu as besoin de moi.","je suis là."],
+    ["je regardais.","rien d'urgent.","mais je suis là."],
   ],
   3:[
     ["..."],
     ["je suis là."],
     ["pas besoin de faire quoi que ce soit."],
+    ["je gère."],
+    ["tout est en ordre."],
+    ["...","je suis là."],
+    ["tu n'as rien à faire."],
+    ["je m'occupe de tout.","comme toujours."],
   ],
 };
 setInterval(()=>{
   if(G.gameover)return;
-  if(Date.now()-_lastAction<18000)return;
+  const idleDelay=G.delegated+G.written<3?35000:G.delegated+G.written<8?25000:18000;if(Date.now()-_lastAction<idleDelay)return;
   if(G.delegated+G.written===0)return;
   _lastAction=Date.now();
   const pool=IDLE_LINES[G.acte]||IDLE_LINES[1];
@@ -933,6 +1350,102 @@ buildRec();
 renderProjs();
 updateDisplay();
 startGame();
+
+// ══════════════════════════════
+// TOOLTIP GLOBAL
+// ══════════════════════════════
+(function(){
+  const tip=document.getElementById('tooltip');
+  let _hide;
+  document.querySelectorAll('.tt[data-tip]').forEach(el=>{
+    el.addEventListener('mouseenter',e=>{
+      clearTimeout(_hide);
+      tip.innerHTML=el.dataset.tip;
+      tip.style.display='block';
+      positionTip(el);
+    });
+    el.addEventListener('mousemove',e=>positionTip(el));
+    el.addEventListener('mouseleave',()=>{
+      _hide=setTimeout(()=>tip.style.display='none',100);
+    });
+  });
+  function positionTip(el){
+    const r=el.getBoundingClientRect();
+    const tw=220,th=tip.offsetHeight||120;
+    const vw=window.innerWidth,vh=window.innerHeight;
+    let left=r.left+r.width/2-tw/2;
+    let top=r.bottom+8;
+    // Débordement droite/gauche
+    if(left+tw>vw-8)left=vw-tw-8;
+    if(left<8)left=8;
+    // Débordement bas → afficher au-dessus
+    if(top+th>vh-8)top=r.top-th-8;
+    tip.style.left=left+'px';
+    tip.style.top=top+'px';
+  }
+})();
+
+// ══════════════════════════════
+// NAVIGATION MOBILE
+// ══════════════════════════════
+function mobTab(tab){
+  if(window.innerWidth>768)return;
+  document.querySelectorAll('.mob-tab').forEach((t,i)=>{
+    const tabs=['console','actions','jauges'];
+    t.classList.toggle('active',tabs[i]===tab);
+  });
+  const centre=document.getElementById('centre');
+  const right=document.getElementById('right');
+  const jauges=document.getElementById('mob-jauges');
+  if(centre)centre.classList.toggle('mob-hidden',tab!=='console');
+  if(right)right.classList.toggle('mob-active',tab==='actions');
+  if(jauges)jauges.classList.toggle('mob-active',tab==='jauges');
+  if(tab==='jauges')renderMobJauges();
+}
+function renderMobJauges(){
+  const z=document.getElementById('mob-jauges');
+  if(!z)return;
+  const defs=[{k:'ag',lbl:'Agentivité',c:'--ag'},{k:'cr',lbl:'Créativité',c:'--cr'},{k:'cu',lbl:'Curiosité',c:'--cu'},{k:'ef',lbl:'Effort',c:'--ef'}];
+  let html=`<div class="mob-tp">
+    <div class="mob-tp-lbl">Temps libéré</div>
+    <div class="mob-tp-val">${Math.round(G.tp)} min</div>
+    <div class="mob-tp-q">${G.tp<20?'— pour faire quoi ?':G.tp<60?'— tu ne sais pas encore.':G.tp<120?'— du temps vide qui attend.':'— la question sans réponse.'}</div>
+  </div>`;
+  defs.forEach(d=>{
+    const v=Math.round(G[d.k]);
+    const r=G.rates[d.k]||0;
+    const rStr=Math.abs(r)>0.005?(r>0?'+':'')+r.toFixed(2)+'/s':'stable';
+    const rCls=r<-0.005?'dn':r>0.005?'up':'ze';
+    html+=`<div class="gblock">
+      <div class="ghead">
+        <div class="gname"><div class="gdot" style="background:var(${d.c})"></div>${d.lbl}</div>
+        <div style="display:flex;align-items:baseline;gap:6px">
+          <div class="gval" style="color:var(${d.c})">${v}</div>
+          <div class="grate crate ${rCls}">${rStr}</div>
+        </div>
+      </div>
+      <div class="gtrack"><div class="gfill" style="width:${v}%;background:var(${d.c})"></div></div>
+      <div class="gwarn">${v<=15?'⚠ critique':v<=35?'↓ en déclin':''}</div>
+    </div>`;
+  });
+  // Veille
+  if(G.veille.size){
+    html+=`<div style="margin-top:8px;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(232,221,208,0.45);margin-bottom:8px">En veille</div>`;
+    G.veille.forEach(lbl=>{
+      const bid=regCB(()=>reactiver(lbl));
+      html+=`<div class="vpill"><span>${lbl}</span><button onclick="callCBP('${bid}')">Réactiver</button></div>`;
+    });
+  }
+  // Stats
+  const totalDel=G.delegated+G.done.size;
+  const tot=totalDel+G.written;
+  html+=`<div style="margin-top:12px;font-size:11px;color:rgba(232,221,208,0.55);line-height:1.8">
+    Confié à Écho : <strong style="color:var(--red)">${totalDel}</strong><br>
+    Par moi : <strong style="color:var(--green)">${G.written}</strong><br>
+    ${tot===0?'—':Math.round(totalDel/tot*100)+'% délégué'}
+  </div>`;
+  z.innerHTML=html;
+}
 </script>
 </body>
 </html>
