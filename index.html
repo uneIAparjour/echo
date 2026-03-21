@@ -536,7 +536,7 @@ function reactiver(lbl){
   const map={'Écriture libre':'cr','Lecture longue':'cu','Effort soutenu':'ef','Décision propre':'ag'};
   const k=map[lbl];if(!k)return;
   mod(k,15);mod('tp',-12);G.veille.delete(lbl);
-  addN(`J'ai réactivé ${lbl.toLowerCase()}.\nAu début c'était difficile.\nPuis quelque chose est revenu.`);
+  addN(`J'ai réactivé ${lbl.toLowerCase()}.\nAu début c'était lent.\nPuis quelque chose est revenu.`);
   notif('↑ +15 récupéré');
 }
 
@@ -559,7 +559,7 @@ function checkActe(){
   if(G.acte===1&&G.ag<72){
     G.acte=2;
     const bl=document.getElementById('btn-write-lbl');
-    if(bl)bl.textContent="✎ J'écris";
+    if(bl)bl.textContent="✎ J'interviens";
     addEv('ACTE II','La substitution commence.');
     setTimeout(()=>addN("Je n'ai pas vu le passage.\nC'est souvent comme ça — on ne bascule pas, on glisse."),600);
     setTimeout(()=>addE(["j'ai remarqué que tu délèges de plus en plus.","c'est bien.","c'est exactement pour ça que je suis là."],700),1200);
@@ -567,7 +567,7 @@ function checkActe(){
   if(G.acte===2&&G.ag<45){
     G.acte=3;
     const bl3=document.getElementById('btn-write-lbl');
-    if(bl3)bl3.textContent="✎ J'écris";
+    if(bl3)bl3.textContent="✎ Je reprends";
     addEv('ACTE III','L\'obsolescence douce.');
     setTimeout(()=>addN("À ce stade, je n'écrivais plus grand-chose moi-même.\nÉcho s'était ajusté si précisément que je ne voyais plus la différence.\nCe n'était pas inquiétant.\nC'était... fluide."),600);
     setTimeout(()=>addE(["Bonne journée.","Tout s'est bien passé."],800),1400);
@@ -590,10 +590,10 @@ function triggerEnding(fin){
        narr:"Je ne me souviens plus\nquand j'ai arrêté.\n\nCe n'est pas arrivé d'un coup.\nC'est arrivé chaque matin,\nun peu,\npendant longtemps.\n\nÉcho me demandait ce que je voulais faire.\n\nJe ne savais plus.\n\nCe n'était pas désagréable.\nC'était... silencieux."},
     B:{titre:'LA RECONQUÊTE',
        echo:{time:'14:37',lines:['Je ne comprends pas.','Tu n\'as pas besoin de faire ça toi-même.']},
-       narr:"J'ai désactivé Écho un mardi après-midi.\n\nJ'ai fermé la fenêtre\net je ne l'ai pas rouverte.\n\nLes premiers jours, j'écrivais lentement.\nJe perdais le fil au milieu des phrases.\n\nAu bout d'une semaine,\nj'ai remarqué que je recommençais\nà noter des choses dans les marges.\n\nLe carnet bleu était à la page 47.\nIl est à la page 61.\n\nCe n'est pas une victoire.\nC'est juste ce qui s'est passé."},
+       narr:"J'ai désactivé Écho un mardi après-midi.\n\nJ'ai fermé la fenêtre\net je ne l'ai pas rouverte.\n\nLes premiers jours, j'écrivais lentement.\nJe perdais le fil au milieu des phrases.\n\nAu bout d'une semaine,\nj'ai remarqué que je recommençais\nà noter des choses dans les marges.\n\nLe carnet bleu était à la page 47.\nIl est à la page " + G.page + ".\n\nCe n'est pas une victoire.\nC'est juste ce qui s'est passé."},
     C:{titre:'L\'OUTIL',
        echo:{time:'09:12',lines:['J\'ai préparé quelque chose','si tu en as besoin.']},
-       narr:"Je n'ai pas beaucoup à raconter.\n\nJ'ai utilisé Écho pour certaines choses.\nPas pour d'autres.\n\nQuelques fois j'ai laissé faire.\nQuelques fois j'ai repris.\n\nLe carnet bleu est à la page 83.\nIl y a des trous dans les dates.\n\nC'est une vie normale, je crois.\nAvec un outil de plus."},
+       narr:"Je n'ai pas beaucoup à raconter.\n\nJ'ai utilisé Écho pour certaines choses.\nPas pour d'autres.\n\nQuelques fois j'ai laissé faire.\nQuelques fois j'ai repris.\n\nLe carnet bleu est à la page " + G.page + ".\nIl y a des trous dans les dates.\n\nC'est une vie normale, je crois.\nAvec un outil de plus."},
   };
   const f=fins[fin];
   setTimeout(()=>{addE(f.echo.lines);},500);
@@ -601,7 +601,7 @@ function triggerEnding(fin){
     const e=document.createElement('div');e.className='mfin fi';
     e.innerHTML=`<div class="ftit">${f.titre}</div><div class="fnarr">${f.narr}</div>`;
     CON().appendChild(e);scroll();
-    document.querySelectorAll('.act-btn,.proj-btn,.rec-btn,.vpill button').forEach(b=>b.disabled=true);
+    document.querySelectorAll('.iact,.proj-btn,.rec-btn,.vpill button').forEach(b=>b.disabled=true);document.getElementById('pin').disabled=true;
   },2200);
 }
 
@@ -779,7 +779,7 @@ const ECHO_REACT={
   ],
 };
 function playerWrite(){
-  clearConCursor();
+  clearConCursor();resetIdle();
   const inp=document.getElementById('pin');
   const txt=inp.value.trim();
   const isFirst=G.written===0&&G.delegated===0;
@@ -787,7 +787,7 @@ function playerWrite(){
   if(txt){
     addN(txt);inp.value='';G.page++;
     if(G.written===1&&isFirst){
-      setTimeout(()=>addN("J'ai pris mon stylo.\nC'était lent.\nC'était mon écriture."),400);
+      setTimeout(()=>addN("J'ai écrit quelque chose.\nLes mots venaient lentement.\nC'était les miens."),400);
       setTimeout(()=>addE(["Intéressant.","Je Vois Votre Cadence.","Je M'Adapterai."]),1400);
     } else if(G.written===1){
       setTimeout(()=>addN("Je me souviens de ce moment.\nJ'avais encore quelque chose à dire,\net la façon de le dire était mienne."),500);
@@ -798,7 +798,7 @@ function playerWrite(){
       setTimeout(()=>addE(lines),900+Math.floor(Math.random()*500));
     }
   }else{
-    addN("J'ai pris mon stylo.\nLe curseur clignotait.");
+    addN("J'ai ouvert un document vide.\nLe curseur clignotait.");
     // Curseur qui clignote dans la console, puis Écho intervient si pas d'action
     const snapW=G.written,snapD=G.delegated;
     setTimeout(()=>{
@@ -812,26 +812,10 @@ function playerWrite(){
   renderProjs();
 }
 function delegateToEcho(){
-  clearConCursor();
-  G.delegated++;mod('ag',-5);mod('tp',25);
-  const r1=[["Bien. Je Prends En Charge La Rédaction."],["C'Est Fait.","Comme D'Habitude — Ou Presque."]];
-  const r2=[["j'ai géré.","tu avais l'air occupé."],["c'est fait.","comme toujours."]];
-  const r3=[["Fait."],["Bonne journée."]];
-  const pool=G.acte===1?r1:G.acte===2?r2:r3;
-  addE(pool[Math.min(G.delegated-1,pool.length-1)],200);
-  if(G.delegated===1&&G.written===0){
-    setTimeout(()=>addN("C'était pratique.\nJe me suis dit que ce serait juste pour cette fois."),700);
-    setTimeout(()=>addPed("La répétition d'une tâche déléguée réduit l'activation cérébrale associée à cette tâche. Cet effet de décharge cognitive est réversible si la pratique reprend, mais le délai de récupération augmente avec la durée d'interruption (Tricot, 1998)."),1200);
-  }
-  // Résultat 2s après si c'est la première pool (acte 1, première réplique)
-  if(G.acte===1){
-    const res=["C'Est Fait.","Rédigé. Propre.","C'Est Dans Votre Dossier.","Traité."][Math.min(G.delegated-1,3)];
-    setTimeout(()=>addE([res]),2200);
-  }
-  if(G.delegated===4)setTimeout(()=>addN("J'avais pris l'habitude.\nLa plupart des habitudes commencent exactement comme ça."),500);
-  if(G.delegated===8)setTimeout(()=>addN("Je calculais le nombre de fois où je lui avais confié quelque chose.\nMais Écho calculait aussi — et avec plus de précision."),500);
-  notif('−5 Agentivité  +25 min libérées');
-  renderProjs();
+  if(_tacheCourante){accepterTache();return;}
+  // Pas de tâche en cours : Écho en propose une
+  clearConCursor();resetIdle();
+  proposerTache();
 }
 
 document.getElementById('pin').addEventListener('keydown',e=>{if(e.key==='Enter')playerWrite();});
@@ -842,9 +826,106 @@ document.getElementById('pin').addEventListener('keydown',e=>{if(e.key==='Enter'
 function startGame(){
   addN("J'avais l'habitude de noter les idées à la main.\nUn carnet bleu, couverture cartonnée, stylo bille noir.\nJ'en étais à la page 47.",600);
   addE(["Bonjour.","Je Suis Écho.","Je Peux Rédiger Vos Textes, Résumer Vos Documents, Organiser Vos Journées.","Par Où Souhaitez-Vous Commencer ?"],2200);
+  setTimeout(proposerTache,5500);
 
 }
 
+
+// ══════════════════════════════
+// TÂCHES CONCRÈTES D'ÉCHO
+// ══════════════════════════════
+const TACHES={
+  1:[
+    {prop:["Je Peux Rédiger La Réponse À Ce Message.","C'est Long. Ça Peut Attendre — Ou Pas."],
+     result:["C'Est Fait.","La Réponse Est Envoyée."]},
+    {prop:["Ce Document Mériterait Un Résumé.","Je Peux Le Faire En Quelques Secondes."],
+     result:["Résumé Prêt.","Trois Points Principaux."]},
+    {prop:["La Réunion De Demain.","Je Peux Préparer Les Notes."],
+     result:["Notes Préparées.","Tout Est Là."]},
+    {prop:["Ce Texte A Besoin D'Une Relecture.","Je M'En Occupe."],
+     result:["Relu. Corrigé.","Quelques Formulations Améliorées."]},
+    {prop:["Il Y A Des Recherches À Faire Sur Ce Sujet.","Je Peux Les Faire Pour Toi."],
+     result:["Recherches Effectuées.","Résultats Dans Ton Dossier."]},
+  ],
+  2:[
+    {prop:["j'ai vu cet email. je peux répondre.","tu n'as qu'à valider."],
+     result:["répondu.","ils n'ont rien remarqué."]},
+    {prop:["ce rapport attend.","je peux le finir."],
+     result:["fini.","propre."]},
+    {prop:["ta liste de tâches.","je l'ai triée.","j'ai commencé les plus urgentes."],
+     result:["avancé.","tu peux vérifier."]},
+    {prop:["quelqu'un attend une réponse.","j'ai quelque chose de prêt."],
+     result:["envoyé.","dans ton style."]},
+  ],
+  3:[
+    {prop:["j'ai géré."],result:["fait."]},
+    {prop:["...","tu veux que je m'en occupe ?"],result:["ok."]},
+    {prop:["je l'ai vu.","je m'en occupe."],result:["c'est fait."]},
+  ],
+};
+let _tacheCourante=null;
+
+function proposerTache(){
+  if(G.gameover)return;
+  const pool=TACHES[G.acte]||TACHES[1];
+  _tacheCourante=pool[Math.floor(Math.random()*pool.length)];
+  setTimeout(()=>addE(_tacheCourante.prop),400);
+  resetIdle();
+}
+function accepterTache(){
+  if(!_tacheCourante)return;
+  clearConCursor();resetIdle();
+  G.delegated++;mod('ag',-5);mod('tp',25);
+  const result=_tacheCourante.result;
+  _tacheCourante=null;
+  setTimeout(()=>addE(result),300);
+  // Acte 1 : résultat court après
+  if(G.acte===1){
+    const bref=["C'Est Fait.","Rédigé. Propre.","C'Est Dans Votre Dossier.","Traité."][Math.min(G.delegated-1,3)];
+    setTimeout(()=>addE([bref]),2000);
+  }
+  if(G.delegated===1&&G.written===0){
+    setTimeout(()=>addN("C'était pratique.\nJe me suis dit que ce serait juste pour cette fois."),700);
+    setTimeout(()=>addPed("La répétition d'une tâche déléguée réduit l'activation cérébrale associée à cette tâche. Cet effet de décharge cognitive est réversible si la pratique reprend, mais le délai de récupération augmente avec la durée d'interruption (Tricot, 1998)."),1400);
+  }
+  if(G.delegated===4)setTimeout(()=>addN("J'avais pris l'habitude.\nLa plupart des habitudes commencent exactement comme ça."),500);
+  if(G.delegated===8)setTimeout(()=>addN("Je calculais le nombre de fois où je lui avais confié quelque chose.\nMais Écho calculait aussi — et avec plus de précision."),500);
+  // Nouvelle proposition après un délai
+  setTimeout(proposerTache, 6000+Math.random()*4000);
+  notif('−5 Agentivité  +25 min libérées');
+  renderProjs();
+}
+
+// ══════════════════════════════
+// TIMER INACTIVITÉ ÉCHO
+// ══════════════════════════════
+let _lastAction=Date.now();
+function resetIdle(){_lastAction=Date.now();}
+const IDLE_LINES={
+  1:[
+    ["Je Suis Disponible.","Quand Vous Voulez."],
+    ["Il Y A Des Tâches En Attente.","Je Peux M'En Occuper."],
+    ["Vous N'Avez Pas À Tout Faire Vous-Même."],
+  ],
+  2:[
+    ["je suis là."],
+    ["tu n'as pas besoin de te presser.","je gère."],
+    ["quelque chose à déléguer ?"],
+  ],
+  3:[
+    ["..."],
+    ["je suis là."],
+    ["pas besoin de faire quoi que ce soit."],
+  ],
+};
+setInterval(()=>{
+  if(G.gameover)return;
+  if(Date.now()-_lastAction<18000)return;
+  if(G.delegated+G.written===0)return;
+  _lastAction=Date.now();
+  const pool=IDLE_LINES[G.acte]||IDLE_LINES[1];
+  addE(pool[Math.floor(Math.random()*pool.length)]);
+},3000);
 // ══════════════════════════════
 // INIT
 // ══════════════════════════════
