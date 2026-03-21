@@ -1,6 +1,6 @@
 # Écho — Règles de conception
-Document de référence.
-Fichier de jeu : `index.html` — https://uneIAparjour.github.io/echo/index.html
+Document de référence. Version de travail.
+Fichier de jeu : `index.html` — https://uneiaparjour.github.io/echo/
 
 ---
 
@@ -23,34 +23,20 @@ Le jeu est une exploration de l'**agentivité humaine face à l'automatisation c
 ### 1.4 Nom
 Le jeu s'appelle **Écho**. L'IA s'appelle aussi **Écho**. Pas une marque — un nom commun devenu nom propre, comme on dit "le frigo". Écho écoute, répond, se souvient. Écho est partout.
 
----
-
-## 2. Droits et originalité
-
-### 2.1 Ce qui est librement utilisable
-- Le concept de paperclip maximizer (Nick Bostrom, domaine des idées).
-- Les mécaniques de jeu incremental (genre non protégeable).
-- La structure en actes (narration classique).
-- Les types de ressources génériques.
-
-### 2.2 Ce qui est interdit
-- Copier le code source de Universal Paperclips.
-- Reproduire les textes, noms de projets, noms propres du jeu original.
-- Reproduire la liste exacte des projets de Universal Paperclips.
-
-### 2.3 Règle de sécurité juridique
-Tout élément du jeu doit pouvoir être justifié sans référencer Frank Lantz. L'inspiration vient de Bostrom et du genre incremental en général.
+*(Ancien titre de travail : "Le Prompteur" — abandonné.)*
 
 ---
 
-## 3. Mécanique de jeu
+---
+
+## 2. Mécanique de jeu
 
 ### 3.1 Principe fondamental inversé
 Contrairement aux jeux incrementaux classiques où les ressources montent, dans Écho **les ressources humaines descendent** quand le joueur délègue.
 
 ```
 Jeu incremental classique : déléguer → tout monte
-Écho : déléguer → temps gagné augente, capacités humaines descendent
+Écho : déléguer → efficacité monte, capacités humaines descendent
 ```
 
 ### 3.2 Les ressources
@@ -118,7 +104,7 @@ La transition entre actes n'est pas annoncée à l'avance.
 
 ---
 
-## 4. Les projets Écho (15)
+## 3. Les projets Écho (15)
 
 Chaque projet est une **fonction permanente** que le joueur active. Effet immédiat sur les jauges + taux de dégradation passif installé définitivement. Débloqués progressivement selon conditions.
 
@@ -153,7 +139,7 @@ Une fois activé, chaque projet rejoint la liste "Confié à Écho" dans la colo
 
 ---
 
-## 5. Storytelling
+## 4. Storytelling
 
 ### 5.1 Les trois voix — différenciation visuelle
 
@@ -190,7 +176,7 @@ Quand le joueur tape un texte, Écho répond 65% du temps avec un décalage de 9
 
 ---
 
-## 6. Typographie d'Écho
+## 5. Typographie d'Écho
 
 ### 6.1 Acte 1 — Machine formelle
 - Majuscules sur chaque mot (appliquées via `split(' ').map()`).
@@ -217,7 +203,7 @@ Curseur `_` clignotant en bleu à la fin de chaque message. Disparaît dès que 
 
 ---
 
-## 7. Règles d'écriture du narrateur
+## 6. Règles d'écriture du narrateur
 
 - **Éviter les adverbes.** Chaque adverbe supprimé renforce la phrase.
 - **Phrases courtes.** Le blanc entre les phrases fait partie du rythme.
@@ -229,7 +215,7 @@ Curseur `_` clignotant en bleu à la fin de chaque message. Disparaît dès que 
 
 ---
 
-## 8. Règles pédagogiques
+## 7. Règles pédagogiques
 
 ### 8.1 Principe fondamental
 Le joueur ne reçoit pas un cours sur l'agentivité. **Il la perd en jouant.** C'est ça l'enseignement — pas les notes.
@@ -248,7 +234,7 @@ Le joueur ne reçoit pas un cours sur l'agentivité. **Il la perd en jouant.** C
 
 ---
 
-## 9. Les seuils narratifs (textes validés)
+## 8. Les seuils narratifs (textes validés)
 
 Déclenchés automatiquement quand une jauge franchit un seuil.
 
@@ -293,7 +279,7 @@ de ce que j'en ai fait."
 
 ---
 
-## 10. Les trois fins (textes validés)
+## 9. Les trois fins (textes validés)
 
 ### Fin A — OPTIMISATION COMPLÈTE
 *Toutes les jauges proches de zéro.*
@@ -376,7 +362,7 @@ Avec un outil de plus.
 
 ---
 
-## 11. Interface
+## 10. Interface
 
 ### 11.1 Palette Encre
 | Variable | Valeur | Usage |
@@ -430,15 +416,16 @@ Sur survol de chaque label du bandeau (Agentivité, Créativité, Curiosité, Ef
 
 ---
 
-## 12. Architecture technique
+## 11. Architecture technique
 
 Fichier HTML unique, autonome. Pas de dépendances externes sauf Google Fonts.
 
 ### Patterns clés
-- **`CB{}`** : registre de callbacks — évite `fn.toString()` dans les attributs HTML.
-- **`_eq[]` queue** : messages Écho séquentiels — jamais deux blocs simultanés.
+- **`CB{}`** : registre de callbacks — évite `fn.toString()` dans les attributs HTML. `callCB` supprime après usage (one-shot), `callCBP` est persistant (boutons répétables).
+- **`_eq[]` queue** : messages Écho séquentiels — jamais deux blocs simultanés. `queueE()` pour ajouter, `_nextE()` pour dépiler.
 - **`G.clock`** : horloge narrative (480 = 08:00), avance à chaque action.
 - **`G.page`** : compteur de pages du carnet, avance quand le joueur écrit avec du contenu.
+- **`_veilleSnap`** : snapshot de l'état veille — le DOM n'est reconstruit que si l'état change, évitant les race conditions sur les clics Réactiver.
 - **`loopId`** : `clearInterval` au gameover.
 - **`escHtml()`** : protection XSS sur le texte joueur.
 
@@ -448,24 +435,9 @@ Fichier HTML unique, autonome. Pas de dépendances externes sauf Google Fonts.
 
 ---
 
-## 13. Ce qui reste à faire
-
-**Desktop**
-- [ ] Condition fin B plus atteignable (actuellement trop stricte)
-- [ ] Tester le rythme global : temps de jeu réel vs estimé (40–60 min)
-- [ ] Tester les 3 fins en conditions réelles
-
-**Mobile**
-- [ ] Version responsive — passe prioritaire après stabilisation desktop
-- [ ] Layout mobile : 3 vues en onglets (Jauges / Console / Actions)
-- [ ] Bandeau mobile : réduire à 3 valeurs clés ou collapsible
-
-**Décisions ouvertes**
-- [ ] Fin A : ouverte ou fermée ? (le joueur peut-il rejouer depuis la fin ?)
-
 ---
 
-## 14. Sources pédagogiques — tableau complet
+## 12. Sources pédagogiques — tableau complet
 
 | Projet | Source | URL |
 |---|---|---|
@@ -484,3 +456,21 @@ Fichier HTML unique, autonome. Pas de dépendances externes sauf Google Fonts.
 | **Opinion assistée** | Mercier, H. (2009). *La théorie argumentative du raisonnement*. Thèse EPHE. | https://theses.hal.science/tel-00396731 |
 | **Silence comblé** | Desmidt, T., & Belzung, C. (2018). *Revue de Neuropsychologie*, 10(3), 232–240. | https://cairn.info/revue-de-neuropsychologie-2018-3-page-232.htm |
 | **Décision clarifiée** | Bioulac, B. et al. (2019). Le cortex cingulaire antérieur. *Académie nationale de médecine*. | https://www.academie-medecine.fr/le-cortex-cingulaire-anterieur-dans-la-detection-des-erreurs-et-la-gestion-des-conflits-analyse-de-lactivite-neuronale-chez-le-singe/ |
+
+---
+
+## 13. Droits et responsabilité
+
+### 2.1 Ce qui est librement utilisable
+- Le concept de paperclip maximizer (Nick Bostrom, domaine des idées).
+- Les mécaniques de jeu incremental (genre non protégeable).
+- La structure en actes (narration classique).
+- Les types de ressources génériques.
+
+### 2.2 Ce qui est interdit
+- Copier le code source de Universal Paperclips.
+- Reproduire les textes, noms de projets, noms propres du jeu original.
+- Reproduire la liste exacte des projets de Universal Paperclips.
+
+### 2.3 Règle de sécurité juridique
+Tout élément du jeu doit pouvoir être justifié sans référencer Frank Lantz. L'inspiration vient de Bostrom et du genre incremental en général.
