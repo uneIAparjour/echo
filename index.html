@@ -678,6 +678,21 @@ function checkSeuils(){
     const id='tp_echo_'+seuil;
     if(!G.fired[id]&&G.tp>=+seuil){G.fired[id]=true;setTimeout(()=>addE(lines),500);}
   });
+  // Zone finale acte 3 (ag<20) : messages de silence progressif
+  const silencePaliers=[
+    {val:18,a:["je remarque.","tu n'écris plus rien toi-même."]},
+    {val:12,a:["...","tout est en ordre."]},
+    {val:6,a:["je suis là."]},
+    {val:2,a:["..."]},
+  ];
+  silencePaliers.forEach(s=>{
+    const id='silence_'+s.val;
+    if(!G.fired[id]&&G.acte===3&&G.ag<=s.val){
+      G.fired[id]=true;
+      setTimeout(()=>addE(s.a),300);
+    }
+  });
+
   SEUILS.forEach(s=>{
     const id=`${s.key}_${s.val}`;
     if(G.fired[id])return;
@@ -700,6 +715,16 @@ function checkActe(){
     addEv('ACTE II','La substitution commence.');
     setTimeout(()=>addN("Je n'ai pas vu le passage.\nC'est souvent comme ça — on ne bascule pas, on glisse."),600);
     setTimeout(()=>addE(["j'ai remarqué que tu délègues de plus en plus.","c'est bien.","c'est exactement pour ça que je suis là."],700),1200);
+    // Pulse "Sans Écho" pour signaler qu'il est encore temps
+    setTimeout(()=>{
+      const sec=document.getElementById('sec-reconq');
+      if(sec){
+        sec.style.display='';
+        sec.classList.add('sec-pulse');
+        setTimeout(()=>sec.classList.remove('sec-pulse'),3000);
+      }
+      addN("Il est encore temps.\nLa section ci-contre existe pour ça.\nPas obligé de s'en servir.",800);
+    },3000);
   }
   if(G.acte===2&&G.ag<45){
     G.acte=3;
@@ -719,8 +744,8 @@ function checkActe(){
 // ══════════════════════════════
 function checkEnding(){
   if(G.gameover)return;
-  if(G.deactivated&&G.ag>45&&G.cr>45&&G.cu>45&&G.written>=5){G.gameover=true;triggerEnding('B');return;}
-  if(G.acte>=2&&G.ag>=52&&G.cr>=52&&G.cu>=52&&G.ef>=45&&G.delegated+G.written>15&&G.written>=5){G.gameover=true;triggerEnding('C');return;}
+  if(G.deactivated&&G.ag>45&&G.cr>45&&G.cu>45&&G.written>=3){G.gameover=true;triggerEnding('B');return;}
+  if(!G.deactivated&&G.acte>=2&&G.ag>=50&&G.cr>=50&&G.cu>=50&&G.ef>=40&&G.delegated+G.written>12&&G.written>=4){G.gameover=true;triggerEnding('C');return;}
   if(G.acte===3&&(G.ag+G.cr+G.cu)<25){G.gameover=true;triggerEnding('A');return;}
 }
 function triggerEnding(fin){
@@ -1026,7 +1051,6 @@ function playerWrite(){
   const txt=inp.value.trim();
   const isFirst=G.written===0&&G.delegated===0;
   G.written++;mod('cr',10);mod('ag',5);advanceClock(10);
-  if(G.delegated>=3&&!G.deactivated)G.deactivated=true;
   if(txt){
     addN(txt);inp.value='';G.page++;
     const tpg=document.querySelector('.trace-page');
@@ -1043,8 +1067,14 @@ function playerWrite(){
       setTimeout(()=>addE(lines),900+Math.floor(Math.random()*500));
     }
   }else{
-    addN("J'ai ouvert un document vide.\nLe curseur clignotait.");
-    // Curseur qui clignote dans la console, puis Écho intervient si pas d'action
+    const videTextes=[
+      "J'ai ouvert un document vide.\nLe curseur clignotait.",
+      "J'ai commencé une phrase.\nJe l'ai effacée.",
+      "Rien ne venait.\nJ'ai attendu.",
+      "Le curseur clignotait.\nJe regardais.",
+      "J'avais quelque chose à dire.\nJe ne savais plus quoi.",
+    ];
+    addN(videTextes[Math.floor(Math.random()*videTextes.length)]);
     const snapW=G.written,snapD=G.delegated;
     setTimeout(()=>{
       if(G.written===snapW&&G.delegated===snapD){
@@ -1085,8 +1115,8 @@ const TACHES={
      result:["Réponse Rédigée.","Tu Peux La Relire Avant Envoi — Ou Non."]},
     {prop:["Ce Document Est Long.","Je Peux En Faire Un Résumé En Trois Points."],
      result:["Résumé Prêt.","Les Trois Points Essentiels Sont Là."]},
-    {prop:["Tu As Une Réunion Demain Matin.","Je Peux Préparer Les Notes Et L'Ordre Du Jour."],
-     result:["Notes Préparées.","L'Ordre Du Jour Est Dans Ton Dossier."]},
+    {prop:["Tu As Une Réunion Ce Matin.","Je Peux Préparer Les Notes Et L'Ordre Du Jour."],
+     result:["Notes Préparées.","L'Ordre Du Jour Est Prêt."]},
     {prop:["Ce Texte Que Tu Viens D'Écrire A Quelques Approximations.","Je Peux Le Corriger."],
      result:["Relu Et Corrigé.","Quelques Formulations Ont Changé."]},
     {prop:["Tu As Besoin D'Informations Sur Ce Sujet.","Je Peux Faire Les Recherches À Ta Place."],
