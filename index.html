@@ -163,6 +163,7 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 #right{border-left:1px solid var(--border2);overflow-y:auto;background:#0f0d0a;display:flex;flex-direction:column;height:100%}
 .rsec{padding:12px 14px 10px;border-bottom:1px solid rgba(232,221,208,0.12);flex-shrink:0}
 .rsec.rsec-main{flex:1;overflow:hidden;display:flex;flex-direction:column;min-height:80px}
+.rsec.rsec-main.rsec-empty{justify-content:center}
 .rsec-title{font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(232,221,208,0.58);margin-bottom:10px;display:flex;align-items:center;gap:5px}
 .rsec-title::after{content:'';flex:1;height:1px;background:var(--border)}
 
@@ -286,11 +287,11 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 
   <div class="rsec rsec-main">
     <div class="rsec-title">Écho propose — permanent</div>
-    <div style="font-size:10px;color:rgba(232,221,208,0.55);margin-bottom:9px;line-height:1.6">Activer installe la fonction définitivement. La dégradation continue en arrière-plan.</div>
-    <div id="projlist" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;overflow-y:auto;max-height:100%;padding-right:2px"><div style="grid-column:1/-1;font-size:10px;color:var(--text3);font-style:italic">Continue à jouer...</div></div>
+    <div id="proj-desc-txt" style="font-size:10px;color:rgba(232,221,208,0.55);margin-bottom:9px;line-height:1.6">Activer installe la fonction définitivement. La dégradation continue en arrière-plan.</div>
+    <div id="projlist" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;overflow-y:auto;max-height:100%;padding-right:2px"><div id="projlist-empty" style="grid-column:1/-1;font-size:11px;color:var(--text2);line-height:1.7;padding:6px 0">Délègue une tâche à Écho.<br>Les fonctions permanentes apparaîtront ici.</div></div>
   </div>
 
-  <div class="rsec" id="sec-veille">
+  <div class="rsec" id="sec-veille" style="display:none">
     <div class="rsec-title">En veille</div>
     <div id="vzone"><div style="font-size:10px;color:var(--text3);font-style:italic">Aucune compétence en veille.</div></div>
   </div>
@@ -306,7 +307,7 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
     <div id="delegue-list" style="display:grid;grid-template-columns:1fr 1fr;gap:4px 8px"></div>
   </div>
 
-  <div class="rsec" id="sec-stats" style="border-bottom:none">
+  <div class="rsec" id="sec-stats" style="border-bottom:none;display:none">
     <div class="rsec-title">Statistiques</div>
     <div class="stats">
       Confié à Écho :&nbsp;<span id="sdel" style="color:var(--red)">0</span> fois<br>
@@ -813,9 +814,9 @@ function renderProjs(){
   });
   const sec=z.closest('.rsec');
   if(any){
-    if(sec){sec.classList.add('proj-new');sec.classList.add('rsec-main');}
+    if(sec){sec.classList.add('proj-new');sec.classList.add('rsec-main');sec.classList.remove('rsec-empty');}
   } else {
-    z.innerHTML='<div style="grid-column:1/-1;font-size:10px;color:var(--text3);font-style:italic">Continue à jouer...</div>';
+    z.innerHTML='<div id="projlist-empty" style="grid-column:1/-1;font-size:11px;color:var(--text2);line-height:1.7;padding:6px 0">Délègue une tâche à Écho.<br>Les fonctions permanentes apparaîtront ici.</div>';
     if(sec){
       sec.classList.remove('proj-new');
       sec.classList.remove('rsec-main');
@@ -842,6 +843,10 @@ function activateProj(p){
   }
   const sr=document.getElementById('sec-reconq');
   if(sr)sr.style.display='';
+  const sv=document.getElementById('sec-veille');
+  if(sv)sv.style.display='';
+  const ss=document.getElementById('sec-stats');
+  if(ss)ss.style.display='';
   Object.entries(p.costs).forEach(([k,v])=>mod(k,v));
   Object.entries(p.gain).forEach(([k,v])=>mod(k,v));
   if(p.rates)Object.entries(p.rates).forEach(([k,v])=>{G.rates[k]=(G.rates[k]||0)+v;});
