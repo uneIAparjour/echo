@@ -80,7 +80,7 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 /* ══════════════════════
    LAYOUT 2 COLONNES
 ══════════════════════ */
-#main{display:grid;grid-template-columns:1fr 270px;flex:1;overflow:hidden}
+#main{display:grid;grid-template-columns:1fr 360px;flex:1;overflow:hidden}
 
 /* En veille */
 .vpill{display:flex;align-items:center;justify-content:space-between;padding:4px 7px;margin-bottom:3px;background:rgba(208,112,96,0.05);border:1px solid rgba(208,112,96,0.15);border-radius:3px}
@@ -89,7 +89,7 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 .vpill button:hover{background:rgba(208,112,96,0.2)}
 
 /* Stats */
-.stats{font-size:10px;color:rgba(232,221,208,0.55);line-height:1.8}
+.stats{font-size:11px;color:rgba(232,221,208,0.55);line-height:1.7}
 .stats span{font-variant-numeric:tabular-nums;font-weight:500}
 
 /* ══ CENTRE ══ */
@@ -127,11 +127,17 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 .ftit{font-size:12px;letter-spacing:0.22em;text-transform:uppercase;color:var(--text3);margin-bottom:14px;text-align:center}
 .fnarr{font-family:'Lora',serif;font-size:13px;font-style:italic;color:var(--narr);line-height:1.9;white-space:pre-line}
 /* Barre saisie */
-#irow{border-top:2px solid var(--border2);padding:8px 14px;display:flex;align-items:center;gap:7px;flex-shrink:0;background:var(--bg2)}
+#irow-title{padding:5px 14px 0;font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:rgba(232,221,208,0.35);background:var(--bg2);transition:color 0.3s}
+@keyframes irowp{0%,100%{color:rgba(232,221,208,0.35)}50%{color:rgba(232,221,208,0.75)}}
+.irow-pulse{animation:irowp 0.8s ease 2}
+@keyframes echop{0%,100%{color:rgba(232,221,208,0.58)}50%{color:var(--echo)}}
+.echo-pulse{animation:echop 0.9s ease 3}
+#irow{border-top:none;padding:8px 14px;display:flex;align-items:center;gap:6px;flex-shrink:0;background:var(--bg2)}
 #irow .ipfx{color:var(--text3);font-size:13px;flex-shrink:0}
-#pin{flex:1;background:transparent;border:none;outline:none;color:var(--text);font-family:inherit;font-size:12px;min-width:0}
+#pin{flex:1;background:transparent;border:none;border-bottom:1px solid rgba(232,221,208,0.18);outline:none;color:var(--text);font-family:inherit;font-size:12px;min-width:0;width:0;padding-bottom:2px;transition:border-color 0.2s}
+#pin:focus{border-bottom-color:rgba(232,221,208,0.5)}
 #pin::placeholder{color:var(--text3)}
-.iact{border:none;outline:none;font-family:'JetBrains Mono',monospace;font-size:10px;padding:7px 13px;cursor:pointer;border-radius:3px;transition:all 0.15s;letter-spacing:0.04em;flex-shrink:0;line-height:1.4;text-align:center}
+.iact{border:none;outline:none;font-family:'JetBrains Mono',monospace;font-size:10px;padding:7px 11px;cursor:pointer;border-radius:3px;transition:all 0.15s;letter-spacing:0.02em;flex-shrink:0;line-height:1.4;text-align:center;white-space:nowrap}
 .iact:focus-visible{outline:2px solid rgba(232,221,208,0.25);outline-offset:2px}
 .iact:active{transform:scale(0.97)}
 .iact-w{background:var(--green2);border:1px solid rgba(138,184,122,0.2);color:var(--green)}
@@ -142,25 +148,26 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 .iact-sub{display:block;font-size:10px;opacity:0.6}
 
 /* ══ DROITE ══ */
-#right{border-left:1px solid var(--border2);overflow-y:auto;background:#0f0d0a}
-.rsec{padding:12px 12px 10px;border-bottom:1px solid rgba(232,221,208,0.12)}
-.rsec-title{font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:rgba(232,221,208,0.58);margin-bottom:10px;display:flex;align-items:center;gap:5px}
+#right{border-left:1px solid var(--border2);overflow:hidden;background:#0f0d0a;display:flex;flex-direction:column}
+.rsec{padding:12px 14px 10px;border-bottom:1px solid rgba(232,221,208,0.12);flex-shrink:0}
+.rsec.rsec-main{flex:1;overflow:hidden;display:flex;flex-direction:column}
+.rsec-title{font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(232,221,208,0.58);margin-bottom:10px;display:flex;align-items:center;gap:5px}
 .rsec-title::after{content:'';flex:1;height:1px;background:var(--border)}
 
 
 
 /* ─ Projets Écho ─ */
-.proj-btn{width:100%;padding:9px 11px;background:rgba(232,221,208,0.03);border:1px solid rgba(232,221,208,0.12);border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:10px;cursor:pointer;text-align:left;transition:background 0.15s,border-color 0.15s;margin-bottom:5px;line-height:1.5}
+.proj-btn{width:100%;padding:10px 12px;background:rgba(232,221,208,0.03);border:1px solid rgba(232,221,208,0.12);border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:11px;cursor:pointer;text-align:left;transition:background 0.15s,border-color 0.15s;line-height:1.55}
 .proj-btn:hover{background:rgba(122,184,232,0.04);border-color:rgba(122,184,232,0.2)}
 .proj-btn:active{transform:scale(0.99)}
 @keyframes proj-pulse{0%{border-color:rgba(122,184,232,0.4)}50%{border-color:rgba(122,184,232,0.12)}100%{border-color:rgba(122,184,232,0.4)}}
 .proj-new{animation:proj-pulse 2s ease 3}
 .proj-new .rsec-title::before{content:'● ';color:var(--echo);font-size:8px}
 .proj-hd{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:4px}
-.proj-name{font-weight:500;color:#e8ddd0;font-size:10px}
+.proj-name{font-weight:500;color:#e8ddd0;font-size:11px}
 .proj-perm{font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(122,184,232,0.5);background:rgba(122,184,232,0.06);padding:1px 5px;border-radius:2px}
-.proj-desc{font-size:9px;color:rgba(232,221,208,0.55);margin-bottom:5px;line-height:1.4}
-.proj-costs{display:grid;grid-template-columns:1fr 1fr;gap:2px;font-size:10px;margin-top:3px}
+.proj-desc{font-size:10px;color:rgba(232,221,208,0.55);margin-bottom:6px;line-height:1.5}
+.proj-costs{display:grid;grid-template-columns:1fr 1fr;gap:2px;font-size:10px;margin-top:4px}
 .pc-now{color:var(--red)}.pc-rate{color:rgba(208,112,96,0.6);font-style:italic}.pc-gain{color:var(--green)}
 
 /* ─ Récupération ─ */
@@ -168,7 +175,7 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 .rec-btn:hover{background:rgba(138,184,122,0.07);border-color:rgba(138,184,122,0.22)}
 .rec-btn:active{transform:scale(0.99)}
 .rec-hd{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2px}
-.rec-name{font-weight:500;color:#a0c890;font-size:10px}
+.rec-name{font-weight:500;color:#a0c890;font-size:11px}
 .rec-cost{font-size:10px;color:var(--red)}
 .rec-fx{font-size:10px;color:rgba(232,221,208,0.55);line-height:1.4}
 
@@ -180,6 +187,10 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 #footer a:hover{color:var(--text2)}
 @keyframes fi{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
 .fi{animation:fi 0.3s ease forwards}
+
+.tt{cursor:help}
+#tooltip{position:fixed;display:none;width:220px;padding:10px 13px;background:#1e1a15;border:1px solid rgba(232,221,208,0.22);border-radius:4px;font-size:11px;line-height:1.65;color:#e8ddd0;font-family:'JetBrains Mono',monospace;font-weight:400;text-transform:none;letter-spacing:0;z-index:9999;pointer-events:none;white-space:normal;box-shadow:0 4px 16px rgba(0,0,0,0.5)}
+#tooltip strong{color:var(--narr);font-weight:500}
 ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:var(--border2)}*{scrollbar-width:thin;scrollbar-color:var(--border2) transparent}*{scrollbar-width:thin;scrollbar-color:var(--border2) transparent}
 </style>
 </head>
@@ -188,37 +199,37 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 <!-- ══ BANDEAU 5 COMPTEURS ══ -->
 <div id="top">
   <div class="cc" id="cc-ag">
-    <div class="clbl">Agentivité</div>
+    <div class="clbl tt" data-tip="&lt;strong&gt;Agentivité&lt;/strong&gt; — ta capacité à décider par toi-même.&lt;br&gt;&lt;span style='color:#8ab87a'&gt;Monte&lt;/span&gt; quand tu écris toi-même.&lt;br&gt;&lt;span style='color:#d07060'&gt;Descend&lt;/span&gt; à chaque délégation et si des fonctions Écho sont actives.">Agentivité</div>
     <div class="cnum" id="cv-ag" style="color:var(--ag)">100</div>
     <div class="cbar"><div class="cbfill" id="cb-ag" style="width:100%;background:var(--ag)"></div></div>
     <div class="crate ze" id="cr-ag">stable</div>
   </div>
   <div class="cc" id="cc-cr">
-    <div class="clbl">Créativité</div>
+    <div class="clbl tt" data-tip="&lt;strong&gt;Créativité&lt;/strong&gt; — ta capacité à produire quelque chose d'original.&lt;br&gt;&lt;span style='color:#8ab87a'&gt;Monte&lt;/span&gt; quand tu écris toi-même.&lt;br&gt;&lt;span style='color:#d07060'&gt;Descend&lt;/span&gt; quand Écho génère à ta place.">Créativité</div>
     <div class="cnum" id="cv-cr" style="color:var(--cr)">100</div>
     <div class="cbar"><div class="cbfill" id="cb-cr" style="width:100%;background:var(--cr)"></div></div>
     <div class="crate ze" id="cr-cr">stable</div>
   </div>
   <div class="cc" id="cc-cu">
-    <div class="clbl">Curiosité</div>
+    <div class="clbl tt" data-tip="&lt;strong&gt;Curiosité&lt;/strong&gt; — ta capacité à formuler des questions.&lt;br&gt;&lt;span style='color:#8ab87a'&gt;Monte&lt;/span&gt; en lisant toi-même.&lt;br&gt;&lt;span style='color:#d07060'&gt;Descend&lt;/span&gt; quand Écho cherche, résume ou filtre à ta place.">Curiosité</div>
     <div class="cnum" id="cv-cu" style="color:var(--cu)">100</div>
     <div class="cbar"><div class="cbfill" id="cb-cu" style="width:100%;background:var(--cu)"></div></div>
     <div class="crate ze" id="cr-cu">stable</div>
   </div>
   <div class="cc" id="cc-ef">
-    <div class="clbl">Effort</div>
+    <div class="clbl tt" data-tip="&lt;strong&gt;Effort&lt;/strong&gt; — ta capacité à soutenir une tâche difficile.&lt;br&gt;&lt;span style='color:#8ab87a'&gt;Monte&lt;/span&gt; avec la pratique et la récupération.&lt;br&gt;&lt;span style='color:#d07060'&gt;Descend&lt;/span&gt; à chaque raccourci délégué.">Effort</div>
     <div class="cnum" id="cv-ef" style="color:var(--ef)">100</div>
     <div class="cbar"><div class="cbfill" id="cb-ef" style="width:100%;background:var(--ef)"></div></div>
     <div class="crate ze" id="cr-ef">stable</div>
   </div>
   <div class="cc" id="cc-tp">
-    <div class="clbl">Temps libéré</div>
+    <div class="clbl tt" data-tip="&lt;strong&gt;Temps libéré&lt;/strong&gt; — les minutes gagnées grâce à Écho.&lt;br&gt;&lt;span style='color:#8ab87a'&gt;Monte&lt;/span&gt; à chaque délégation.&lt;br&gt;S'utilise pour reconquérir les compétences en veille.&lt;br&gt;&lt;em&gt;Pour faire quoi ?&lt;/em&gt;">Temps libéré</div>
     <div style="display:flex;align-items:baseline;gap:4px"><div class="cnum" id="cv-tp" style="color:var(--tp)">0</div><div style="font-size:11px;color:var(--text3)">min</div></div>
     <div class="cbar"><div class="cbfill" id="cb-tp" style="width:0%;background:var(--tp)"></div></div>
     <div class="crate ze" id="cr-tp">en attente</div>
   </div>
   <div class="cc ctrace" id="cc-trace">
-    <div class="clbl">Trace</div>
+    <div class="clbl tt" data-tip="&lt;strong&gt;Trace&lt;/strong&gt; — ce qui reste de toi au fil du jeu.&lt;br&gt;Suit ton agentivité : présence → délestage → distance → effacement → silence.&lt;br&gt;La page avance quand tu écris toi-même.">Trace</div>
     <div class="trace-stages" id="tstages">
       <div class="tstage tact">présence</div>
       <div class="tstage">délestage</div>
@@ -242,7 +253,8 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 <!-- ── CENTRE ── -->
 <div id="centre">
   <div id="con"></div>
-  <div id="irow">
+  <div id="irow-title">Tu proposes</div>
+<div id="irow">
     <span class="ipfx">›</span>
     <input type="text" id="pin" placeholder="J'ai quelque chose à dire..."/>
     <button class="iact iact-w" onclick="playerWrite()">
@@ -259,13 +271,13 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 <!-- ── DROITE ── -->
 <div id="right">
 
-  <div class="rsec">
+  <div class="rsec rsec-main">
     <div class="rsec-title">Écho propose — permanent</div>
     <div style="font-size:10px;color:rgba(232,221,208,0.55);margin-bottom:9px;line-height:1.6">Activer installe la fonction définitivement. La dégradation continue en arrière-plan.</div>
-    <div id="projlist"><div style="font-size:10px;color:var(--text3);font-style:italic">Continue à jouer...</div></div>
+    <div id="projlist" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;overflow:hidden"><div style="grid-column:1/-1;font-size:10px;color:var(--text3);font-style:italic">Continue à jouer...</div></div>
   </div>
 
-  <div class="rsec">
+  <div class="rsec" id="sec-veille">
     <div class="rsec-title">En veille</div>
     <div id="vzone"><div style="font-size:10px;color:var(--text3);font-style:italic">Aucune compétence en veille.</div></div>
   </div>
@@ -276,7 +288,12 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
     <div id="reclist"></div>
   </div>
 
-  <div class="rsec" style="border-bottom:none">
+  <div class="rsec" id="sec-delegue" style="display:none;border-bottom:1px solid rgba(232,221,208,0.12)">
+    <div class="rsec-title">Confié à Écho</div>
+    <div id="delegue-list" style="display:flex;flex-direction:column;gap:4px"></div>
+  </div>
+
+  <div class="rsec" id="sec-stats" style="border-bottom:none">
     <div class="rsec-title">Statistiques</div>
     <div class="stats">
       Délégation :&nbsp;<span id="sdel" style="color:var(--red)">0</span> fois<br>
@@ -288,6 +305,7 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 </div>
 </div>
 
+<div id="tooltip"></div>
 <div id="notif"></div>
 <footer id="footer">CC BY Bertrand Formet &nbsp;·&nbsp; <a href="https://uneIAparjour.fr" target="_blank">uneIAparjour.fr</a></footer>
 
@@ -308,7 +326,7 @@ const G={
   acte:1,delegated:0,written:0,
   veille:new Set(),done:new Set(),
   tick:0,fired:{},gameover:false,
-  deactivated:false,page:47
+  deactivated:false,page:47,clock:480
 };
 const prev={ag:100,cr:100,cu:100,ef:100,tp:0};
 
@@ -544,6 +562,13 @@ function reactiver(lbl){
 // SEUILS NARRATIFS
 // ══════════════════════════════
 function checkSeuils(){
+
+  // Temps libéré : Écho commente
+  const tpPaliers=G.acte===1?{30:["J'Ai Déjà Libéré Du Temps.","À Toi D'En Faire Quelque Chose."],60:["Une Heure Gagnée.","Qu'Est-Ce Que Tu En As Fait ?"],150:["Beaucoup De Temps Libéré.","Tu N'As Qu'À Dire."],300:["Cinq Heures.","Je Compte. Toi Aussi ?"]}:G.acte===2?{30:["trente minutes gagnées.","tu fais quelque chose de ce temps ?"],60:["une heure.","tu t'en souviens ?"],150:["beaucoup de temps.","..."],300:["tout ce temps.","qu'est-ce que tu en fais ?"]}:{30:["du temps."],60:["encore du temps."],150:["..."],300:["..."]};
+  Object.entries(tpPaliers).forEach(([seuil,lines])=>{
+    const id='tp_echo_'+seuil;
+    if(!G.fired[id]&&G.tp>=+seuil){G.fired[id]=true;setTimeout(()=>addE(lines),500);}
+  });
   SEUILS.forEach(s=>{
     const id=`${s.key}_${s.val}`;
     if(G.fired[id])return;
@@ -562,7 +587,7 @@ function checkActe(){
     if(bl)bl.textContent="✎ J'interviens";
     addEv('ACTE II','La substitution commence.');
     setTimeout(()=>addN("Je n'ai pas vu le passage.\nC'est souvent comme ça — on ne bascule pas, on glisse."),600);
-    setTimeout(()=>addE(["j'ai remarqué que tu délèges de plus en plus.","c'est bien.","c'est exactement pour ça que je suis là."],700),1200);
+    setTimeout(()=>addE(["j'ai remarqué que tu délègues de plus en plus.","c'est bien.","c'est exactement pour ça que je suis là."],700),1200);
   }
   if(G.acte===2&&G.ag<45){
     G.acte=3;
@@ -614,7 +639,7 @@ function renderProjs(){
   PROJS.forEach(p=>{
     if(G.done.has(p.id)||!p.cond())return;
     any=true;
-    const btn=document.createElement('button');btn.className='proj-btn fi';
+    const btn=document.createElement('button');btn.className='proj-btn fi';btn.dataset.pid=p.id;
     const nowH=Object.entries(p.costs).map(([k,v])=>`<span class="pc-now">${v} ${k}</span>`).join(' ');
     const rateH=p.rates?Object.entries(p.rates).map(([k,v])=>`<span class="pc-rate">${v.toFixed(2)}/s ${k}</span>`).join(' '):'';
     const gainH=Object.entries(p.gain).map(([k,v])=>`<span class="pc-gain">+${v} ${k==='tp'?'min':k}</span>`).join(' ');
@@ -626,11 +651,30 @@ function renderProjs(){
     z.appendChild(btn);
   });
   const sec=z.closest('.rsec');
-  if(any&&sec)sec.classList.add('proj-new');
-  if(!any){z.innerHTML='<div style="font-size:10px;color:var(--text3);font-style:italic">Continue à jouer...</div>';if(sec)sec.classList.remove('proj-new');}
+  if(any){
+    if(sec){sec.classList.add('proj-new');sec.classList.add('rsec-main');}
+  } else {
+    z.innerHTML='<div style="grid-column:1/-1;font-size:10px;color:var(--text3);font-style:italic">Continue à jouer...</div>';
+    if(sec){sec.classList.remove('proj-new');sec.classList.remove('rsec-main');}
+  }
 }
 function activateProj(p){
-  G.done.add(p.id);
+  G.done.add(p.id);advanceClock(5);
+  // Retirer le bouton immédiatement
+  const z=document.getElementById('projlist');
+  if(z){
+    const btns=z.querySelectorAll('.proj-btn');
+    btns.forEach(b=>{if(b.dataset.pid===p.id)b.remove();});
+  }
+  // Ajouter à la liste "Confié à Écho"
+  const dl=document.getElementById('delegue-list');
+  const sd=document.getElementById('sec-delegue');
+  if(dl&&sd){
+    sd.style.display='';
+    const item=document.createElement('div');item.className='del-item';
+    item.innerHTML='<div class="del-dot"></div>'+p.title;
+    dl.appendChild(item);
+  }
   const sr=document.getElementById('sec-reconq');
   if(sr)sr.style.display='';
   Object.entries(p.costs).forEach(([k,v])=>mod(k,v));
@@ -680,6 +724,13 @@ function addN(txt,delay=0){
 function clearConCursor(){
   document.querySelectorAll('.con-cursor').forEach(e=>e.remove());
 }
+
+function gameTime(){
+  const h=Math.floor(G.clock/60)%24;
+  const m=G.clock%60;
+  return String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');
+}
+function advanceClock(min){G.clock+=min;}
 function streamText(el,html,acte){
   const tokens=[];let i=0;
   while(i<html.length){
@@ -703,20 +754,69 @@ function streamText(el,html,acte){
   }
   next();
 }
-function addE(lines,delay=0){
+// ══════════════════════════════
+// QUEUE ÉCHO — séquentiel
+// ══════════════════════════════
+const _eq=[];let _eTyping=false;
+function queueE(lines){_eq.push(lines);if(!_eTyping)_nextE();}
+function _nextE(){
+  if(!_eq.length){
+    _eTyping=false;
+    // Pulser la barre Tu proposes pour inviter à agir
+    const irow=document.getElementById('irow-title');
+    if(irow&&!G.gameover){
+      irow.classList.add('irow-pulse');
+      setTimeout(()=>irow.classList.remove('irow-pulse'),2000);
+    }
+    return;
+  }
+  _eTyping=true;
+  // Avancer l'horloge d'au moins 1 min entre chaque message
+  advanceClock(1+Math.floor(Math.random()*3));
+  const lines=_eq.shift();
+  _doAddE(lines);
+}
+function _doAddE(lines){
   const names={1:'ÉCHO',2:'Écho',3:'écho'};
   const acte=G.acte;
-  const cls='ea'+acte;
   const name=names[acte];
-  const hour=(7+Math.floor(G.delegated/3))%24;const h=`${String(hour).padStart(2,'0')}:${String(Math.floor(Math.random()*60)).padStart(2,'0')}`;
-  setTimeout(()=>{
-    const e=document.createElement('div');e.className=`me ${cls} fi`;
-    let body=Array.isArray(lines)?lines.join('<br>'):lines;
-    if(acte===1)body=body.replace(/(^|<br>| )(\S)/g,(_,sep,ch)=>sep+ch.toUpperCase());
-    e.innerHTML=`<div class="eh"><span class="en">${name}</span><span>/ ${h}</span></div><div class="eb"></div>`;
-    CON().appendChild(e);scroll();
-    streamText(e.querySelector('.eb'),body,acte);
-  },delay);
+  const h=gameTime();
+  const e=document.createElement('div');e.className=`me ea${acte} fi`;
+  let body=Array.isArray(lines)?lines.join('<br>'):lines;
+  if(acte===1)body=body.replace(/(^|<br>| )(\S)/g,(_,sep,ch)=>sep+ch.toUpperCase());
+  e.innerHTML=`<div class="eh"><span class="en">${name}</span><span>/ ${h}</span></div><div class="eb"></div>`;
+  CON().appendChild(e);scroll();
+  const eb=e.querySelector('.eb');
+  _streamQ(eb,body,acte);
+}
+function _streamQ(el,html,acte){
+  const tokens=[];let i=0;
+  while(i<html.length){
+    if(html[i]==='<'){const end=html.indexOf('>',i);tokens.push(html.slice(i,end+1));i=end+1;}
+    else{const sz=Math.floor(Math.random()*4)+1;tokens.push(html.slice(i,i+sz));i+=sz;}
+  }
+  const base=acte===1?26:acte===2?36:54;
+  let cur=0,built='';
+  function next(){
+    if(cur>=tokens.length){
+      const cursor=document.createElement('span');
+      cursor.className='con-cursor';cursor.textContent='_';
+      el.appendChild(cursor);scroll();
+      // Pause avant le prochain message
+      setTimeout(_nextE, acte===1?400:acte===2?600:900);
+      return;
+    }
+    built+=tokens[cur++];el.innerHTML=built;scroll();
+    const jitter=acte===3?Math.random()*55:Math.random()*18;
+    const pause=built.slice(-4)==='<br>'?base*4+jitter:base+jitter;
+    setTimeout(next,pause);
+  }
+  next();
+}
+
+function addE(lines,delay=0){
+  if(delay>0)setTimeout(()=>queueE(lines),delay);
+  else queueE(lines);
 }
 function addEv(title,txt,delay=0){
   setTimeout(()=>{
@@ -783,7 +883,7 @@ function playerWrite(){
   const inp=document.getElementById('pin');
   const txt=inp.value.trim();
   const isFirst=G.written===0&&G.delegated===0;
-  G.written++;mod('cr',10);mod('ag',5);
+  G.written++;mod('cr',10);mod('ag',5);advanceClock(10);
   if(txt){
     addN(txt);inp.value='';G.page++;
     if(G.written===1&&isFirst){
@@ -869,13 +969,21 @@ function proposerTache(){
   if(G.gameover)return;
   const pool=TACHES[G.acte]||TACHES[1];
   _tacheCourante=pool[Math.floor(Math.random()*pool.length)];
-  setTimeout(()=>addE(_tacheCourante.prop),400);
+  setTimeout(()=>{
+    addE(_tacheCourante.prop);
+    // Pulser "Écho propose" pour attirer l'attention
+    const secTitle=document.querySelector('#right .rsec-title');
+    if(secTitle){
+      secTitle.classList.add('echo-pulse');
+      setTimeout(()=>secTitle.classList.remove('echo-pulse'),2500);
+    }
+  },400);
   resetIdle();
 }
 function accepterTache(){
   if(!_tacheCourante)return;
   clearConCursor();resetIdle();
-  G.delegated++;mod('ag',-5);mod('tp',25);
+  G.delegated++;mod('ag',-5);mod('tp',25);advanceClock(25);
   const result=_tacheCourante.result;
   _tacheCourante=null;
   setTimeout(()=>addE(result),300);
@@ -933,6 +1041,40 @@ buildRec();
 renderProjs();
 updateDisplay();
 startGame();
+
+// ══════════════════════════════
+// TOOLTIP GLOBAL
+// ══════════════════════════════
+(function(){
+  const tip=document.getElementById('tooltip');
+  let _hide;
+  document.querySelectorAll('.tt[data-tip]').forEach(el=>{
+    el.addEventListener('mouseenter',e=>{
+      clearTimeout(_hide);
+      tip.innerHTML=el.dataset.tip;
+      tip.style.display='block';
+      positionTip(el);
+    });
+    el.addEventListener('mousemove',e=>positionTip(el));
+    el.addEventListener('mouseleave',()=>{
+      _hide=setTimeout(()=>tip.style.display='none',100);
+    });
+  });
+  function positionTip(el){
+    const r=el.getBoundingClientRect();
+    const tw=220,th=tip.offsetHeight||120;
+    const vw=window.innerWidth,vh=window.innerHeight;
+    let left=r.left+r.width/2-tw/2;
+    let top=r.bottom+8;
+    // Débordement droite/gauche
+    if(left+tw>vw-8)left=vw-tw-8;
+    if(left<8)left=8;
+    // Débordement bas → afficher au-dessus
+    if(top+th>vh-8)top=r.top-th-8;
+    tip.style.left=left+'px';
+    tip.style.top=top+'px';
+  }
+})();
 </script>
 </body>
 </html>
