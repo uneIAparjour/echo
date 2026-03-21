@@ -1,6 +1,6 @@
 # Écho — Règles de conception
-Document de référence. Version de travail.
-Fichier de jeu : `echo-v6.html` — https://uneIAparjour.github.io/echo/echo-v6.html
+Document de référence.
+Fichier de jeu : `index.html` — https://uneIAparjour.github.io/echo/index.html
 
 ---
 
@@ -22,8 +22,6 @@ Le jeu est une exploration de l'**agentivité humaine face à l'automatisation c
 
 ### 1.4 Nom
 Le jeu s'appelle **Écho**. L'IA s'appelle aussi **Écho**. Pas une marque — un nom commun devenu nom propre, comme on dit "le frigo". Écho écoute, répond, se souvient. Écho est partout.
-
-*(Ancien titre de travail : "Le Prompteur" — abandonné.)*
 
 ---
 
@@ -52,7 +50,7 @@ Contrairement aux jeux incrementaux classiques où les ressources montent, dans 
 
 ```
 Jeu incremental classique : déléguer → tout monte
-Écho : déléguer → efficacité monte, capacités humaines descendent
+Écho : déléguer → temps gagné augente, capacités humaines descendent
 ```
 
 ### 3.2 Les ressources
