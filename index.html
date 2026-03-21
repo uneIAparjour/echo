@@ -206,6 +206,88 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 #tooltip{position:fixed;display:none;width:220px;padding:10px 13px;background:#1e1a15;border:1px solid rgba(232,221,208,0.22);border-radius:4px;font-size:11px;line-height:1.65;color:#e8ddd0;font-family:'JetBrains Mono',monospace;font-weight:400;text-transform:none;letter-spacing:0;z-index:9999;pointer-events:none;white-space:normal;box-shadow:0 4px 16px rgba(0,0,0,0.5)}
 #tooltip strong{color:var(--narr);font-weight:500}
 ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:var(--border2)}*{scrollbar-width:thin;scrollbar-color:var(--border2) transparent}*{scrollbar-width:thin;scrollbar-color:var(--border2) transparent}
+
+/* ══════════════════════════════════════
+   MOBILE — max-width: 768px
+══════════════════════════════════════ */
+@media(max-width:768px){
+  body{font-size:13px}
+
+  /* Bandeau compact 6 cellules */
+  #top{grid-template-columns:repeat(5,1fr) 1.4fr}
+  .cc{padding:5px 4px 4px}
+  .ctrace{padding:5px 4px 4px}
+  .clbl{font-size:7px;letter-spacing:0.1em}
+  .cnum{font-size:18px}
+  .cbar,.crate{display:none}
+  /* Trace mobile : juste curseur + mot */
+  .ctrace .clbl{margin-bottom:3px}
+  .trace-stages{display:none}
+  .trace-row{flex-direction:column;gap:2px;align-items:center}
+  .trace-track{width:100%;height:6px}
+  .trace-page{font-size:8px}
+  .tstage{display:none}
+  .tstage.tact{display:block;font-size:8px;text-align:center}
+
+  /* Layout : une seule colonne, onglets */
+  #main{grid-template-columns:1fr;position:relative;overflow:hidden}
+
+  /* Console : toujours visible, flex:1 */
+  #centre{display:flex;flex-direction:column;flex:1;overflow:hidden}
+  #con{flex:1;padding:12px 14px}
+
+  /* Colonne droite : masquée par défaut, affichée via onglet */
+  #right{display:none;position:absolute;inset:0;z-index:10;overflow-y:auto}
+  #right.mob-active{display:flex;flex-direction:column}
+
+  /* Vue Jauges : panneau dédié */
+  #mob-jauges{display:none;position:absolute;inset:0;z-index:10;background:var(--bg);overflow-y:auto;padding:12px 14px}
+  #mob-jauges.mob-active{display:block}
+
+  /* Barre saisie + onglets collés en bas */
+  #irow-title{padding:5px 12px 0;font-size:8px}
+  #irow{padding:7px 12px;gap:6px}
+  #pin{min-width:0;font-size:12px}
+  .iact{padding:9px 10px;font-size:10px}
+  .iact-sub{font-size:9px}
+
+  /* Onglets navigation */
+  #mob-nav{display:flex;background:#0f0d0a;border-top:1px solid rgba(232,221,208,0.1);flex-shrink:0}
+  .mob-tab{flex:1;padding:8px 4px;text-align:center;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#9a8068;border-right:1px solid rgba(232,221,208,0.07);cursor:pointer;transition:all 0.15s;-webkit-tap-highlight-color:transparent}
+  .mob-tab:last-child{border-right:none}
+  .mob-tab.active{color:var(--text);background:#1e1a15}
+  .mob-tab-dot{width:4px;height:4px;border-radius:50%;background:var(--echo);margin:2px auto 0;opacity:0;transition:opacity 0.2s}
+  .mob-tab.active .mob-tab-dot{opacity:1}
+
+  /* Jauges détaillées */
+  #mob-jauges .gblock{margin-bottom:14px}
+  #mob-jauges .ghead{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
+  #mob-jauges .gname{font-size:11px;color:var(--text2);display:flex;align-items:center;gap:5px}
+  #mob-jauges .gdot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+  #mob-jauges .gval{font-size:16px;font-weight:600;font-variant-numeric:tabular-nums}
+  #mob-jauges .grate{font-size:10px;margin-left:6px}
+  #mob-jauges .gtrack{height:4px;background:rgba(255,255,255,0.05);border-radius:2px;overflow:hidden}
+  #mob-jauges .gfill{height:100%;border-radius:2px;transition:width 0.7s cubic-bezier(.4,0,.2,1)}
+  #mob-jauges .gwarn{font-size:9px;color:var(--red);margin-top:2px;height:12px}
+  .mob-tp{background:rgba(200,170,136,0.05);border:1px solid rgba(200,170,136,0.12);border-radius:4px;padding:10px 12px;margin-bottom:14px}
+  .mob-tp-lbl{font-size:9px;color:var(--tp);letter-spacing:0.14em;margin-bottom:3px}
+  .mob-tp-val{font-size:28px;font-weight:300;color:var(--tp);line-height:1;font-variant-numeric:tabular-nums}
+  .mob-tp-q{font-size:9px;color:var(--text3);margin-top:4px;font-style:italic}
+
+  /* Taille des boutons tactiles ≥44px */
+  .iact{min-height:44px}
+  .mob-tab{min-height:40px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .vpill button{padding:4px 9px;min-height:32px}
+  .rec-btn,.proj-btn{min-height:44px}
+
+  /* Footerau dessus du nav */
+  #footer{order:99}
+}
+
+@media(min-width:769px){
+  #mob-nav{display:none}
+  #mob-jauges{display:none!important}
+}
 </style>
 </head>
 <body>
@@ -321,6 +403,17 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 
 <div id="tooltip"></div>
 <div id="notif"></div>
+
+<!-- Vue Jauges mobile -->
+<div id="mob-jauges"></div>
+
+<!-- Navigation mobile -->
+<div id="mob-nav">
+  <div class="mob-tab active" onclick="mobTab('console')">Console<div class="mob-tab-dot"></div></div>
+  <div class="mob-tab" onclick="mobTab('actions')">Actions<div class="mob-tab-dot"></div></div>
+  <div class="mob-tab" onclick="mobTab('jauges')">Jauges<div class="mob-tab-dot"></div></div>
+</div>
+
 <footer id="footer">CC BY Bertrand Formet &nbsp;·&nbsp; <a href="https://uneIAparjour.fr" target="_blank">uneIAparjour.fr</a></footer>
 
 <script>
@@ -1285,6 +1378,64 @@ startGame();
     tip.style.top=top+'px';
   }
 })();
+
+// ══════════════════════════════
+// NAVIGATION MOBILE
+// ══════════════════════════════
+function mobTab(tab){
+  if(window.innerWidth>768)return;
+  document.querySelectorAll('.mob-tab').forEach((t,i)=>{
+    const tabs=['console','actions','jauges'];
+    t.classList.toggle('active',tabs[i]===tab);
+  });
+  document.getElementById('right').classList.toggle('mob-active',tab==='actions');
+  document.getElementById('mob-jauges').classList.toggle('mob-active',tab==='jauges');
+  if(tab==='jauges')renderMobJauges();
+}
+function renderMobJauges(){
+  const z=document.getElementById('mob-jauges');
+  if(!z)return;
+  const defs=[{k:'ag',lbl:'Agentivité',c:'--ag'},{k:'cr',lbl:'Créativité',c:'--cr'},{k:'cu',lbl:'Curiosité',c:'--cu'},{k:'ef',lbl:'Effort',c:'--ef'}];
+  let html=`<div class="mob-tp">
+    <div class="mob-tp-lbl">Temps libéré</div>
+    <div class="mob-tp-val">${Math.round(G.tp)} min</div>
+    <div class="mob-tp-q">${G.tp<20?'— pour faire quoi ?':G.tp<60?'— tu ne sais pas encore.':G.tp<120?'— du temps vide qui attend.':'— la question sans réponse.'}</div>
+  </div>`;
+  defs.forEach(d=>{
+    const v=Math.round(G[d.k]);
+    const r=G.rates[d.k]||0;
+    const rStr=Math.abs(r)>0.005?(r>0?'+':'')+r.toFixed(2)+'/s':'stable';
+    const rCls=r<-0.005?'dn':r>0.005?'up':'ze';
+    html+=`<div class="gblock">
+      <div class="ghead">
+        <div class="gname"><div class="gdot" style="background:var(${d.c})"></div>${d.lbl}</div>
+        <div style="display:flex;align-items:baseline;gap:6px">
+          <div class="gval" style="color:var(${d.c})">${v}</div>
+          <div class="grate crate ${rCls}">${rStr}</div>
+        </div>
+      </div>
+      <div class="gtrack"><div class="gfill" style="width:${v}%;background:var(${d.c})"></div></div>
+      <div class="gwarn">${v<=15?'⚠ critique':v<=35?'↓ en déclin':''}</div>
+    </div>`;
+  });
+  // Veille
+  if(G.veille.size){
+    html+=`<div style="margin-top:8px;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(232,221,208,0.45);margin-bottom:8px">En veille</div>`;
+    G.veille.forEach(lbl=>{
+      const bid=regCB(()=>reactiver(lbl));
+      html+=`<div class="vpill"><span>${lbl}</span><button onclick="callCBP('${bid}')">Réactiver</button></div>`;
+    });
+  }
+  // Stats
+  const totalDel=G.delegated+G.done.size;
+  const tot=totalDel+G.written;
+  html+=`<div style="margin-top:12px;font-size:11px;color:rgba(232,221,208,0.55);line-height:1.8">
+    Confié à Écho : <strong style="color:var(--red)">${totalDel}</strong><br>
+    Par moi : <strong style="color:var(--green)">${G.written}</strong><br>
+    ${tot===0?'—':Math.round(totalDel/tot*100)+'% délégué'}
+  </div>`;
+  z.innerHTML=html;
+}
 </script>
 </body>
 </html>
