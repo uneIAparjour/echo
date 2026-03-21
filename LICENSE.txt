@@ -1,0 +1,36 @@
+Creative Commons Attribution 4.0 International (CC BY 4.0)
+
+Copyright (c) 2025 Bertrand Formet — uneIAparjour.fr
+
+---
+
+Vous êtes autorisé à :
+
+  Partager — copier et redistribuer le contenu sous quelque support
+  que ce soit ou sous n'importe quel format.
+
+  Adapter — remixer, transformer et créer à partir du contenu,
+  même à des fins commerciales.
+
+---
+
+Selon les conditions suivantes :
+
+  Attribution — Vous devez créditer l'œuvre, intégrer un lien vers
+  la licence et indiquer si des modifications ont été effectuées.
+  Vous devez indiquer ces informations par tous les moyens raisonnables,
+  sans toutefois suggérer que l'offrant vous soutient ou soutient la
+  façon dont vous avez utilisé son œuvre.
+
+  Pas de restrictions complémentaires — Vous n'êtes pas autorisé à
+  appliquer des conditions légales ou des mesures techniques qui
+  restreindraient légalement autrui à utiliser l'œuvre dans les
+  conditions décrites par la licence.
+
+---
+
+Texte complet de la licence :
+https://creativecommons.org/licenses/by/4.0/legalcode.fr
+
+Résumé lisible :
+https://creativecommons.org/licenses/by/4.0/deed.fr
