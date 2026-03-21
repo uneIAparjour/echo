@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Écho</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Lora:ital,wght@0,400;1,400&display=swap');
@@ -211,7 +211,8 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
    MOBILE — max-width: 768px
 ══════════════════════════════════════ */
 @media(max-width:768px){
-  body{font-size:13px}
+  body{font-size:13px;display:flex;flex-direction:column}
+  #main{flex:1;min-height:0}
 
   /* Bandeau compact 6 cellules */
   #top{grid-template-columns:repeat(5,1fr) 1.4fr}
@@ -232,16 +233,17 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
   /* Layout : une seule colonne, onglets */
   #main{grid-template-columns:1fr;position:relative;overflow:hidden}
 
-  /* Console : toujours visible, flex:1 */
-  #centre{display:flex;flex-direction:column;flex:1;overflow:hidden}
+  /* Console : visible sur vue console uniquement */
+  #centre{display:flex;flex-direction:column;flex:1;overflow:hidden;min-height:0}
+  #centre.mob-hidden{display:none}
   #con{flex:1;padding:12px 14px}
 
   /* Colonne droite : masquée par défaut, affichée via onglet */
-  #right{display:none;position:absolute;inset:0;z-index:10;overflow-y:auto}
+  #right{display:none;flex:1;overflow-y:auto;min-height:0}
   #right.mob-active{display:flex;flex-direction:column}
 
   /* Vue Jauges : panneau dédié */
-  #mob-jauges{display:none;position:absolute;inset:0;z-index:10;background:var(--bg);overflow-y:auto;padding:12px 14px}
+  #mob-jauges{display:none;flex:1;overflow-y:auto;background:var(--bg);padding:12px 14px;min-height:0}
   #mob-jauges.mob-active{display:block}
 
   /* Barre saisie + onglets collés en bas */
@@ -258,6 +260,8 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
   .mob-tab.active{color:var(--text);background:#1e1a15}
   .mob-tab-dot{width:4px;height:4px;border-radius:50%;background:var(--echo);margin:2px auto 0;opacity:0;transition:opacity 0.2s}
   .mob-tab.active .mob-tab-dot{opacity:1}
+  #clbl-tp{font-size:0;letter-spacing:0}
+  #clbl-tp::before{content:"Lib.";font-size:7px;letter-spacing:0.1em}
 
   /* Jauges détaillées */
   #mob-jauges .gblock{margin-bottom:14px}
@@ -282,6 +286,8 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 
   /* Footerau dessus du nav */
   #footer{order:99}
+  #mob-nav{padding-bottom:env(safe-area-inset-bottom,0px)}
+  #irow{padding-bottom:calc(7px + env(safe-area-inset-bottom,0px))}
 }
 
 @media(min-width:769px){
@@ -1388,8 +1394,12 @@ function mobTab(tab){
     const tabs=['console','actions','jauges'];
     t.classList.toggle('active',tabs[i]===tab);
   });
-  document.getElementById('right').classList.toggle('mob-active',tab==='actions');
-  document.getElementById('mob-jauges').classList.toggle('mob-active',tab==='jauges');
+  const centre=document.getElementById('centre');
+  const right=document.getElementById('right');
+  const jauges=document.getElementById('mob-jauges');
+  if(centre)centre.classList.toggle('mob-hidden',tab!=='console');
+  if(right)right.classList.toggle('mob-active',tab==='actions');
+  if(jauges)jauges.classList.toggle('mob-active',tab==='jauges');
   if(tab==='jauges')renderMobJauges();
 }
 function renderMobJauges(){
