@@ -194,8 +194,8 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 .rec-fx{font-size:10px;color:rgba(232,221,208,0.55);line-height:1.4}
 
 /* Notif toast */
-#notif{position:fixed;bottom:14px;left:50%;transform:translateX(-50%) translateY(40px);background:var(--bg3);border:1px solid var(--border2);padding:5px 13px;font-size:10px;border-radius:2px;transition:transform 0.2s;pointer-events:none;z-index:999;color:var(--text2)}
-#notif.show{transform:translateX(-50%) translateY(0)}
+#notif{position:fixed;bottom:14px;left:50%;transform:translateX(-50%) translateY(0);background:var(--bg3);border:1px solid var(--border2);padding:5px 13px;font-size:10px;border-radius:2px;transition:opacity 0.3s,transform 0.3s;pointer-events:none;z-index:999;color:var(--text2);opacity:0;visibility:hidden}
+#notif.show{opacity:1;visibility:visible;transform:translateX(-50%) translateY(-8px)}
 #footer{flex-shrink:0;padding:4px 18px;font-size:10px;color:var(--text3);letter-spacing:0.08em;border-top:1px solid var(--border);text-align:right;background:var(--bg2)}
 #footer a{color:var(--text3);text-decoration:none}
 #footer a:hover{color:var(--text2)}
@@ -233,7 +233,6 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
   .tstage.tact{display:block;font-size:8px;text-align:center}
 
   /* Layout : une seule colonne, onglets */
-  #main{grid-template-columns:1fr;position:relative;overflow:hidden}
 
   /* Console : visible sur vue console uniquement */
   #centre{display:flex;flex-direction:column;flex:1;overflow:hidden;min-height:0}
@@ -242,6 +241,7 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 
   /* Colonne droite : masquée par défaut, affichée via onglet */
   #right{display:none;overflow-y:auto;height:calc(100dvh - 80px - 50px - env(safe-area-inset-bottom,0px));background:var(--bg3)}
+  #sec-delegue,#sec-stats{display:none!important}
   #right.mob-active{display:flex;flex-direction:column}
 
   /* Vue Jauges : panneau dédié */
@@ -293,7 +293,7 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
   .mob-choice-write{background:rgba(138,184,122,0.08);border-color:rgba(138,184,122,0.25);color:#8ab87a}
   .mob-choice-lbl{display:block;font-weight:500;margin-bottom:2px}
   .mob-choice-sub{display:block;font-size:9px;opacity:0.6}
-  #notif{bottom:calc(55px + env(safe-area-inset-bottom,0px));z-index:200}
+  #notif{bottom:calc(58px + env(safe-area-inset-bottom,0px));z-index:999}
   /* Taille des boutons tactiles ≥44px */
   .iact{min-height:44px}
   .mob-tab{min-height:40px;display:flex;flex-direction:column;align-items:center;justify-content:center}
@@ -303,7 +303,7 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
   /* Footerau dessus du nav */
   #footer{display:none}
   #mob-nav{padding-bottom:env(safe-area-inset-bottom,0px)}
-  #irow{padding-bottom:7px;gap:4px}
+  #irow{padding-bottom:calc(7px + env(safe-area-inset-bottom,0px));gap:4px;flex-shrink:0;display:flex!important}
   #irow-title{display:none}
   .iact{display:none}
   .ipfx{display:none}
@@ -438,7 +438,7 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 <div id="mob-nav">
   <div class="mob-tab active" onclick="mobTab('console')">Console<div class="mob-tab-dot"></div></div>
   <div class="mob-tab" onclick="mobTab('actions')">Actions<div class="mob-tab-dot"></div></div>
-  <div class="mob-tab" onclick="mobTab('jauges')">Jauges<div class="mob-tab-dot"></div></div>
+  <div class="mob-tab" onclick="mobTab('jauges')">Bilan<div class="mob-tab-dot"></div></div>
 </div>
 
 <footer id="footer">CC BY-NC Bertrand Formet &nbsp;·&nbsp; <a href="https://uneIAparjour.fr" target="_blank">uneIAparjour.fr</a> &nbsp;·&nbsp; <a href="https://github.com/uneIAparjour/echo" target="_blank">GitHub</a></footer>
@@ -874,7 +874,10 @@ function checkActe(){
         sec.classList.add('sec-pulse');
         setTimeout(()=>sec.classList.remove('sec-pulse'),3000);
       }
-      addN("Il est encore temps.\nLa section ci-contre existe pour ça.\nPas obligé de s'en servir.",800);
+      const msgR=window.innerWidth<=768
+        ? "Il est encore temps.\nVa dans l'onglet Actions.\nPas obligé de s'en servir."
+        : "Il est encore temps.\nLa section à droite existe pour ça.\nPas obligé de s'en servir.";
+      addN(msgR,800);
     },3000);
   }
   if(G.acte===2&&G.ag<45){
@@ -1014,6 +1017,7 @@ function renderProjs(){
 }
 function activateProj(p){
   G.done.add(p.id);advanceClock(5);
+  if(window.innerWidth<=768)setTimeout(()=>mobTab('console'),400);
   // Retirer le bouton immédiatement
   const z=document.getElementById('projlist');
   if(z){
@@ -1031,6 +1035,7 @@ function activateProj(p){
   }
   const sr=document.getElementById('sec-reconq');
   if(sr)sr.style.display='';
+  announceReconq();
   const sv=document.getElementById('sec-veille');
   if(sv)sv.style.display='';
   const ss=document.getElementById('sec-stats');
@@ -1045,6 +1050,13 @@ function activateProj(p){
   setTimeout(()=>addE(lines),2200);
 }
 
+
+let _reconqAnnounced=false;
+function announceReconq(){
+  if(_reconqAnnounced)return;
+  _reconqAnnounced=true;
+  setTimeout(()=>addN("Il y avait une section que je n'avais pas regardée.\n\nElle s'appelait :\nSans Écho — reconquérir."),3500);
+}
 // ══════════════════════════════
 // RÉCUPÉRATION
 // ══════════════════════════════
@@ -1052,11 +1064,11 @@ function buildRec(){
   const z=document.getElementById('reclist');z.innerHTML='';
   [
     {name:'✎ Écrire sans aide',cost:'−10 min',gains:'+8 Créativité, +5 Agentivité',
-     fn:()=>{if(G.tp<10){notif('Pas assez de temps libéré');return;}mod('cr',8);mod('ag',5);mod('tp',-10);G.deactivated=true;addN("J'ai écrit sans aide.\nC'était résistant.\nC'était mon écriture.");}},
+     fn:()=>{if(G.tp<10){notif('Pas assez de temps libéré');return;}mod('cr',8);mod('ag',5);mod('tp',-10);G.deactivated=true;if(window.innerWidth<=768)setTimeout(()=>mobTab('console'),400);addN("J'ai écrit sans aide.\nC'était résistant.\nC'était mon écriture.");}},
     {name:'📖 Lire entièrement',cost:'−15 min',gains:'+10 Curiosité',
-     fn:()=>{if(G.tp<15){notif('Pas assez de temps libéré');return;}mod('cu',10);mod('tp',-15);addN("J'ai lu jusqu'à la fin.\nLe résumé n'avait pas mentionné le troisième paragraphe.\nC'était le meilleur.");}},
+     fn:()=>{if(G.tp<15){notif('Pas assez de temps libéré');return;}mod('cu',10);mod('tp',-15);if(window.innerWidth<=768)setTimeout(()=>mobTab('console'),400);addN("J'ai lu jusqu'à la fin.\nLe résumé n'avait pas mentionné le troisième paragraphe.\nC'était le meilleur.");}},
     {name:'◯ Silence actif',cost:'−12 min',gains:'+4 à toutes les jauges',
-     fn:()=>{if(G.tp<12){notif('Pas assez de temps libéré');return;}['ag','cr','cu','ef'].forEach(k=>mod(k,4));mod('tp',-12);addN("Dix minutes sans Écho.\nJ'ai pensé à des choses sans les noter.\nElles sont parties.\nC'était bien.");}},
+     fn:()=>{if(G.tp<12){notif('Pas assez de temps libéré');return;}['ag','cr','cu','ef'].forEach(k=>mod(k,4));mod('tp',-12);if(window.innerWidth<=768)setTimeout(()=>mobTab('console'),400);addN("Dix minutes sans Écho.\nJ'ai pensé à des choses sans les noter.\nElles sont parties.\nC'était bien.");}},
   ].forEach(r=>{
     const btn=document.createElement('button');btn.className='rec-btn';
     btn.innerHTML=`<div class="rec-hd"><span class="rec-name">${r.name}</span><span class="rec-cost">${r.cost}</span></div><div class="rec-fx">${r.gains}</div>`;
@@ -1568,13 +1580,24 @@ function renderMobJauges(){
       html+=`<div class="vpill"><span>${lbl}</span><button onclick="callCBP('${bid}')">Réactiver</button></div>`;
     });
   }
-  // Stats
+  // Confié à Écho
+  if(G.done.size>0){
+    html+=`<div style="margin-top:14px;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(232,221,208,0.45);margin-bottom:8px">Confié à Écho</div>`;
+    html+=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 8px;margin-bottom:14px">`;
+    G.done.forEach(id=>{
+      const p=PROJS.find(x=>x.id===id);
+      if(p)html+=`<div style="font-size:10px;color:rgba(232,221,208,0.45);display:flex;align-items:center;gap:5px"><div style="width:4px;height:4px;border-radius:50%;background:rgba(122,184,232,0.5);flex-shrink:0"></div>${p.title}</div>`;
+    });
+    html+=`</div>`;
+  }
+  // Statistiques
   const totalDel=G.delegated+G.done.size;
   const tot=totalDel+G.written;
-  html+=`<div style="margin-top:12px;font-size:11px;color:rgba(232,221,208,0.55);line-height:1.8">
-    Confié à Écho : <strong style="color:var(--red)">${totalDel}</strong><br>
-    Par moi : <strong style="color:var(--green)">${G.written}</strong><br>
-    ${tot===0?'—':Math.round(totalDel/tot*100)+'% délégué'}
+  html+=`<div style="font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(232,221,208,0.45);margin-bottom:8px">Statistiques</div>`;
+  html+=`<div style="font-size:11px;color:rgba(232,221,208,0.55);line-height:1.9">
+    Confié à Écho : <strong style="color:#d07060">${totalDel}</strong><br>
+    Par moi : <strong style="color:#8ab87a">${G.written}</strong><br>
+    <span style="font-size:10px;color:rgba(232,221,208,0.35)">${tot===0?'—':Math.round(totalDel/tot*100)+'% délégué'}</span>
   </div>`;
   z.innerHTML=html;
 }
