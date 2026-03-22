@@ -1,7 +1,6 @@
 # Écho
 
-**Jouer :** [uneiaparjour.github.io/echo/](https://uneiaparjour.github.io/echo/)
-
+V1
 ---
 
 Vous êtes à la page 47 d'un carnet bleu. Écho arrive. Il peut corriger vos textes, résumer vos documents, répondre à vos mails, gérer votre agenda, compléter vos phrases. Chaque délégation libère du temps. Chaque délégation coûte un peu de vous.
@@ -14,7 +13,9 @@ Vous ne voyez pas quand Écho change. C'est souvent comme ça — on ne bascule 
 
 ## Jouer
 
-Ouvrir `index.html` dans un navigateur. Aucune installation, aucune dépendance.
+**Jouer en ligne :** [uneiaparjour.github.io/echo/](https://uneiaparjour.github.io/echo/)
+
+**Jouer en local :** Ouvrir `index.html` dans un navigateur. Aucune installation, aucune dépendance.
 
 Compatible Chrome, Firefox, Safari. Fonctionne sur mobile.
 
