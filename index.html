@@ -97,7 +97,7 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 .stats span{font-variant-numeric:tabular-nums;font-weight:500}
 
 /* ══ CENTRE ══ */
-#centre{display:flex;flex-direction:column;overflow:hidden;background:var(--bg)}
+#centre{display:flex;flex-direction:column;overflow:hidden;background:var(--bg);height:100%}
 #con{flex:1;overflow-y:auto;padding:18px 22px;display:flex;flex-direction:column;gap:2px}
 /* Messages narrateur */
 .mn{margin:8px 0;padding:0 0 0 12px;border-left:2px solid rgba(212,184,112,0.2)}
@@ -264,6 +264,8 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
   .mob-tab:last-child{border-right:none}
   .mob-tab.active{color:var(--text);background:#1e1a15}
   .mob-tab-dot{width:4px;height:4px;border-radius:50%;background:var(--echo);margin:2px auto 0;opacity:0;transition:opacity 0.2s}
+  .mob-tab-notif{color:var(--text)!important;animation:tabn 1s ease 3}
+  @keyframes tabn{0%,100%{background:transparent}50%{background:rgba(122,184,232,0.12)}}
   .mob-tab.active .mob-tab-dot{opacity:1}
   #clbl-tp{font-size:0;letter-spacing:0}
   #clbl-tp::before{content:"Lib.";font-size:7px;letter-spacing:0.1em}
@@ -285,7 +287,7 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 
 
   /* Boutons choix mobile dans console */
-  .mob-choice{display:flex;gap:8px;margin-top:10px;padding:0 0 4px 12px}
+  .mob-choice{display:flex;gap:8px;margin-top:10px;padding:0 0 16px 12px}
   .mob-choice-btn{flex:1;padding:10px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:11px;cursor:pointer;text-align:center;border:1px solid;line-height:1.4;min-height:44px;display:flex;flex-direction:column;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent}
   .mob-choice-accept{background:rgba(208,112,96,0.08);border-color:rgba(208,112,96,0.25);color:#d07060}
   .mob-choice-write{background:rgba(138,184,122,0.08);border-color:rgba(138,184,122,0.25);color:#8ab87a}
@@ -303,7 +305,9 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
   #mob-nav{padding-bottom:env(safe-area-inset-bottom,0px)}
   #irow{padding-bottom:7px;gap:4px}
   #irow-title{display:none}
-  #irow{display:none}
+  .iact{display:none}
+  .ipfx{display:none}
+  #pin{flex:1;width:100%;font-size:14px}
   #pin{flex:1;width:100%}
 }
 
@@ -942,11 +946,48 @@ function recoverFromEnding(){
 // ══════════════════════════════
 // PROJETS
 // ══════════════════════════════
+
+// ══════════════════════════════
+// SIGNAL NOUVEAUX PROJETS
+// ══════════════════════════════
+const _projSignaled=new Set();
+const _PROJ_SIGNAL_A1=[
+  ["J'Ai Une Proposition Pour Vous.","Regardez Dans La Colonne De Droite."],
+  ["Une Nouvelle Automatisation Est Disponible.","Elle Pourrait Vous Simplifier La Vie."],
+  ["J'Ai Repéré Quelque Chose.","Une Fonction Qui Pourrait Vous Intéresser."],
+  ["Nouvelle Proposition Dans Le Panneau.","Quand Vous Voudrez."],
+];
+const _PROJ_SIGNAL_A2=[
+  ["j'ai une proposition.","regarde dans les actions."],
+  ["quelque chose de nouveau est disponible.","à toi de voir."],
+  ["j'ai identifié une automatisation.","elle attend."],
+];
+const _PROJ_SIGNAL_A3=[
+  ["...","une proposition. si tu la veux."],
+  ["nouveau dans les actions."],
+];
+function signalNewProj(projId){
+  if(_projSignaled.has(projId))return;
+  _projSignaled.add(projId);
+  const pool=G.acte===1?_PROJ_SIGNAL_A1:G.acte===2?_PROJ_SIGNAL_A2:_PROJ_SIGNAL_A3;
+  const lines=pool[Math.floor(Math.random()*pool.length)];
+  // Délai pour ne pas chevaucher d'autres messages
+  setTimeout(()=>addE(lines),1200);
+  // Sur mobile : badge sur l'onglet Actions
+  if(window.innerWidth<=768){
+    const tabs=document.querySelectorAll('.mob-tab');
+    if(tabs[1]){
+      tabs[1].classList.add('mob-tab-notif');
+      setTimeout(()=>tabs[1].classList.remove('mob-tab-notif'),8000);
+    }
+  }
+}
 function renderProjs(){
   const z=document.getElementById('projlist');z.innerHTML='';
   let any=false;
   PROJS.forEach(p=>{
     if(G.done.has(p.id)||!p.cond())return;
+    if(!_projSignaled.has(p.id)&&!G.done.has(p.id))signalNewProj(p.id);
     any=true;
     const btn=document.createElement('button');btn.className='proj-btn fi';btn.dataset.pid=p.id;
     const nowH=Object.entries(p.costs).map(([k,v])=>`<span class="pc-now">${v} ${k}</span>`).join(' ');
@@ -1166,8 +1207,11 @@ function addChoice(q,choices,delay=0){
 }
 function notif(msg){
   const el=document.getElementById('notif');
-  el.textContent=msg;el.classList.add('show');
-  setTimeout(()=>el.classList.remove('show'),1800);
+  el.textContent=msg;
+  el.classList.remove('show');void el.offsetWidth;
+  el.classList.add('show');
+  clearTimeout(el._t);
+  el._t=setTimeout(()=>el.classList.remove('show'),2200);
 }
 
 // ══════════════════════════════
