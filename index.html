@@ -84,7 +84,7 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 /* ══════════════════════
    LAYOUT 2 COLONNES
 ══════════════════════ */
-#main{display:grid;grid-template-columns:1fr clamp(360px, 28%, 520px);flex:1;overflow:hidden;align-items:stretch}
+#main{display:flex;flex-direction:row;flex:1;overflow:hidden;min-height:0}
 
 /* En veille */
 .vpill{display:flex;align-items:center;justify-content:space-between;padding:4px 7px;margin-bottom:3px;background:rgba(208,112,96,0.05);border:1px solid rgba(208,112,96,0.15);border-radius:3px}
@@ -97,7 +97,7 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 .stats span{font-variant-numeric:tabular-nums;font-weight:500}
 
 /* ══ CENTRE ══ */
-#centre{display:flex;flex-direction:column;overflow:hidden;background:var(--bg);min-height:0}
+#centre{display:flex;flex-direction:column;overflow:hidden;background:var(--bg);flex:1;min-width:0;min-height:0}
 #con{flex:1;overflow-y:auto;padding:18px 22px;display:flex;flex-direction:column;gap:2px}
 /* Messages narrateur */
 .mn{margin:8px 0;padding:0 0 0 12px;border-left:2px solid rgba(212,184,112,0.2)}
@@ -160,7 +160,7 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 .iact-sub{display:block;font-size:10px;opacity:0.6}
 
 /* ══ DROITE ══ */
-#right{border-left:1px solid var(--border2);overflow-y:auto;background:#0f0d0a;display:flex;flex-direction:column;height:100%}
+#right{border-left:1px solid var(--border2);overflow-y:auto;background:#0f0d0a;display:flex;flex-direction:column;width:clamp(360px,28%,520px);flex-shrink:0}
 .rsec{padding:12px 14px 10px;border-bottom:1px solid rgba(232,221,208,0.12);flex-shrink:0}
 .rsec.rsec-main{flex:1;overflow:hidden;display:flex;flex-direction:column;min-height:80px}
 .rsec.rsec-main.rsec-empty{justify-content:center}
