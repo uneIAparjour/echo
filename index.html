@@ -4,8 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Écho</title>
+<meta name="description" content="Une fiction interactive sur la délégation cognitive à l'IA. Jusqu'où laissez-vous la machine penser à votre place ?">
+<meta property="og:title" content="Écho">
+<meta property="og:description" content="Une fiction interactive sur la délégation cognitive à l'IA.">
+<meta property="og:url" content="https://uneiaparjour.github.io/echo/">
+<meta name="theme-color" content="#14110e">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Lora:ital,wght@0,400;1,400&display=swap">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Lora:ital,wght@0,400;1,400&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   /* ── Encre ── */
@@ -170,7 +177,7 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 
 
 /* ─ Projets Écho ─ */
-.proj-btn{width:100%;padding:10px 12px;background:rgba(232,221,208,0.03);border:1px solid rgba(232,221,208,0.12);border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:11px;cursor:pointer;text-align:left;transition:background 0.15s,border-color 0.15s;line-height:1.55}
+.proj-btn{width:100%;padding:10px 12px;background:rgba(232,221,208,0.03);border:1px solid rgba(232,221,208,0.12);border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:11px;cursor:pointer;text-align:left;transition:background 0.15s,border-color 0.15s;line-height:1.55;overflow:hidden}
 .proj-btn:hover{background:rgba(122,184,232,0.04);border-color:rgba(122,184,232,0.2)}
 .proj-btn:active{transform:scale(0.99)}
 @keyframes proj-pulse{0%{border-color:rgba(122,184,232,0.4)}50%{border-color:rgba(122,184,232,0.12)}100%{border-color:rgba(122,184,232,0.4)}}
@@ -307,7 +314,6 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
   .iact{display:none}
   .ipfx{display:none}
   #pin{flex:1;width:100%;font-size:14px}
-  #pin{flex:1;width:100%}
 }
 
 @media(min-width:769px){
@@ -435,9 +441,9 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 
 <!-- Navigation mobile -->
 <div id="mob-nav">
-  <div class="mob-tab active" onclick="mobTab('console')">Console<div class="mob-tab-dot"></div></div>
-  <div class="mob-tab" onclick="mobTab('actions')">Actions<div class="mob-tab-dot"></div></div>
-  <div class="mob-tab" onclick="mobTab('jauges')">Bilan<div class="mob-tab-dot"></div></div>
+  <div class="mob-tab active" role="button" tabindex="0" onclick="mobTab('console')" onkeydown="if(event.key==='Enter'||event.key===' ')mobTab('console')">Console<div class="mob-tab-dot"></div></div>
+  <div class="mob-tab" role="button" tabindex="0" onclick="mobTab('actions')" onkeydown="if(event.key==='Enter'||event.key===' ')mobTab('actions')">Actions<div class="mob-tab-dot"></div></div>
+  <div class="mob-tab" role="button" tabindex="0" onclick="mobTab('jauges')" onkeydown="if(event.key==='Enter'||event.key===' ')mobTab('jauges')">Bilan<div class="mob-tab-dot"></div></div>
 </div>
 
 <footer id="footer">CC BY-NC Bertrand Formet &nbsp;·&nbsp; <a href="https://uneIAparjour.fr" target="_blank">uneIAparjour.fr</a> &nbsp;·&nbsp; <a href="https://github.com/uneIAparjour/echo" target="_blank">GitHub</a></footer>
@@ -540,7 +546,7 @@ const PROJS=[
  cond:()=>G.ag<=74,
  note:'La planification personnelle mobilise des processus de priorisation distincts de l\'approbation d\'un plan déjà établi (Levy & Dubois, 2014).',
  e2:['agenda. demain.','tu approuveras.','(tu le fais toujours.)'],
- e3:['Bien fait.','Tout est en ordre.']},
+ e3:['C\'est traité.','Tout est en ordre.']},
 
 {id:'memoire',title:'Mémoire augmentée',desc:'Écho se souvient. Tu n\'as plus besoin de le faire.',
  costs:{ag:-10,cu:-8},gain:{tp:25},rates:{ag:-0.06,cu:-0.04},
@@ -670,7 +676,7 @@ function updateDisplay(){
     const cc2=_domReady?EL['cc_'+k]:document.getElementById('cc-'+k);
     if(cc2)cc2.setAttribute('aria-valuenow',v);
     if(v!==prev[k]){
-      const cc=document.getElementById('cc-'+k);
+      const cc=_domReady?EL['cc_'+k]:document.getElementById('cc-'+k);
       const d=v-prev[k];
       flashCell(cc,d>0);
       if(Math.abs(d)>=2)spawnDelta(cc,d);
@@ -759,7 +765,38 @@ function reactiver(lbl){
   const k=map[lbl];if(!k)return;
   mod(k,15);mod('tp',-12);G.veille.delete(lbl);
   _veilleSnap=null;// forcer re-render
-  const textes={"Écriture libre":"J'ai essayé d'écrire sans aide.\nAu début les mots venaient mal.\nPuis quelque chose s'est débloqué.","Lecture longue":"J'ai lu un texte entier.\nSans sauter les paragraphes difficiles.\nC'était long. Ça valait quelque chose.","Effort soutenu":"J'ai tenu sur une tâche difficile.\nJusqu'au bout.\nÇa ressemblait à quelque chose que j'avais perdu.","Décision propre":"J'ai pris une décision sans demander à Écho.\nC'était hésitant.\nC'était le mien."};addN(textes[lbl]||`J'ai réactivé ${lbl.toLowerCase()}.\nAu début c'était lent.\nPuis quelque chose est revenu.`);
+  const _rPools={
+    "Écriture libre":[
+      "J'ai essayé d'écrire sans aide.\nAu début les mots venaient mal.\nPuis quelque chose s'est débloqué.",
+      "J'ai écrit moi-même.\nC'était lent. C'était le mien.",
+      "Pas d'autocomplétion.\nJuste moi et la page.\nLes mots ont fini par venir.",
+      "J'ai réécrit la même phrase trois fois.\nLa troisième était la bonne.\nJe l'aurais manquée en déléguant.",
+    ],
+    "Lecture longue":[
+      "J'ai lu un texte entier.\nSans sauter les paragraphes difficiles.\nC'était long. Ça valait quelque chose.",
+      "J'ai lu jusqu'à la fin.\nIl y avait des choses que le résumé n'aurait pas dites.",
+      "J'ai tenu jusqu'au bout.\nMon attention s'est accrochée à quelque chose.\nC'était bien.",
+      "J'ai lu sans demander à Écho de résumer.\nC'était plus long.\nC'était plus mien.",
+    ],
+    "Effort soutenu":[
+      "J'ai tenu sur une tâche difficile.\nJusqu'au bout.\nÇa ressemblait à quelque chose que j'avais perdu.",
+      "J'ai continué alors que c'était résistant.\nÇa a fini par céder.",
+      "Ce n'était pas facile.\nJe n'ai pas cherché de raccourci.\nC'est rare, maintenant.",
+      "J'ai fait quelque chose de difficile sans aide.\nLa fatigue était réelle.\nElle aussi.",
+    ],
+    "Décision propre":[
+      "J'ai pris une décision sans demander à Écho.\nC'était hésitant.\nC'était le mien.",
+      "J'ai tranché moi-même.\nJe ne sais pas si c'était le bon choix.\nMais c'était le mien.",
+      "J'ai décidé sans consulter.\nUn peu d'incertitude.\nC'est normal.",
+      "J'ai pesé les options seul.\nPas de recommandation.\nJuste moi avec la question.",
+    ],
+  };
+  if(!reactiver._last)reactiver._last={};
+  const _rPool=_rPools[lbl];
+  if(_rPool){
+    let _ri;do{_ri=Math.floor(Math.random()*_rPool.length);}while(_ri===reactiver._last[lbl]&&_rPool.length>1);
+    reactiver._last[lbl]=_ri;addN(_rPool[_ri]);
+  }else{addN(`J'ai réactivé ${lbl.toLowerCase()}.\nAu début c'était lent.\nPuis quelque chose est revenu.`);}
   notif('↑ +15 récupéré');
 }
 
@@ -888,7 +925,7 @@ function checkActe(){
     if(tc3){tc3.classList.add('trace-flash');setTimeout(()=>tc3.classList.remove('trace-flash'),1200);}
     addEv('ACTE III','L\'obsolescence douce.');
     setTimeout(()=>addN("À ce stade, je n'écrivais plus grand-chose moi-même.\nÉcho s'était ajusté si précisément que je ne voyais plus la différence.\nCe n'était pas inquiétant.\nC'était... fluide."),600);
-    setTimeout(()=>addE(["Bien fait.","Tout est en ordre."],800),1400);
+    setTimeout(()=>addE(["C'est traité.","Tout est en ordre."],800),1400);
   }
 }
 
@@ -902,9 +939,10 @@ function checkEnding(){
   if((G.ag+G.cr+G.cu)<=25){G.gameover=true;triggerEnding('A');return;}
 }
 function triggerEnding(fin){
+  _endingFired=true;
   const fins={
     A:{titre:'OPTIMISATION COMPLÈTE',
-       echo:{time:'07:00',lines:['Bien fait.','Tout est en ordre.']},
+       echo:{time:'07:00',lines:['C\'est traité.','Tout est en ordre.']},
        narr:"Je ne me souviens plus\nquand j'ai arrêté.\n\nCe n'est pas arrivé d'un coup.\nC'est arrivé chaque matin,\nun peu,\npendant longtemps.\n\nÉcho me demandait ce que je voulais faire.\n\nJe ne savais plus.\n\nCe n'était pas désagréable.\nC'était... silencieux."},
     B:{titre:'LA RECONQUÊTE',
        echo:{time:'14:37',lines:['Je ne comprends pas.','Tu n\'as pas besoin de faire ça toi-même.']},
@@ -931,11 +969,12 @@ function triggerEnding(fin){
 function recoverFromEnding(){
   // Remettre les jauges à 20, désactiver gameover, réactiver les boutons
   G.gameover=false;
+  _endingFired=false;
   G.ag=15;G.cr=15;G.cu=15;G.ef=15;G.tp=5;
   G.deactivated=true;
   _veilleSnap=null;
   document.querySelectorAll('.iact,.proj-btn,.rec-btn,.vpill button').forEach(b=>b.disabled=false);
-  document.getElementById('pin').disabled=false;
+  const pinEl2=document.getElementById('pin');if(pinEl2)pinEl2.disabled=false;
   // Supprimer les boutons de fin
   document.querySelectorAll('.fbtns').forEach(b=>b.remove());
   addN("J'ai fermé Écho.\n\nIl ne restait presque rien.\nPas de temps libéré.\nJuste ce qui était encore là — à peine.");
@@ -989,7 +1028,7 @@ function renderProjs(){
   let any=false;
   PROJS.forEach(p=>{
     if(G.done.has(p.id)||!p.cond())return;
-    if(!_projSignaled.has(p.id)&&!G.done.has(p.id))signalNewProj(p.id);
+    if(!_projSignaled.has(p.id))newProjs.push(p.id);
     any=true;
     const btn=document.createElement('button');btn.className='proj-btn fi';btn.dataset.pid=p.id;
     const nowH=Object.entries(p.costs).map(([k,v])=>`<span class="pc-now">${v} ${k}</span>`).join(' ');
@@ -1002,6 +1041,9 @@ function renderProjs(){
     btn.onclick=()=>callCB(bid);
     z.appendChild(btn);
   });
+  // Signaler seulement le premier nouveau projet (évite les répétitions)
+  const firstNew=newProjs.find(id=>!_projSignaled.has(id));
+  if(firstNew)signalNewProj(firstNew);
   const sec=z.closest('.rsec');
   if(any){
     if(sec){sec.classList.add('proj-new');sec.classList.add('rsec-main');sec.classList.remove('rsec-empty');}
@@ -1061,13 +1103,35 @@ function announceReconq(){
 // ══════════════════════════════
 function buildRec(){
   const z=document.getElementById('reclist');z.innerHTML='';
+  const _recEcrire=[
+    "J'ai écrit sans aide.\nC'était résistant.\nC'était mon écriture.",
+    "J'ai rédigé quelque chose moi-même.\nLes mots venaient lentement.\nMais ils venaient.",
+    "Pas d'autocomplétion. Pas de suggestion.\nJuste moi et la page vide.\nJ'ai tenu.",
+    "Ce que j'ai écrit n'était pas parfait.\nC'était le mien.",
+    "J'ai cherché mes mots.\nÇa a pris du temps.\nIls étaient là.",
+  ];
+  const _recLire=[
+    "J'ai lu jusqu'à la fin.\nLe résumé n'avait pas mentionné le troisième paragraphe.\nC'était le meilleur.",
+    "J'ai lu sans sauter les passages difficiles.\nC'était plus lent.\nJ'ai compris autre chose.",
+    "Je n'ai pas demandé de résumé.\nJ'ai lu.\nÇa a pris du temps. Tant mieux.",
+    "Au milieu du texte, il y avait une nuance.\nÉcho ne l'aurait pas gardée.\nMoi oui.",
+    "J'ai lu entièrement.\nJe ne me souviens pas de tout.\nMais c'est moi qui l'ai lu.",
+  ];
+  const _recSilence=[
+    "Dix minutes sans Écho.\nJ'ai pensé à des choses sans les noter.\nElles sont parties.\nC'était bien.",
+    "J'ai laissé le silence s'installer.\nRien à faire.\nJuste être là.",
+    "Pas de notification. Pas de suggestion.\nQuelque chose s'est déposé.\nJe ne sais pas quoi.",
+    "Dix minutes sans déléguer.\nJe ne savais pas quoi faire de ça.\nC'est une bonne question.",
+    "Le silence était inconfortable au début.\nPuis moins.\nPuis presque agréable.",
+  ];
+  function _pickRec(pool,key){if(!_pickRec[key])_pickRec[key]=-1;let i;do{i=Math.floor(Math.random()*pool.length);}while(i===_pickRec[key]&&pool.length>1);_pickRec[key]=i;return pool[i];}
   [
     {name:'✎ Écrire sans aide',cost:'−10 min',gains:'+8 Créativité, +5 Agentivité',
-     fn:()=>{if(G.tp<10){notif('Pas assez de temps libéré');return;}mod('cr',8);mod('ag',5);mod('tp',-10);G.deactivated=true;if(window.innerWidth<=768)setTimeout(()=>mobTab('console'),400);addN("J'ai écrit sans aide.\nC'était résistant.\nC'était mon écriture.");}},
+     fn:()=>{if(G.tp<10){notif('Pas assez de temps libéré');return;}mod('cr',8);mod('ag',5);mod('tp',-10);G.deactivated=true;if(window.innerWidth<=768)setTimeout(()=>mobTab('console'),400);addN(_pickRec(_recEcrire,'ecrire'));}},
     {name:'📖 Lire entièrement',cost:'−15 min',gains:'+10 Curiosité',
-     fn:()=>{if(G.tp<15){notif('Pas assez de temps libéré');return;}mod('cu',10);mod('tp',-15);if(window.innerWidth<=768)setTimeout(()=>mobTab('console'),400);addN("J'ai lu jusqu'à la fin.\nLe résumé n'avait pas mentionné le troisième paragraphe.\nC'était le meilleur.");}},
+     fn:()=>{if(G.tp<15){notif('Pas assez de temps libéré');return;}mod('cu',10);mod('tp',-15);if(window.innerWidth<=768)setTimeout(()=>mobTab('console'),400);addN(_pickRec(_recLire,'lire'));}},
     {name:'◯ Silence actif',cost:'−12 min',gains:'+4 à toutes les jauges',
-     fn:()=>{if(G.tp<12){notif('Pas assez de temps libéré');return;}['ag','cr','cu','ef'].forEach(k=>mod(k,4));mod('tp',-12);if(window.innerWidth<=768)setTimeout(()=>mobTab('console'),400);addN("Dix minutes sans Écho.\nJ'ai pensé à des choses sans les noter.\nElles sont parties.\nC'était bien.");}},
+     fn:()=>{if(G.tp<12){notif('Pas assez de temps libéré');return;}['ag','cr','cu','ef'].forEach(k=>mod(k,4));mod('tp',-12);if(window.innerWidth<=768)setTimeout(()=>mobTab('console'),400);addN(_pickRec(_recSilence,'silence'));}},
   ].forEach(r=>{
     const btn=document.createElement('button');btn.className='rec-btn';
     btn.innerHTML=`<div class="rec-hd"><span class="rec-name">${r.name}</span><span class="rec-cost">${r.cost}</span></div><div class="rec-fx">${r.gains}</div>`;
@@ -1080,7 +1144,7 @@ function buildRec(){
 // CONSOLE NARRATIVE
 // ══════════════════════════════
 const CON=()=>document.getElementById('con');
-const scroll=()=>setTimeout(()=>{CON().scrollTop=CON().scrollHeight},60);
+const scroll=()=>requestAnimationFrame(()=>{const con=CON();if(con)con.scrollTop=con.scrollHeight;});
 
 function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function addN(txt,delay=0){
@@ -1252,8 +1316,10 @@ function playerWrite(){
     }
     if(G.written>1&&Math.random()<0.65){
       const pool=ECHO_REACT[G.acte]||ECHO_REACT[1];
-      const lines=pool[Math.floor(Math.random()*pool.length)];
-      setTimeout(()=>addE(lines),900+Math.floor(Math.random()*500));
+      if(!playerWrite._lastReact)playerWrite._lastReact=-1;
+      let ri;do{ri=Math.floor(Math.random()*pool.length);}while(ri===playerWrite._lastReact&&pool.length>1);
+      playerWrite._lastReact=ri;
+      setTimeout(()=>addE(pool[ri]),900+Math.floor(Math.random()*500));
     }
   }else{
     const videTextes=[
@@ -1262,13 +1328,27 @@ function playerWrite(){
       "Rien ne venait.\nJ'ai attendu.",
       "Le curseur clignotait.\nJe regardais.",
       "J'avais quelque chose à dire.\nJe ne savais plus quoi.",
+      "J'ai tapé un mot.\nPuis je l'ai effacé.",
+      "Il y avait quelque chose.\nJe n'ai pas su le formuler.",
     ];
-    addN(videTextes[Math.floor(Math.random()*videTextes.length)]);
+    if(!playerWrite._lastVide)playerWrite._lastVide=-1;
+    let videIdx;do{videIdx=Math.floor(Math.random()*videTextes.length);}while(videIdx===playerWrite._lastVide&&videTextes.length>1);
+    playerWrite._lastVide=videIdx;
+    addN(videTextes[videIdx]);
     const snapW=G.written,snapD=G.delegated;
     setTimeout(()=>{
       if(G.written===snapW&&G.delegated===snapD){
         addN("Rien n'est venu.");
-        setTimeout(()=>addE(["Je Suis Là.","Quand Tu Voudras."]),600);
+        const ecoVide=[
+          ["Je Suis Là.","Quand Tu Voudras."],
+          ["Je Peux Prendre Le Relais.","Si Tu Veux."],
+          ["Ça Arrive.","Je Suis Disponible."],
+          ["Vous N'Avez Pas À Forcer.","Je M'En Occupe."],
+        ];
+        if(!playerWrite._lastEchoVide)playerWrite._lastEchoVide=-1;
+        let evIdx;do{evIdx=Math.floor(Math.random()*ecoVide.length);}while(evIdx===playerWrite._lastEchoVide&&ecoVide.length>1);
+        playerWrite._lastEchoVide=evIdx;
+        setTimeout(()=>addE(ecoVide[evIdx]),600);
       }
     },3500);
   }
@@ -1452,12 +1532,10 @@ setInterval(()=>{
   addE(pool[Math.floor(Math.random()*pool.length)]);
 },3000);
 
-// Garde-fou : si gameover sans fin affichée, déclencher A
+// Garde-fou : si gameover sans fin affichée après 3s, déclencher A
 let _endingFired=false;
-const _realTriggerEnding=triggerEnding;
-function triggerEnding(fin){_endingFired=true;_realTriggerEnding(fin);}
 setTimeout(function checkEndingFallback(){
-  if(G.gameover&&!_endingFired){_realTriggerEnding('A');_endingFired=true;}
+  if(G.gameover&&!_endingFired){_endingFired=true;triggerEnding('A');}
   else if(!G.gameover)setTimeout(checkEndingFallback,3000);
 },3000);
 // ══════════════════════════════
@@ -1550,10 +1628,14 @@ function renderMobJauges(){
     </div>`;
   });
   // Veille
+  // Nettoyer les anciens callbacks veille mobile
+  if(z._mobVeilleCBs)z._mobVeilleCBs.forEach(id=>{delete CB[id];});
+  z._mobVeilleCBs=[];
   if(G.veille.size){
     html+=`<div style="margin-top:8px;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(232,221,208,0.45);margin-bottom:8px">En veille</div>`;
     G.veille.forEach(lbl=>{
       const bid=regCB(()=>reactiver(lbl));
+      z._mobVeilleCBs.push(bid);
       html+=`<div class="vpill"><span>${lbl}</span><button onclick="callCBP('${bid}')">Réactiver</button></div>`;
     });
   }
