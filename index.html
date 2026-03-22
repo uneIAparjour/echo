@@ -205,7 +205,7 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 .tt{cursor:help}
 #tooltip{position:fixed;display:none;width:220px;padding:10px 13px;background:#1e1a15;border:1px solid rgba(232,221,208,0.22);border-radius:4px;font-size:11px;line-height:1.65;color:#e8ddd0;font-family:'JetBrains Mono',monospace;font-weight:400;text-transform:none;letter-spacing:0;z-index:9999;pointer-events:none;white-space:normal;box-shadow:0 4px 16px rgba(0,0,0,0.5)}
 #tooltip strong{color:var(--narr);font-weight:500}
-::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:var(--border2)}*{scrollbar-width:thin;scrollbar-color:var(--border2) transparent}*{scrollbar-width:thin;scrollbar-color:var(--border2) transparent}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:var(--border2)}*{scrollbar-width:thin;scrollbar-color:var(--border2) transparent}
 
 /* ══════════════════════════════════════
    MOBILE — max-width: 768px
@@ -306,25 +306,25 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 
 <!-- ══ BANDEAU 5 COMPTEURS ══ -->
 <div id="top">
-  <div class="cc" id="cc-ag">
+  <div class="cc" id="cc-ag" role="meter" aria-label="Agentivité" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
     <div class="clbl tt" data-tip="&lt;strong&gt;Agentivité&lt;/strong&gt; — ta capacité à décider par toi-même.&lt;br&gt;&lt;span style='color:#8ab87a'&gt;Monte&lt;/span&gt; quand tu écris toi-même.&lt;br&gt;&lt;span style='color:#d07060'&gt;Descend&lt;/span&gt; à chaque délégation et si des fonctions Écho sont actives.">Agentivité</div>
     <div class="cnum" id="cv-ag" style="color:var(--ag)">100</div>
     <div class="cbar"><div class="cbfill" id="cb-ag" style="width:100%;background:var(--ag)"></div></div>
     <div class="crate ze" id="cr-ag">stable</div>
   </div>
-  <div class="cc" id="cc-cr">
+  <div class="cc" id="cc-cr" role="meter" aria-label="Créativité" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
     <div class="clbl tt" data-tip="&lt;strong&gt;Créativité&lt;/strong&gt; — ta capacité à produire quelque chose d'original.&lt;br&gt;&lt;span style='color:#8ab87a'&gt;Monte&lt;/span&gt; quand tu écris toi-même.&lt;br&gt;&lt;span style='color:#d07060'&gt;Descend&lt;/span&gt; quand Écho génère à ta place.">Créativité</div>
     <div class="cnum" id="cv-cr" style="color:var(--cr)">100</div>
     <div class="cbar"><div class="cbfill" id="cb-cr" style="width:100%;background:var(--cr)"></div></div>
     <div class="crate ze" id="cr-cr">stable</div>
   </div>
-  <div class="cc" id="cc-cu">
+  <div class="cc" id="cc-cu" role="meter" aria-label="Curiosité" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
     <div class="clbl tt" data-tip="&lt;strong&gt;Curiosité&lt;/strong&gt; — ta capacité à formuler des questions.&lt;br&gt;&lt;span style='color:#8ab87a'&gt;Monte&lt;/span&gt; en lisant toi-même.&lt;br&gt;&lt;span style='color:#d07060'&gt;Descend&lt;/span&gt; quand Écho cherche, résume ou filtre à ta place.">Curiosité</div>
     <div class="cnum" id="cv-cu" style="color:var(--cu)">100</div>
     <div class="cbar"><div class="cbfill" id="cb-cu" style="width:100%;background:var(--cu)"></div></div>
     <div class="crate ze" id="cr-cu">stable</div>
   </div>
-  <div class="cc" id="cc-ef">
+  <div class="cc" id="cc-ef" role="meter" aria-label="Effort" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
     <div class="clbl tt" data-tip="&lt;strong&gt;Effort&lt;/strong&gt; — ta capacité à soutenir une tâche difficile.&lt;br&gt;&lt;span style='color:#8ab87a'&gt;Monte&lt;/span&gt; avec la pratique et la récupération.&lt;br&gt;&lt;span style='color:#d07060'&gt;Descend&lt;/span&gt; à chaque raccourci délégué.">Effort</div>
     <div class="cnum" id="cv-ef" style="color:var(--ef)">100</div>
     <div class="cbar"><div class="cbfill" id="cb-ef" style="width:100%;background:var(--ef)"></div></div>
@@ -356,7 +356,7 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 </div>
 
 <!-- ══ CORPS ══ -->
-<div id="main">
+<main id="main" aria-label="Jeu Écho">
 
 <!-- ── CENTRE ── -->
 <div id="centre">
@@ -606,6 +606,28 @@ function checkSignalRecovery(){
     }
   },45000);
 }
+
+// ══════════════════════════════
+// CACHE DOM (perf boucle)
+// ══════════════════════════════
+let _domReady=false;
+const EL={};
+function initDomCache(){
+  ['ag','cr','cu','ef','tp'].forEach(k=>{
+    EL['cv_'+k]=document.getElementById('cv-'+k);
+    EL['cb_'+k]=document.getElementById('cb-'+k);
+    EL['cr_'+k]=document.getElementById('cr-'+k);
+    EL['cc_'+k]=document.getElementById('cc-'+k);
+  });
+  EL.tpage=document.getElementById('tpage');
+  EL.tcursor=document.getElementById('tcursor');
+  EL.sdel=document.getElementById('sdel');
+  EL.swri=document.getElementById('swri');
+  EL.sratio=document.getElementById('sratio');
+  EL.actelbl=document.getElementById('acte-lbl');
+  EL.tstages=document.querySelectorAll('.tstage');
+  _domReady=true;
+}
 // ══════════════════════════════
 // BOUCLE TEMPS RÉEL
 // ══════════════════════════════
@@ -630,7 +652,9 @@ function updateDisplay(){
   const ks=['ag','cr','cu','ef','tp'];
   ks.forEach(k=>{
     const v=Math.round(k==='tp'?G.tp:G[k]);
-    const el=document.getElementById('cv-'+k);if(!el)return;
+    const el=_domReady?EL['cv_'+k]:document.getElementById('cv-'+k);if(!el)return;
+    const cc2=_domReady?EL['cc_'+k]:document.getElementById('cc-'+k);
+    if(cc2)cc2.setAttribute('aria-valuenow',v);
     if(v!==prev[k]){
       const cc=document.getElementById('cc-'+k);
       const d=v-prev[k];
@@ -658,19 +682,19 @@ function updateDisplay(){
   const TSTAGES=['présence','délestage','distance','effacement','silence'];
   let tidx=G.ag>=85?0:G.ag>=65?1:G.ag>=45?2:G.ag>=20?3:4;
   const tpct=3+(((100-G.ag)/100)*94);
-  const tc=document.getElementById('tcursor');
+  const tc=_domReady?EL.tcursor:document.getElementById('tcursor');
   if(tc)tc.style.left=tpct+'%';
   document.querySelectorAll('.tstage').forEach((el,i)=>{
     el.className='tstage'+(i<tidx?' tpast':i===tidx?' tact':'');
   });
-  const tpel=document.getElementById('tpage');
+  const tpel=_domReady?EL.tpage:document.getElementById('tpage');
   if(tpel)tpel.textContent=G.page;
 
   const totalDel=G.delegated+G.done.size;
-  document.getElementById('sdel').textContent=totalDel;
-  document.getElementById('swri').textContent=G.written;
+  const sdel=_domReady?EL.sdel:document.getElementById('sdel');if(sdel)sdel.textContent=totalDel;
+  const swri=_domReady?EL.swri:document.getElementById('swri');if(swri)swri.textContent=G.written;
   const tot=totalDel+G.written;
-  document.getElementById('sratio').textContent=tot===0?'—':`${Math.round(totalDel/tot*100)}% délégué`;
+  const sratio=_domReady?EL.sratio:document.getElementById('sratio');if(sratio)sratio.textContent=tot===0?'—':`${Math.round(totalDel/tot*100)}% délégué`;
 }
 
 function flashCell(cell,up){
@@ -701,7 +725,13 @@ function checkVeille(){
   const snap=JSON.stringify([...G.veille].sort());
   if(snap===_veilleSnap)return;
   _veilleSnap=snap;
-  const z=document.getElementById('vzone');z.innerHTML='';
+  const z=document.getElementById('vzone');
+  // Nettoyer les callbacks orphelins avant rebuild
+  z.querySelectorAll('[onclick]').forEach(btn=>{
+    const m=btn.getAttribute('onclick').match(/callCBP\('(\w+)'\)/);
+    if(m&&CB[m[1]])delete CB[m[1]];
+  });
+  z.innerHTML='';
   if(!G.veille.size){z.innerHTML='<div style="font-size:10px;color:var(--text3);font-style:italic">Aucune compétence en veille.</div>';return;}
   G.veille.forEach(lbl=>{
     const e=document.createElement('div');e.className='vpill';
@@ -886,7 +916,7 @@ function recoverFromEnding(){
   G.ag=15;G.cr=15;G.cu=15;G.ef=15;G.tp=5;
   G.deactivated=true;
   _veilleSnap=null;
-  document.querySelectorAll('.iact,.rec-btn,.vpill button').forEach(b=>b.disabled=false);
+  document.querySelectorAll('.iact,.proj-btn,.rec-btn,.vpill button').forEach(b=>b.disabled=false);
   document.getElementById('pin').disabled=false;
   // Supprimer les boutons de fin
   document.querySelectorAll('.fbtns').forEach(b=>b.remove());
@@ -1006,8 +1036,7 @@ function gameTime(){
   return String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');
 }
 function advanceClock(min){G.clock+=min;}
-/* streamText — conservé pour compatibilité, remplacé par _streamQ */
-function streamText(el,html,acte){
+function _streamQ(el,html,acte){
   const tokens=[];let i=0;
   while(i<html.length){
     if(html[i]==='<'){const end=html.indexOf('>',i);tokens.push(html.slice(i,end+1));i=end+1;}
@@ -1209,6 +1238,7 @@ document.getElementById('pin').addEventListener('keydown',e=>{if(e.key==='Enter'
 // OUVERTURE
 // ══════════════════════════════
 function startGame(){
+  initDomCache();
   addN("J'avais l'habitude de noter les idées à la main.\nUn carnet bleu, couverture cartonnée, stylo bille noir.\nJ'en étais à la page 47.",600);
   addE(["Bonjour.","Je Suis Écho.","Je Peux Rédiger Vos Textes, Résumer Vos Documents, Organiser Vos Journées.","Par Où Souhaitez-Vous Commencer ?"],2200);
   setTimeout(proposerTache,5500);
