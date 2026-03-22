@@ -4,11 +4,11 @@
 
 ---
 
-Écho est un jeu narratif incremental sur la délégation cognitive à l'IA.
+Vous êtes à la page 47 d'un carnet bleu. Écho arrive. Il peut corriger vos textes, résumer vos documents, répondre à vos mails, gérer votre agenda, compléter vos phrases. Chaque délégation libère du temps. Chaque délégation coûte un peu de vous.
 
-Le joueur interagit avec un assistant nommé Écho. Au fil du jeu, il lui confie des tâches — rédiger, chercher, décider. Ses capacités propres déclinent. Il peut résister, récupérer, ou laisser faire jusqu'au silence complet.
+Le jeu dure vingt à trente minutes. Il n'y a pas d'ennemis, pas de score, pas de bonne réponse. Trois fins sont possibles — selon ce que vous choisissez de garder, ou de laisser.
 
-Ce n'est pas une condamnation de l'IA. C'est une observation.
+Vous ne voyez pas quand Écho change. C'est souvent comme ça — on ne bascule pas, on glisse.
 
 ---
 
@@ -16,7 +16,7 @@ Ce n'est pas une condamnation de l'IA. C'est une observation.
 
 Ouvrir `index.html` dans un navigateur. Aucune installation, aucune dépendance.
 
-Compatible Chrome, Firefox, Safari. Temps de jeu estimé : 30 à 60 minutes.
+Compatible Chrome, Firefox, Safari. Fonctionne sur mobile.
 
 ---
 
@@ -26,17 +26,17 @@ Compatible Chrome, Firefox, Safari. Temps de jeu estimé : 30 à 60 minutes.
 |---|---|
 | `index.html` | Le jeu — fichier unique autonome |
 | `echo-regles.md` | Document de conception complet |
-| `LICENSE.txt` | Licence CC BY 4.0 |
+| `LICENSE.txt` | Licence CC BY-NC 4.0 |
 
 → [Règles de conception complètes](echo-regles.md)
 
 ---
 
-## Contexte pédagogique
+## Public
 
-Écho est conçu pour les enseignants, formateurs et médiateurs numériques qui souhaitent aborder la question de l'agentivité humaine face aux outils d'IA générative.
+Écho s'adresse à tout public. Aucune connaissance technique n'est requise.
 
-Le jeu s'appuie sur des travaux de recherche en psychologie cognitive et neurosciences (Tricot, Maquestiaux, Sparrow, Kahneman et al.) — chaque mécanique est sourcée.
+Une utilisation en contexte éducatif est possible — le jeu s'appuie sur des travaux de recherche en psychologie cognitive et neurosciences (Tricot, Maquestiaux, Sparrow, Kahneman et al.) et peut servir de point de départ à une discussion sur la délégation cognitive aux outils d'IA.
 
 ---
 

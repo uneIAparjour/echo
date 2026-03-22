@@ -9,7 +9,7 @@ Fichier de jeu : `index.html` — https://uneiaparjour.github.io/echo/
 ### 1.1 Concept central
 Le joueur est un humain qui interagit avec un assistant IA nommé **Écho**. Au fil du jeu, il délègue progressivement ses tâches cognitives à Écho. Ses capacités propres déclinent. Il peut choisir de résister, de récupérer, ou de laisser faire jusqu'au silence complet.
 
-Le jeu est une exploration de l'**agentivité humaine face à l'automatisation cognitive** — pas une condamnation de l'IA, pas un éloge du progrès. Une observation.
+Le jeu est une exploration de l'**agentivité humaine face à l'automatisation cognitive**. Il n'y a pas de bonne réponse. Trois fins sont possibles — selon ce que le joueur choisit de garder, ou de laisser.
 
 ### 1.2 Ce que le jeu n'est pas
 - Ce n'est pas un jeu sur une IA malveillante.
