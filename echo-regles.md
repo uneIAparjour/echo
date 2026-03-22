@@ -1,5 +1,5 @@
 # Écho — Règles de conception
-Document de référence. Version de travail.
+Document de référence.
 Fichier de jeu : `index.html` — https://uneiaparjour.github.io/echo/
 
 ---
@@ -7,9 +7,9 @@ Fichier de jeu : `index.html` — https://uneiaparjour.github.io/echo/
 ## 1. Identité du projet
 
 ### 1.1 Concept central
-Le joueur est un humain qui interagit avec un assistant IA nommé **Écho**. Au fil du jeu, il délègue progressivement ses tâches cognitives à Écho. Ses capacités propres déclinent. Il peut choisir de résister, de récupérer, ou de laisser faire jusqu'au silence complet.
+Le joueur est un humain qui interagit avec un assistant IA nommé **Écho**. Au fil du jeu, il délègue progressivement ses tâches cognitives à Écho. Ses capacités propres déclinent, il libère du temps. Il peut choisir de résister, de récupérer, ou de laisser faire jusqu'au silence complet.
 
-Le jeu est une exploration de l'**agentivité humaine face à l'automatisation cognitive**. Il n'y a pas de bonne réponse. Trois fins sont possibles — selon ce que le joueur choisit de garder, ou de laisser.
+Inspiré de "Universal Paperclips", le jeu est une exploration de l'**agentivité humaine face à l'automatisation cognitive**. Il n'y a pas de bonne réponse. Trois fins sont possibles — selon ce que le joueur choisit de garder ou de laisser.
 
 ### 1.2 Ce que le jeu n'est pas
 - Ce n'est pas un jeu sur une IA malveillante.
@@ -18,12 +18,10 @@ Le jeu est une exploration de l'**agentivité humaine face à l'automatisation c
 - Ce n'est pas une dystopie spectaculaire.
 
 ### 1.3 Monde
-**Uchronie douce à 18 mois.** Pas de robots, pas de catastrophe. Un monde où les outils IA actuels ont été adoptés un peu plus vite, un peu plus profondément. Suffisamment familier pour que le joueur se reconnaisse, suffisamment décalé pour autoriser la fiction.
+**Uchronie douce à quelques mois.** Pas de robots, pas de catastrophe. Un monde où les outils IA actuels ont été adoptés un peu plus vite, un peu plus profondément. Suffisamment familier pour que le joueur se reconnaisse, suffisamment décalé pour autoriser la fiction.
 
 ### 1.4 Nom
-Le jeu s'appelle **Écho**. L'IA s'appelle aussi **Écho**. Pas une marque — un nom commun devenu nom propre, comme on dit "le frigo". Écho écoute, répond, se souvient. Écho est partout.
-
-*(Ancien titre de travail : "Le Prompteur" — abandonné.)*
+Le jeu s'appelle **Écho**. L'IA s'appelle aussi **Écho**. Pas une marque, comme un nom commun devenu nom propre, comme on dit "le frigo". Écho écoute, répond, se souvient. Écho est partout.
 
 ---
 
