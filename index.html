@@ -46,7 +46,7 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 #top{display:grid;grid-template-columns:repeat(5,1fr) 1.7fr;background:var(--bg2);border-bottom:2px solid var(--border2);flex-shrink:0}
 .cc{padding:10px 14px 8px;border-right:1px solid var(--border);position:relative;overflow:hidden;cursor:default;display:flex;flex-direction:column;justify-content:space-between}
 .cc:last-child{border-right:none}
-.clbl{font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--text3);margin-bottom:2px}
+.clbl{font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--text3);margin-bottom:2px;white-space:nowrap}
 .cnum{font-size:34px;font-weight:600;line-height:1;font-variant-numeric:tabular-nums;transition:color 0.3s}
 .cbar{height:2px;background:var(--border);margin-top:6px;border-radius:1px;overflow:hidden}
 .cbfill{height:100%;border-radius:1px;transition:width 0.7s cubic-bezier(.4,0,.2,1)}
@@ -283,6 +283,15 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
   .mob-tp-val{font-size:28px;font-weight:300;color:var(--tp);line-height:1;font-variant-numeric:tabular-nums}
   .mob-tp-q{font-size:9px;color:var(--text3);margin-top:4px;font-style:italic}
 
+
+  /* Boutons choix mobile dans console */
+  .mob-choice{display:flex;gap:8px;margin-top:10px;padding:0 0 4px 12px}
+  .mob-choice-btn{flex:1;padding:10px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:11px;cursor:pointer;text-align:center;border:1px solid;line-height:1.4;min-height:44px;display:flex;flex-direction:column;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent}
+  .mob-choice-accept{background:rgba(208,112,96,0.08);border-color:rgba(208,112,96,0.25);color:#d07060}
+  .mob-choice-write{background:rgba(138,184,122,0.08);border-color:rgba(138,184,122,0.25);color:#8ab87a}
+  .mob-choice-lbl{display:block;font-weight:500;margin-bottom:2px}
+  .mob-choice-sub{display:block;font-size:9px;opacity:0.6}
+  #notif{bottom:calc(58px + env(safe-area-inset-bottom,0px))}
   /* Taille des boutons tactiles ≥44px */
   .iact{min-height:44px}
   .mob-tab{min-height:40px;display:flex;flex-direction:column;align-items:center;justify-content:center}
@@ -290,10 +299,12 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
   .rec-btn,.proj-btn{min-height:44px}
 
   /* Footerau dessus du nav */
-  #footer{order:99}
+  #footer{display:none}
   #mob-nav{padding-bottom:env(safe-area-inset-bottom,0px)}
-  #irow{padding-bottom:calc(7px + env(safe-area-inset-bottom,0px))}
-  #pin{min-width:80px;width:80px;flex:1}
+  #irow{padding-bottom:calc(7px + env(safe-area-inset-bottom,0px));gap:4px}
+  #pin{min-width:90px;flex:1}
+  .iact{padding:7px 8px;letter-spacing:0}
+  .iact-sub{display:none}
 }
 
 @media(min-width:769px){
@@ -1185,6 +1196,7 @@ const ECHO_REACT={
 };
 function playerWrite(){
   clearConCursor();resetIdle();
+  document.querySelectorAll('.mob-choice').forEach(e=>e.remove());
   if(_signalTimer){clearTimeout(_signalTimer);_signalTimer=null;}
   const inp=document.getElementById('pin');
   const txt=inp.value.trim();
@@ -1311,12 +1323,37 @@ function proposerTache(){
       secTitle.classList.add('echo-pulse');
       setTimeout(()=>secTitle.classList.remove('echo-pulse'),2500);
     }
+    // Sur mobile : boutons choix dans la console
+    if(window.innerWidth<=768){
+      const delay=_tacheCourante.prop.join('').length*28+800;
+      setTimeout(addMobChoiceButtons,delay);
+    }
   },400);
   resetIdle();
+}
+function addMobChoiceButtons(){
+  if(!_tacheCourante||G.gameover)return;
+  // Retirer les anciens boutons
+  document.querySelectorAll('.mob-choice').forEach(e=>e.remove());
+  const d=document.createElement('div');
+  d.className='mob-choice';
+  const bidA=regCB(()=>{d.remove();accepterTache();});
+  const bidW=regCB(()=>{d.remove();playerWrite();});
+  d.innerHTML=`
+    <button class="mob-choice-btn mob-choice-accept" onclick="callCB('${bidA}')">
+      <span class="mob-choice-lbl">⟳ Écho s'en occupe</span>
+      <span class="mob-choice-sub">−5 Agentivité  +25 min</span>
+    </button>
+    <button class="mob-choice-btn mob-choice-write" onclick="callCB('${bidW}')">
+      <span class="mob-choice-lbl">✎ J'écris moi-même</span>
+      <span class="mob-choice-sub">+10 Créativité  +5 Ag.</span>
+    </button>`;
+  CON().appendChild(d);scroll();
 }
 function accepterTache(){
   if(!_tacheCourante)return;
   clearConCursor();resetIdle();
+  document.querySelectorAll('.mob-choice').forEach(e=>e.remove());
   G.delegated++;mod('ag',-5);mod('tp',25);advanceClock(25);
   const result=_tacheCourante.result;
   _tacheCourante=null;
