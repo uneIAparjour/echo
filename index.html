@@ -235,7 +235,7 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
   /* Layout : une seule colonne, onglets */
 
   /* Console : visible sur vue console uniquement */
-  #centre{display:flex;flex-direction:column;flex:1;overflow:hidden;min-height:0}
+  #centre{display:flex;flex-direction:column;flex:1;overflow:hidden;min-height:0;padding-bottom:calc(48px + env(safe-area-inset-bottom,0px))}
   #centre.mob-hidden{display:none}
   #con{flex:1;padding:12px 14px}
 
@@ -249,11 +249,8 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
   #mob-jauges.mob-active{display:block}
 
   /* Barre saisie + onglets collés en bas */
-  #irow-title{padding:5px 12px 0;font-size:8px;order:2}
-  #irow{padding:7px 12px;gap:6px;order:2}
-  #centre{order:1}
-  #right{order:1}
-  #mob-jauges{order:1}
+  #irow-title{padding:5px 12px 0;font-size:8px}
+  #irow{padding:7px 12px;gap:6px}
   #pin{min-width:0;font-size:12px}
   .iact{padding:9px 10px;font-size:10px}
   .iact-sub{font-size:9px}
