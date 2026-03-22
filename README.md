@@ -1,6 +1,6 @@
 # Écho
 
-V1
+V1 : version ordinateur et mobile.
 ---
 
 Vous êtes à la page 47 d'un carnet bleu. Écho arrive. Il peut corriger vos textes, résumer vos documents, répondre à vos mails, gérer votre agenda, compléter vos phrases. Chaque délégation libère du temps. Chaque délégation coûte un peu de vous.
