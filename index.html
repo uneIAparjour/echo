@@ -241,11 +241,11 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
   #con{flex:1;padding:12px 14px}
 
   /* Colonne droite : masquée par défaut, affichée via onglet */
-  #right{display:none;flex:1;overflow-y:auto;min-height:0}
+  #right{display:none;overflow-y:auto;height:calc(100dvh - 80px - 50px - env(safe-area-inset-bottom,0px));background:var(--bg3)}
   #right.mob-active{display:flex;flex-direction:column}
 
   /* Vue Jauges : panneau dédié */
-  #mob-jauges{display:none;flex:1;overflow-y:auto;background:var(--bg);padding:12px 14px;min-height:0}
+  #mob-jauges{display:none;overflow-y:auto;height:calc(100dvh - 80px - 50px - env(safe-area-inset-bottom,0px));background:var(--bg);padding:12px 14px}
   #mob-jauges.mob-active{display:block}
 
   /* Barre saisie + onglets collés en bas */
@@ -259,7 +259,7 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
   .iact-sub{font-size:9px}
 
   /* Onglets navigation */
-  #mob-nav{display:flex;background:#0f0d0a;border-top:1px solid rgba(232,221,208,0.1);flex-shrink:0}
+  #mob-nav{display:flex;background:#0f0d0a;border-top:1px solid rgba(232,221,208,0.1);position:fixed;bottom:0;left:0;right:0;z-index:50;padding-bottom:env(safe-area-inset-bottom,0px)}
   .mob-tab{flex:1;padding:8px 4px;text-align:center;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#9a8068;border-right:1px solid rgba(232,221,208,0.07);cursor:pointer;transition:all 0.15s;-webkit-tap-highlight-color:transparent}
   .mob-tab:last-child{border-right:none}
   .mob-tab.active{color:var(--text);background:#1e1a15}
@@ -291,7 +291,7 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
   .mob-choice-write{background:rgba(138,184,122,0.08);border-color:rgba(138,184,122,0.25);color:#8ab87a}
   .mob-choice-lbl{display:block;font-weight:500;margin-bottom:2px}
   .mob-choice-sub{display:block;font-size:9px;opacity:0.6}
-  #notif{bottom:calc(58px + env(safe-area-inset-bottom,0px))}
+  #notif{bottom:calc(55px + env(safe-area-inset-bottom,0px));z-index:200}
   /* Taille des boutons tactiles ≥44px */
   .iact{min-height:44px}
   .mob-tab{min-height:40px;display:flex;flex-direction:column;align-items:center;justify-content:center}
@@ -301,7 +301,8 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
   /* Footerau dessus du nav */
   #footer{display:none}
   #mob-nav{padding-bottom:env(safe-area-inset-bottom,0px)}
-  #irow{padding-bottom:calc(7px + env(safe-area-inset-bottom,0px));gap:4px}
+  #irow{padding-bottom:7px;gap:4px}
+  #irow-title{padding-bottom:0}
   #pin{min-width:90px;flex:1}
   .iact{padding:7px 8px;letter-spacing:0}
   .iact-sub{display:none}
@@ -1084,6 +1085,10 @@ function _nextE(){
       irow.classList.add('irow-pulse');
       setTimeout(()=>irow.classList.remove('irow-pulse'),2000);
     }
+    // Sur mobile : afficher boutons choix si tâche en attente
+    if(window.innerWidth<=768&&_tacheCourante&&!G.gameover){
+      setTimeout(addMobChoiceButtons,300);
+    }
     return;
   }
   _eTyping=true;
@@ -1313,6 +1318,7 @@ let _tacheCourante=null;
 
 function proposerTache(){
   if(G.gameover)return;
+  if(_tacheCourante)return;// déjà une tâche en attente
   const pool=TACHES[G.acte]||TACHES[1];
   _tacheCourante=pool[Math.floor(Math.random()*pool.length)];
   setTimeout(()=>{
@@ -1323,11 +1329,7 @@ function proposerTache(){
       secTitle.classList.add('echo-pulse');
       setTimeout(()=>secTitle.classList.remove('echo-pulse'),2500);
     }
-    // Sur mobile : boutons choix dans la console
-    if(window.innerWidth<=768){
-      const delay=_tacheCourante.prop.join('').length*28+800;
-      setTimeout(addMobChoiceButtons,delay);
-    }
+
   },400);
   resetIdle();
 }
