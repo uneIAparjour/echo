@@ -302,9 +302,8 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
   #footer{display:none}
   #mob-nav{padding-bottom:env(safe-area-inset-bottom,0px)}
   #irow{padding-bottom:7px;gap:4px}
-  #irow-title{padding-bottom:0}
-  .iact{display:none}
-  .ipfx{display:none}
+  #irow-title{display:none}
+  #irow{display:none}
   #pin{flex:1;width:100%}
 }
 
@@ -343,7 +342,7 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
     <div class="crate ze" id="cr-ef">stable</div>
   </div>
   <div class="cc" id="cc-tp">
-    <div class="clbl tt" data-tip="&lt;strong&gt;Temps libéré&lt;/strong&gt; — les minutes gagnées grâce à Écho.&lt;br&gt;&lt;span style='color:#8ab87a'&gt;Monte&lt;/span&gt; à chaque délégation.&lt;br&gt;S'utilise pour reconquérir les compétences en veille.&lt;br&gt;&lt;em&gt;Pour faire quoi ?&lt;/em&gt;">Temps libéré</div>
+    <div class="clbl tt" id="clbl-tp" data-tip="&lt;strong&gt;Temps libéré&lt;/strong&gt; — les minutes gagnées grâce à Écho.&lt;br&gt;&lt;span style='color:#8ab87a'&gt;Monte&lt;/span&gt; à chaque délégation.&lt;br&gt;S'utilise pour reconquérir les compétences en veille.&lt;br&gt;&lt;em&gt;Pour faire quoi ?&lt;/em&gt;">Temps libéré</div>
     <div style="display:flex;align-items:baseline;gap:4px"><div class="cnum" id="cv-tp" style="color:var(--tp)">0</div><div style="font-size:11px;color:var(--text3)">min</div></div>
     <div class="cbar"><div class="cbfill" id="cb-tp" style="width:0%;background:var(--tp)"></div></div>
     <div class="crate ze" id="cr-tp">en attente</div>
@@ -894,7 +893,7 @@ function checkEnding(){
   if(G.gameover)return;
   if(G.deactivated&&G.ag>45&&G.cr>45&&G.cu>45&&G.written>=3){G.gameover=true;triggerEnding('B');return;}
   if(!G.deactivated&&G.acte>=2&&G.ag>=50&&G.cr>=50&&G.cu>=50&&G.ef>=40&&G.delegated+G.written>12&&G.written>=4){G.gameover=true;triggerEnding('C');return;}
-  if(G.acte===3&&(G.ag+G.cr+G.cu)<25){G.gameover=true;triggerEnding('A');return;}
+  if((G.ag+G.cr+G.cu)<25){G.gameover=true;triggerEnding('A');return;}
 }
 function triggerEnding(fin){
   const fins={
@@ -909,15 +908,16 @@ function triggerEnding(fin){
        narr:"Je n'ai pas beaucoup à raconter.\n\nJ'ai utilisé Écho pour certaines choses.\nPas pour d'autres.\n\nQuelques fois j'ai laissé faire.\nQuelques fois j'ai repris.\n\nLe carnet bleu est à la page " + G.page + ".\nIl y a des trous dans les dates.\n\nC'est une vie normale, je crois.\nAvec un outil de plus."},
   };
   const f=fins[fin];
+  // Désactiver les boutons immédiatement
+  document.querySelectorAll('.iact,.proj-btn,.rec-btn,.vpill button').forEach(b=>b.disabled=true);
+  const pinEl=document.getElementById('pin');if(pinEl)pinEl.disabled=true;
   setTimeout(()=>{addE(f.echo.lines);},500);
   setTimeout(()=>{
     const e=document.createElement('div');e.className='mfin fi';
-    // Boutons selon la fin
     const btnRestart='<button class="fbtn fbtn-restart" onclick="location.reload()">↺ Recommencer</button>';
     const btnRecover=fin==='A'?'<button class="fbtn fbtn-recover" onclick="recoverFromEnding()">↑ Tenter de récupérer</button>':'';
     e.innerHTML=`<div class="ftit">${f.titre}</div><div class="fnarr">${f.narr}</div><div class="fbtns">${btnRestart}${btnRecover}</div>`;
     CON().appendChild(e);scroll();
-    document.querySelectorAll('.iact,.proj-btn,.rec-btn,.vpill button').forEach(b=>b.disabled=true);document.getElementById('pin').disabled=true;
   },2200);
 }
 
@@ -1417,6 +1417,15 @@ setInterval(()=>{
   _lastAction=Date.now();
   const pool=IDLE_LINES[G.acte]||IDLE_LINES[1];
   addE(pool[Math.floor(Math.random()*pool.length)]);
+},3000);
+
+// Garde-fou : si gameover sans fin affichée, déclencher A
+let _endingFired=false;
+const _origTrigger=triggerEnding;
+function triggerEnding(fin){_endingFired=true;_origTrigger(fin);}
+setTimeout(function checkEndingFallback(){
+  if(G.gameover&&!_endingFired){triggerEnding('A');}
+  else if(!G.gameover)setTimeout(checkEndingFallback,3000);
 },3000);
 // ══════════════════════════════
 // INIT
