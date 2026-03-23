@@ -155,7 +155,9 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 #irow .ipfx{color:var(--text3);font-size:13px;flex-shrink:0}
 #pin{flex:1;background:transparent;border:none;border-bottom:1px solid rgba(232,221,208,0.18);outline:none;color:var(--text);font-family:inherit;font-size:12px;min-width:0;width:0;padding-bottom:2px;transition:border-color 0.2s}
 #pin:focus{border-bottom-color:rgba(232,221,208,0.5)}
-#pin::placeholder{color:var(--echo);animation:cur 1.1s ease infinite}
+#pin::placeholder{color:transparent}
+#pin-cursor{color:var(--echo);animation:cur 1.1s ease infinite;pointer-events:none;font-size:14px;flex-shrink:0}
+#pin-cursor.hidden{display:none}
 .iact{border:none;outline:none;font-family:'JetBrains Mono',monospace;font-size:10px;padding:7px 11px;cursor:pointer;border-radius:3px;transition:all 0.15s;letter-spacing:0.02em;flex-shrink:0;line-height:1.4;text-align:center;white-space:nowrap}
 .iact:focus-visible{outline:2px solid rgba(232,221,208,0.25);outline-offset:2px}
 .iact:active{transform:scale(0.97)}
@@ -393,7 +395,7 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
       <span class="iact-sub">−5 Agentivité</span>
     </button>
     <span class="ipfx">›</span>
-    <label for="pin" class="sr-only">Écrire</label><input type="text" id="pin" placeholder="_" aria-label="Écrire quelque chose"/>
+    <label for="pin" class="sr-only">Écrire</label><input type="text" id="pin" placeholder="" aria-label="Écrire quelque chose"/><span id="pin-cursor">_</span>
   </div>
 </div>
 
@@ -1693,6 +1695,19 @@ function renderMobJauges(){
   </div>`;
   z.innerHTML=html;
 }
+
+// ══════════════════════════════
+// CURSEUR CHAMP TEXTE
+// ══════════════════════════════
+(function(){
+  const pin=document.getElementById('pin');
+  const cur=document.getElementById('pin-cursor');
+  if(!pin||!cur)return;
+  function update(){cur.classList.toggle('hidden',pin.value.length>0);}
+  pin.addEventListener('input',update);
+  pin.addEventListener('focus',()=>cur.classList.add('hidden'));
+  pin.addEventListener('blur',()=>{if(!pin.value)cur.classList.remove('hidden');});
+})();
 </script>
 </body>
 </html>
