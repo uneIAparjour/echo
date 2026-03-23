@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Écho</title>
+<meta name="description" content="Une fiction interactive. Chaque délégation libère du temps. Chaque délégation coûte un peu.">
+<meta property="og:title" content="Écho">
+<meta property="og:description" content="Est-ce que vous utilisez l'outil… ou est-ce lui qui vous utilise ?">
+<meta property="og:url" content="https://uneiaparjour.github.io/echo/">
+<meta name="theme-color" content="#14110e">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&family=Lora:ital,wght@0,400;1,400&display=swap">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#14110e;
+  --bg2:#1e1a15;
+  --text:#e8ddd0;
+  --text2:#b8a890;
+  --text3:#9a8068;
+  --narr:#d4b870;
+  --echo:#7ab8e8;
+  --border:rgba(232,221,208,0.08);
+  --border2:rgba(232,221,208,0.14);
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'JetBrains Mono',monospace;
+  font-size:13px;
+  line-height:1.7;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+}
+
+.hero{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:80px 24px 60px;
+  text-align:center;
+  max-width:620px;
+  margin:0 auto;
+  width:100%;
+}
+
+.titre{
+  font-family:'Lora',serif;
+  font-size:clamp(52px,9vw,88px);
+  font-weight:400;
+  font-style:italic;
+  color:var(--narr);
+  letter-spacing:0.02em;
+  margin-bottom:40px;
+  opacity:0;
+  animation:fi 1.2s ease 0.2s forwards;
+}
+
+.soustitre{
+  font-family:'Lora',serif;
+  font-size:clamp(13px,1.8vw,15px);
+  font-style:italic;
+  color:var(--narr);
+  line-height:1.8;
+  text-align:center;
+  margin-bottom:48px;
+  opacity:0;
+  animation:fi 1s ease 0.6s forwards;
+}
+.pitch{
+  font-family:'Lora',serif;
+  font-size:clamp(14px,2vw,17px);
+  font-style:italic;
+  color:var(--text2);
+  line-height:2.1;
+  text-align:left;
+  margin-bottom:52px;
+  opacity:0;
+  animation:fi 1s ease 0.8s forwards;
+}
+.pitch strong{
+  color:var(--text);
+  font-weight:400;
+  font-style:normal;
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.85em;
+  letter-spacing:0.06em;
+}
+.pitch .question{
+  color:var(--narr);
+  font-style:italic;
+  display:block;
+  margin-top:1.4em;
+}
+
+.cta-wrap{
+  opacity:0;
+  animation:fi 1s ease 1.4s forwards;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:14px;
+}
+.cta{
+  display:inline-block;
+  padding:13px 52px;
+  background:transparent;
+  border:1px solid rgba(122,184,232,0.3);
+  border-radius:3px;
+  color:var(--echo);
+  font-family:'JetBrains Mono',monospace;
+  font-size:12px;
+  letter-spacing:0.14em;
+  text-decoration:none;
+  text-transform:uppercase;
+  transition:background 0.2s,border-color 0.2s;
+}
+.cta:hover{
+  background:rgba(122,184,232,0.07);
+  border-color:rgba(122,184,232,0.55);
+}
+.cta-meta{
+  font-size:10px;
+  color:var(--text3);
+  letter-spacing:0.06em;
+}
+
+footer{
+  border-top:1px solid var(--border);
+  padding:18px 24px;
+  display:flex;
+  justify-content:center;
+  gap:24px;
+  background:var(--bg2);
+  font-size:10px;
+  color:var(--text3);
+  letter-spacing:0.08em;
+  flex-wrap:wrap;
+}
+footer a{color:var(--text3);text-decoration:none;transition:color 0.15s}
+footer a:hover{color:var(--text2)}
+
+@keyframes fi{
+  from{opacity:0;transform:translateY(6px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+@media(max-width:600px){
+  .hero{padding:60px 20px 48px}
+  footer{flex-direction:column;align-items:center;gap:8px}
+}
+</style>
+</head>
+<body>
+
+<main class="hero">
+
+  <h1 class="titre">Écho</h1>
+
+  <p class="soustitre">Est-ce que vous utilisez l'outil…<br>ou est-ce lui qui vous utilise&nbsp;?</p>
+
+  <div class="pitch">
+    Vous êtes à la page 47 d'un carnet bleu.<br>
+    Puis Écho arrive — pour corriger vos textes, résumer vos documents,<br>
+    répondre à vos mails, compléter vos phrases.<br><br>
+    Chaque délégation libère du temps.<br>
+    Chaque délégation coûte un peu.<br><br>
+    Deux types d'action. <strong>J'écris.</strong> <strong>Écho agit.</strong><br>
+    Des jauges qui bougent en silence.<br>
+    Pas d'ennemis, pas de score, pas de bonne réponse.<br><br>
+    Il ne juge pas. Il comptabilise.<br>
+    Vous ne voyez pas quand il change.<br>
+    Parce qu'ici, on ne bascule pas, on glisse.
+  </div>
+
+  <div class="cta-wrap">
+    <a href="echo.html" class="cta">Jouer</a>
+    <span class="cta-meta">20 minutes · aucune installation</span>
+  </div>
+
+</main>
+
+<footer>
+  <span>CC BY-NC Bertrand Formet</span>
+  <a href="https://uneIAparjour.fr" target="_blank">uneIAparjour.fr</a>
+  <a href="https://github.com/uneIAparjour/echo" target="_blank">GitHub</a>
+</footer>
+
+</body>
+</html>
