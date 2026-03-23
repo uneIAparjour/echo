@@ -464,4 +464,4 @@ Deux fichiers : `index.html` (page d'ouverture) et `echo.html` (jeu). Le jeu est
 
 L'inspiration structurelle vient de [*Universal Paperclips*](https://www.decisionproblem.com/paperclips/) (Frank Lantz, 2017) : la progression par ressources, l'accumulation silencieuse, le moment où le jeu bascule. Le sujet, les textes, les projets, les personnages et le code sont entièrement originaux. Ce qui unit les deux œuvres, c'est une question commune (jusqu'où une optimisation peut-elle aller ?), pas une ressemblance de surface.
 
-La recherche en psychologie cognitive (Tricot, Maquestiaux, Sparrow, Kahneman et al.) accompagne les mécaniques de jeu : chaque projet délégué à Écho correspond à un mécanisme documenté. Écho n'illustre pas une thèse, il aspire à la fait vivre.
+La recherche en psychologie cognitive (Tricot, Maquestiaux, Sparrow, Kahneman et al.) accompagne les mécaniques de jeu : chaque projet délégué à Écho correspond à un mécanisme documenté. Écho n'illustre pas une thèse, il aspire à la faire vivre.
