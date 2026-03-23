@@ -2,195 +2,1746 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Écho</title>
-<meta name="description" content="Une fiction interactive. Chaque délégation libère du temps. Chaque délégation coûte un peu.">
+<meta name="description" content="Une fiction interactive sur la délégation cognitive à l'IA. Jusqu'où laissez-vous la machine penser à votre place ?">
 <meta property="og:title" content="Écho">
-<meta property="og:description" content="Est-ce que vous utilisez l'outil… ou est-ce lui qui vous utilise ?">
+<meta property="og:description" content="Une fiction interactive sur la délégation cognitive à l'IA.">
 <meta property="og:url" content="https://uneiaparjour.github.io/echo/">
 <meta name="theme-color" content="#14110e">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&family=Lora:ital,wght@0,400;1,400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Lora:ital,wght@0,400;1,400&display=swap">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
+  /* ── Encre ── */
   --bg:#14110e;
   --bg2:#1e1a15;
+  --bg3:#28231b;
+  --bg4:#332b20;
+  --border:rgba(232,221,208,0.07);
+  --border2:rgba(232,221,208,0.13);
+  --border3:rgba(232,221,208,0.22);
   --text:#e8ddd0;
   --text2:#b8a890;
   --text3:#9a8068;
-  --narr:#d4b870;
+  /* Ressources humaines — chaudes */
+  --ag:#e8853a;
+  --cr:#d4875a;
+  --cu:#88b4c8;
+  --ef:#8ab87a;
+  --tp:#c8aa88;
+  /* Écho — seul bleu froid */
   --echo:#7ab8e8;
-  --border:rgba(232,221,208,0.08);
-  --border2:rgba(232,221,208,0.14);
+  --echo2:rgba(122,184,232,0.08);
+  --echo3:rgba(122,184,232,0.18);
+  /* Narrateur — or */
+  --narr:#d4b870;
+  --narr2:rgba(212,184,112,0.12);
+  /* Actions */
+  --green:#8ab87a;
+  --red:#d07060;
+  --green2:rgba(138,184,122,0.08);
+  --red2:rgba(208,112,96,0.08);
 }
-html{scroll-behavior:smooth}
-body{
-  background:var(--bg);
-  color:var(--text);
-  font-family:'JetBrains Mono',monospace;
-  font-size:13px;
-  line-height:1.7;
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
+body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:12px;height:100vh;overflow:hidden;display:flex;flex-direction:column}
+
+/* ══════════════════════
+   BANDEAU COMPTEURS
+══════════════════════ */
+#top{display:grid;grid-template-columns:repeat(5,1fr) 1.7fr;background:var(--bg2);border-bottom:2px solid var(--border2);flex-shrink:0}
+.cc{padding:10px 14px 8px;border-right:1px solid var(--border);position:relative;overflow:hidden;cursor:default;display:flex;flex-direction:column;justify-content:space-between}
+.cc:last-child{border-right:none}
+.clbl{font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--text3);margin-bottom:2px;white-space:nowrap}
+.cnum{font-size:34px;font-weight:600;line-height:1;font-variant-numeric:tabular-nums;transition:color 0.3s}
+.cbar{height:2px;background:var(--border);margin-top:6px;border-radius:1px;overflow:hidden}
+.cbfill{height:100%;border-radius:1px;transition:width 0.7s cubic-bezier(.4,0,.2,1)}
+.crate{font-size:10px;margin-top:3px;font-variant-numeric:tabular-nums}
+.crate.dn{color:var(--red)}.crate.up{color:var(--green)}.crate.ze{color:var(--text3)}
+/* flash fond */
+.cc::after{content:'';position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity 0.1s}
+.cc.fu::after{background:rgba(138,184,122,0.08);opacity:1}
+.cc.fd::after{background:rgba(208,112,96,0.08);opacity:1}
+/* delta flottant */
+.dfloat{position:absolute;right:10px;top:8px;font-size:12px;font-weight:600;pointer-events:none;animation:fup 1.1s ease forwards}
+@keyframes fup{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-28px)}}
+.dfp{color:var(--green)}.dfn{color:var(--red)}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes traceflash{0%{background:rgba(122,184,232,0.18)}100%{background:transparent}}
+.trace-flash{animation:traceflash 1.2s ease}
+@keyframes cur{0%,100%{opacity:1}50%{opacity:0}}
+.con-cursor{display:inline-block;color:var(--echo);font-weight:300;animation:cur 1.1s ease infinite;margin-left:2px;font-size:14px;line-height:1}
+.cnum.crit{animation:blink 1.2s ease infinite;color:var(--red)!important}
+
+.ctrace{padding:10px 14px 10px;display:flex;flex-direction:column;justify-content:space-between}
+.ctrace .clbl{margin-bottom:6px}
+.trace-stages{display:flex;justify-content:space-between;margin-bottom:7px;gap:2px}
+.tstage{flex:1;text-align:center;font-size:9px;letter-spacing:0.06em;color:rgba(232,221,208,0.15);line-height:1.3;transition:color 0.4s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tstage.tact{color:var(--text);font-weight:500}
+.tstage.tpast{color:rgba(232,221,208,0.2)}
+.trace-row{display:flex;align-items:center;gap:10px}
+.trace-track{flex:1;position:relative;height:8px}
+.trace-line{height:1px;background:rgba(232,221,208,0.1);position:absolute;top:50%;left:3px;right:3px;transform:translateY(-50%)}
+.trace-cursor{position:absolute;top:50%;width:7px;height:7px;border-radius:50%;background:var(--text);transform:translate(-50%,-50%);transition:left 0.5s cubic-bezier(.4,0,.2,1)}
+.trace-page{font-size:10px;color:var(--text2);font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:500}
+@keyframes pageup{0%{color:var(--narr)}100%{color:var(--text2)}}
+.trace-page.pageflash{animation:pageup 1s ease}
+
+/* ══════════════════════
+   LAYOUT 2 COLONNES
+══════════════════════ */
+#main{display:flex;flex-direction:row;flex:1;overflow:hidden;min-height:0}
+
+/* En veille */
+.vpill{display:flex;align-items:center;justify-content:space-between;padding:4px 7px;margin-bottom:3px;background:rgba(208,112,96,0.05);border:1px solid rgba(208,112,96,0.15);border-radius:3px}
+.vpill span{font-size:9px;color:var(--red)}
+.vpill button{background:rgba(208,112,96,0.1);border:none;color:var(--red);font-family:inherit;font-size:10px;padding:1px 5px;cursor:pointer;border-radius:2px}
+.vpill button:hover{background:rgba(208,112,96,0.2)}
+
+/* Stats */
+.stats{font-size:11px;color:rgba(232,221,208,0.55);line-height:1.7}
+.stats span{font-variant-numeric:tabular-nums;font-weight:500}
+
+/* ══ CENTRE ══ */
+#centre{display:flex;flex-direction:column;overflow:hidden;background:var(--bg);flex:1;min-width:0;min-height:0}
+#con{flex:1;overflow-y:auto;padding:18px 22px;display:flex;flex-direction:column;gap:2px}
+/* Messages narrateur */
+.mn{margin:8px 0;padding:0 0 0 12px;border-left:2px solid rgba(212,184,112,0.2)}
+.mt{font-family:'Lora',serif;font-size:13px;font-style:italic;color:var(--narr);line-height:1.9;white-space:pre-line}
+/* Messages Écho */
+.me{margin:10px 0;padding:9px 0 9px 13px;border-left:3px solid rgba(122,184,232,0.35)}
+.eh{font-size:10px;letter-spacing:0.16em;color:var(--text3);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.en{color:var(--echo);font-weight:500}
+.ea1 .en{text-transform:uppercase;letter-spacing:0.22em}
+.ea2 .en{letter-spacing:0.06em}
+.ea3 .en{font-weight:300;color:rgba(122,184,232,0.6)}
+.eb{line-height:1.75;color:var(--text);font-size:12px}
+.ea3 .eb{font-family:'Lora',serif;font-size:12px;font-style:italic}
+/* Événements */
+.mev{margin:8px 0;padding:7px 10px;background:rgba(200,170,136,0.04);border:1px solid var(--border);border-radius:3px}
+.evt{font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:var(--text3);margin-bottom:4px}
+/* Notes pédagogiques */
+.mp{margin:7px 0;padding:9px 11px;background:rgba(138,184,122,0.04);border:1px solid rgba(138,184,122,0.1);border-radius:3px}
+.pt{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--green);margin-bottom:5px}
+.pb{font-size:10px;color:rgba(138,184,122,0.8);line-height:1.6}
+.pc{font-size:10px;color:var(--text3);cursor:pointer;margin-top:5px;display:inline-block}
+.pc:hover{color:var(--text2)}
+/* Choix binaire */
+.mc{margin:12px 0;display:flex;flex-direction:column;gap:5px}
+.cq{font-size:10px;color:var(--text2);margin-bottom:4px;font-style:italic;padding-left:4px}
+.cb{padding:10px 13px;background:rgba(232,221,208,0.02);border:1px solid var(--border2);border-radius:3px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:11px;cursor:pointer;text-align:left;transition:background 0.15s,border-color 0.15s;line-height:1.5}
+.cb:hover{background:var(--echo2);border-color:rgba(122,184,232,0.25)}
+.cs{display:block;font-size:9px;margin-top:2px;color:var(--text3)}
+/* Fin */
+.mfin{margin:18px 0;padding:18px;background:rgba(232,221,208,0.02);border:1px solid var(--border2);border-radius:4px}
+.ftit{font-size:12px;letter-spacing:0.22em;text-transform:uppercase;color:var(--text3);margin-bottom:14px;text-align:center}
+.fnarr{font-family:'Lora',serif;font-size:13px;font-style:italic;color:var(--narr);line-height:1.9;white-space:pre-line}
+.fbtns{display:flex;gap:8px;margin-top:18px;justify-content:center;flex-wrap:wrap}
+.fbtn{padding:8px 16px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:10px;cursor:pointer;letter-spacing:0.05em;transition:all 0.15s;border:1px solid}
+.fbtn-restart{background:rgba(232,221,208,0.03);border-color:rgba(232,221,208,0.2);color:var(--text2)}
+.fbtn-restart:hover{background:rgba(232,221,208,0.07);border-color:rgba(232,221,208,0.4);color:var(--text)}
+.fbtn-recover{background:var(--green2);border-color:rgba(138,184,122,0.25);color:var(--green)}
+.fbtn-recover:hover{background:rgba(138,184,122,0.13);border-color:rgba(138,184,122,0.4)}
+.fbtn-suggest{background:transparent;border-color:rgba(232,221,208,0.12);color:var(--text3);font-style:italic}
+.fbtn-suggest:hover{border-color:rgba(232,221,208,0.25);color:var(--text2)}
+.fin-invite{font-family:'Lora',serif;font-size:11px;font-style:italic;color:var(--text3);margin-top:14px;margin-bottom:6px;line-height:1.6}
+/* Barre saisie */
+#irow-title{padding:5px 14px 0;font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:rgba(232,221,208,0.35);background:var(--bg2);transition:color 0.3s}
+@keyframes irowp{0%,100%{color:rgba(232,221,208,0.35)}50%{color:rgba(232,221,208,0.75)}}
+.irow-pulse{animation:irowp 0.8s ease 2}
+@keyframes echop{0%,100%{color:rgba(232,221,208,0.58)}50%{color:var(--echo)}}
+.echo-pulse{animation:echop 0.9s ease 3}
+@keyframes secpulse{0%,100%{border-color:rgba(232,221,208,0.12)}50%{border-color:rgba(138,184,122,0.45)}}
+.sec-pulse{animation:secpulse 1.2s ease 3}
+#irow{border-top:none;padding:8px 14px;display:flex;align-items:center;gap:6px;flex-shrink:0;background:var(--bg2)}
+#irow .ipfx{color:var(--text3);font-size:13px;flex-shrink:0}
+#pin{flex:1;background:transparent;border:none;border-bottom:1px solid rgba(232,221,208,0.18);outline:none;color:var(--text);font-family:inherit;font-size:12px;min-width:0;width:0;padding-bottom:2px;transition:border-color 0.2s}
+#pin:focus{border-bottom-color:rgba(232,221,208,0.5)}
+#pin::placeholder{color:transparent}
+#pin-cursor{color:var(--echo);animation:cur 1.1s ease infinite;pointer-events:none;font-size:14px;flex-shrink:0}
+#pin-cursor.hidden{display:none}
+.iact{border:none;outline:none;font-family:'JetBrains Mono',monospace;font-size:10px;padding:7px 11px;cursor:pointer;border-radius:3px;transition:all 0.15s;letter-spacing:0.02em;flex-shrink:0;line-height:1.4;text-align:center;white-space:nowrap}
+.iact:focus-visible{outline:2px solid rgba(232,221,208,0.25);outline-offset:2px}
+.iact:active{transform:scale(0.97)}
+.iact-w{background:var(--green2);border:1px solid rgba(138,184,122,0.2);color:var(--green)}
+.iact-w:hover{background:rgba(138,184,122,0.13);border-color:rgba(138,184,122,0.35)}
+.iact-e{background:var(--red2);border:1px solid rgba(208,112,96,0.2);color:var(--red)}
+.iact-e:hover{background:rgba(208,112,96,0.13);border-color:rgba(208,112,96,0.35)}
+.iact-lbl{display:block;font-weight:500;font-size:10px;margin-bottom:2px}
+.iact-sub{display:block;font-size:10px;opacity:0.6}
+
+/* ══ DROITE ══ */
+#right{border-left:1px solid var(--border2);overflow-y:auto;background:#0f0d0a;display:flex;flex-direction:column;width:clamp(360px,28%,520px);flex-shrink:0}
+.rsec{padding:12px 14px 10px;border-bottom:1px solid rgba(232,221,208,0.12);flex-shrink:0}
+.rsec.rsec-main{flex:1;overflow:hidden;display:flex;flex-direction:column;min-height:80px}
+.rsec.rsec-main.rsec-empty{justify-content:center}
+.rsec-title{font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(232,221,208,0.58);margin-bottom:10px;display:flex;align-items:center;gap:5px}
+.rsec-title::after{content:'';flex:1;height:1px;background:var(--border)}
+
+
+
+/* ─ Projets Écho ─ */
+.proj-btn{width:100%;padding:10px 12px;background:rgba(232,221,208,0.03);border:1px solid rgba(232,221,208,0.12);border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:11px;cursor:pointer;text-align:left;transition:background 0.15s,border-color 0.15s;line-height:1.55;overflow:hidden}
+.proj-btn:hover{background:rgba(122,184,232,0.04);border-color:rgba(122,184,232,0.2)}
+.proj-btn:active{transform:scale(0.99)}
+@keyframes proj-pulse{0%{border-color:rgba(122,184,232,0.4)}50%{border-color:rgba(122,184,232,0.12)}100%{border-color:rgba(122,184,232,0.4)}}
+.proj-new{animation:proj-pulse 2s ease 3}
+.proj-new .rsec-title::before{content:'● ';color:var(--echo);font-size:9px}
+.proj-hd{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:4px}
+.proj-name{font-weight:500;color:#e8ddd0;font-size:11px}
+#sec-delegue #delegue-list{max-height:130px;overflow-y:auto;padding-right:2px}
+.proj-perm{font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(122,184,232,0.5);background:rgba(122,184,232,0.06);padding:1px 5px;border-radius:2px}
+.proj-desc{font-size:10px;color:rgba(232,221,208,0.55);margin-bottom:6px;line-height:1.5}
+.proj-costs{display:grid;grid-template-columns:1fr 1fr;gap:2px;font-size:10px;margin-top:4px}
+.pc-now{color:var(--red)}.pc-rate{color:rgba(208,112,96,0.6);font-style:italic}.pc-gain{color:var(--green)}
+
+/* ─ Récupération ─ */
+.rec-btn{width:100%;padding:9px 11px;background:rgba(138,184,122,0.03);border:1px solid rgba(138,184,122,0.1);border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:10px;cursor:pointer;text-align:left;transition:all 0.15s;margin-bottom:4px}
+.rec-btn:hover{background:rgba(138,184,122,0.07);border-color:rgba(138,184,122,0.22)}
+.rec-btn:active{transform:scale(0.99)}
+.rec-hd{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2px}
+.rec-name{font-weight:500;color:#a0c890;font-size:11px}
+.rec-cost{font-size:10px;color:var(--red)}
+.rec-fx{font-size:10px;color:rgba(232,221,208,0.55);line-height:1.4}
+
+/* Notif toast */
+#notif{position:fixed;bottom:14px;left:50%;transform:translateX(-50%) translateY(0);background:var(--bg3);border:1px solid var(--border2);padding:5px 13px;font-size:10px;border-radius:2px;transition:opacity 0.3s,transform 0.3s;pointer-events:none;z-index:999;color:var(--text2);opacity:0;visibility:hidden}
+#notif.show{opacity:1;visibility:visible;transform:translateX(-50%) translateY(-8px)}
+#footer{flex-shrink:0;padding:4px 18px;font-size:10px;color:var(--text3);letter-spacing:0.08em;border-top:1px solid var(--border);text-align:right;background:var(--bg2);width:100%}
+#footer a{color:var(--text3);text-decoration:none}
+#footer a:hover{color:var(--text2)}
+@keyframes fi{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.fi{animation:fi 0.3s ease forwards}
+
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+.tt{cursor:help}
+#tooltip{position:fixed;display:none;width:220px;padding:10px 13px;background:#1e1a15;border:1px solid rgba(232,221,208,0.22);border-radius:4px;font-size:11px;line-height:1.65;color:#e8ddd0;font-family:'JetBrains Mono',monospace;font-weight:400;text-transform:none;letter-spacing:0;z-index:9999;pointer-events:none;white-space:normal;box-shadow:0 4px 16px rgba(0,0,0,0.5)}
+#tooltip strong{color:var(--narr);font-weight:500}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:var(--border2)}*{scrollbar-width:thin;scrollbar-color:var(--border2) transparent}
+
+/* ══════════════════════════════════════
+   MOBILE — max-width: 768px
+══════════════════════════════════════ */
+@media(max-width:768px){
+  body{font-size:13px;display:flex;flex-direction:column;height:100dvh;overflow:hidden}
+  #main{flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column}
+  #irow-title,#irow{flex-shrink:0}
+  #mob-nav{flex-shrink:0;order:10}
+
+  /* Bandeau compact 6 cellules */
+  #top{grid-template-columns:repeat(5,1fr) 1.4fr}
+  .cc{padding:5px 4px 4px}
+  .ctrace{padding:5px 4px 4px}
+  .clbl{font-size:7px;letter-spacing:0.1em}
+  .cnum{font-size:18px}
+  .cbar,.crate{display:none}
+  /* Trace mobile : juste curseur + mot */
+  .ctrace .clbl{margin-bottom:3px}
+  .trace-stages{display:none}
+  .trace-row{flex-direction:column;gap:2px;align-items:center}
+  .trace-track{width:100%;height:6px}
+  .trace-page{font-size:8px}
+  .tstage{display:none}
+  .tstage.tact{display:block;font-size:8px;text-align:center}
+
+  /* Layout : une seule colonne, onglets */
+
+  /* Console : visible sur vue console uniquement */
+  #centre{display:flex;flex-direction:column;flex:1;overflow:hidden;min-height:0;padding-bottom:calc(48px + env(safe-area-inset-bottom,0px))}
+  #centre.mob-hidden{display:none}
+  #con{flex:1;padding:12px 14px}
+
+  /* Colonne droite : masquée par défaut, affichée via onglet */
+  #right{display:none;overflow-y:auto;height:calc(100dvh - 80px - 50px - env(safe-area-inset-bottom,0px));background:var(--bg3)}
+  #sec-delegue,#sec-stats{display:none!important}
+  #right.mob-active{display:flex;flex-direction:column}
+
+  /* Vue Jauges : panneau dédié */
+  #mob-jauges{display:none;overflow-y:auto;height:calc(100dvh - 80px - 50px - env(safe-area-inset-bottom,0px));background:var(--bg);padding:12px 14px}
+  #mob-jauges.mob-active{display:block}
+
+  /* Barre saisie + onglets collés en bas */
+  #irow-title{padding:5px 12px 0;font-size:8px}
+  #irow{padding:7px 12px;gap:6px}
+  #pin{min-width:0;font-size:12px}
+  .iact{padding:9px 10px;font-size:10px}
+  .iact-sub{font-size:9px}
+
+  /* Onglets navigation */
+  #mob-nav{display:flex;background:#0f0d0a;border-top:1px solid rgba(232,221,208,0.1);position:fixed;bottom:0;left:0;right:0;z-index:50;padding-bottom:env(safe-area-inset-bottom,0px)}
+  .mob-tab{flex:1;padding:8px 4px;text-align:center;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#9a8068;border-right:1px solid rgba(232,221,208,0.07);cursor:pointer;transition:all 0.15s;-webkit-tap-highlight-color:transparent}
+  .mob-tab:last-child{border-right:none}
+  .mob-tab.active{color:var(--text);background:#1e1a15}
+  .mob-tab-dot{width:4px;height:4px;border-radius:50%;background:var(--echo);margin:2px auto 0;opacity:0;transition:opacity 0.2s}
+  .mob-tab-notif{color:var(--text)!important;animation:tabn 1s ease 3}
+  @keyframes tabn{0%,100%{background:transparent}50%{background:rgba(122,184,232,0.12)}}
+  .mob-tab.active .mob-tab-dot{opacity:1}
+  #clbl-tp{font-size:0;letter-spacing:0}
+  .tp-unit{display:none}
+  #clbl-tp::before{content:"Lib.";font-size:7px;letter-spacing:0.1em}
+
+  /* Jauges détaillées */
+  #mob-jauges .gblock{margin-bottom:14px}
+  #mob-jauges .ghead{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
+  #mob-jauges .gname{font-size:11px;color:var(--text2);display:flex;align-items:center;gap:5px}
+  #mob-jauges .gdot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+  #mob-jauges .gval{font-size:16px;font-weight:600;font-variant-numeric:tabular-nums}
+  #mob-jauges .grate{font-size:10px;margin-left:6px}
+  #mob-jauges .gtrack{height:4px;background:rgba(255,255,255,0.05);border-radius:2px;overflow:hidden}
+  #mob-jauges .gfill{height:100%;border-radius:2px;transition:width 0.7s cubic-bezier(.4,0,.2,1)}
+  #mob-jauges .gwarn{font-size:9px;color:var(--red);margin-top:2px;height:12px}
+  .mob-tp{background:rgba(200,170,136,0.05);border:1px solid rgba(200,170,136,0.12);border-radius:4px;padding:10px 12px;margin-bottom:14px}
+  .mob-tp-lbl{font-size:9px;color:var(--tp);letter-spacing:0.14em;margin-bottom:3px}
+  .mob-tp-val{font-size:28px;font-weight:300;color:var(--tp);line-height:1;font-variant-numeric:tabular-nums}
+  .mob-tp-q{font-size:9px;color:var(--text3);margin-top:4px;font-style:italic}
+
+
+  /* Boutons choix mobile dans console */
+  .mob-choice{display:flex;gap:8px;margin-top:10px;padding:0 0 16px 12px}
+  .mob-choice-btn{flex:1;padding:10px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:11px;cursor:pointer;text-align:center;border:1px solid;line-height:1.4;min-height:44px;display:flex;flex-direction:column;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent}
+  .mob-choice-accept{background:rgba(208,112,96,0.08);border-color:rgba(208,112,96,0.25);color:#d07060}
+  .mob-choice-write{background:rgba(138,184,122,0.08);border-color:rgba(138,184,122,0.25);color:#8ab87a}
+  .mob-choice-lbl{display:block;font-weight:500;margin-bottom:2px}
+  .mob-choice-sub{display:block;font-size:9px;opacity:0.6}
+  #notif{bottom:calc(58px + env(safe-area-inset-bottom,0px));z-index:999}
+  /* Taille des boutons tactiles ≥44px */
+  .iact{min-height:44px}
+  .mob-tab{min-height:40px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .vpill button{padding:4px 9px;min-height:32px}
+  .rec-btn,.proj-btn{min-height:44px}
+  #projlist{grid-template-columns:1fr!important}
+
+  /* Footerau dessus du nav */
+  #footer{display:none}
+  #mob-nav{padding-bottom:env(safe-area-inset-bottom,0px)}
+  #irow{padding-bottom:calc(7px + env(safe-area-inset-bottom,0px));gap:4px;flex-shrink:0;display:flex!important}
+  #irow-title{display:none}
+  .iact{display:none}
+  .ipfx{display:none}
+  #pin{flex:1;width:100%;font-size:14px}
 }
 
-.hero{
-  flex:1;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  padding:80px 24px 60px;
-  text-align:center;
-  max-width:620px;
-  margin:0 auto;
-  width:100%;
-}
-
-.titre{
-  font-family:'Lora',serif;
-  font-size:clamp(52px,9vw,88px);
-  font-weight:400;
-  font-style:italic;
-  color:var(--narr);
-  letter-spacing:0.02em;
-  margin-bottom:40px;
-  opacity:0;
-  animation:fi 1.2s ease 0.2s forwards;
-}
-
-.soustitre{
-  font-family:'Lora',serif;
-  font-size:clamp(13px,1.8vw,15px);
-  font-style:italic;
-  color:var(--narr);
-  line-height:1.8;
-  text-align:center;
-  margin-bottom:48px;
-  opacity:0;
-  animation:fi 1s ease 0.6s forwards;
-}
-.pitch{
-  font-family:'Lora',serif;
-  font-size:clamp(14px,2vw,17px);
-  font-style:italic;
-  color:var(--text2);
-  line-height:2.1;
-  text-align:left;
-  margin-bottom:52px;
-  opacity:0;
-  animation:fi 1s ease 0.8s forwards;
-}
-.pitch strong{
-  color:var(--text);
-  font-weight:400;
-  font-style:normal;
-  font-family:'JetBrains Mono',monospace;
-  font-size:0.85em;
-  letter-spacing:0.06em;
-}
-.pitch .question{
-  color:var(--narr);
-  font-style:italic;
-  display:block;
-  margin-top:1.4em;
-}
-
-.cta-wrap{
-  opacity:0;
-  animation:fi 1s ease 1.4s forwards;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:14px;
-}
-.cta{
-  display:inline-block;
-  padding:13px 52px;
-  background:transparent;
-  border:1px solid rgba(122,184,232,0.3);
-  border-radius:3px;
-  color:var(--echo);
-  font-family:'JetBrains Mono',monospace;
-  font-size:12px;
-  letter-spacing:0.14em;
-  text-decoration:none;
-  text-transform:uppercase;
-  transition:background 0.2s,border-color 0.2s;
-}
-.cta:hover{
-  background:rgba(122,184,232,0.07);
-  border-color:rgba(122,184,232,0.55);
-}
-.cta-meta{
-  font-size:10px;
-  color:var(--text3);
-  letter-spacing:0.06em;
-}
-
-footer{
-  border-top:1px solid var(--border);
-  padding:18px 24px;
-  display:flex;
-  justify-content:center;
-  gap:24px;
-  background:var(--bg2);
-  font-size:10px;
-  color:var(--text3);
-  letter-spacing:0.08em;
-  flex-wrap:wrap;
-}
-footer a{color:var(--text3);text-decoration:none;transition:color 0.15s}
-footer a:hover{color:var(--text2)}
-
-@keyframes fi{
-  from{opacity:0;transform:translateY(6px)}
-  to{opacity:1;transform:translateY(0)}
-}
-
-@media(max-width:600px){
-  .hero{padding:60px 20px 48px}
-  footer{flex-direction:column;align-items:center;gap:8px}
+@media(min-width:769px){
+  #mob-nav{display:none}
+  #mob-jauges{display:none!important}
 }
 </style>
 </head>
 <body>
 
-<main class="hero">
+<!-- ══ BANDEAU 5 COMPTEURS ══ -->
+<div id="top">
+  <div class="cc" id="cc-ag" role="meter" aria-label="Agentivité" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+    <div class="clbl tt" data-tip="&lt;strong&gt;Agentivité&lt;/strong&gt; — ta capacité à décider par toi-même.&lt;br&gt;&lt;span style='color:#8ab87a'&gt;Monte&lt;/span&gt; quand tu écris toi-même.&lt;br&gt;&lt;span style='color:#d07060'&gt;Descend&lt;/span&gt; à chaque délégation et si des fonctions Écho sont actives.">Agentivité</div>
+    <div class="cnum" id="cv-ag" style="color:var(--ag)">100</div>
+    <div class="cbar"><div class="cbfill" id="cb-ag" style="width:100%;background:var(--ag)"></div></div>
+    <div class="crate ze" id="cr-ag">stable</div>
+  </div>
+  <div class="cc" id="cc-cr" role="meter" aria-label="Créativité" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+    <div class="clbl tt" data-tip="&lt;strong&gt;Créativité&lt;/strong&gt; — ta capacité à produire quelque chose d'original.&lt;br&gt;&lt;span style='color:#8ab87a'&gt;Monte&lt;/span&gt; quand tu écris toi-même.&lt;br&gt;&lt;span style='color:#d07060'&gt;Descend&lt;/span&gt; quand Écho génère à ta place.">Créativité</div>
+    <div class="cnum" id="cv-cr" style="color:var(--cr)">100</div>
+    <div class="cbar"><div class="cbfill" id="cb-cr" style="width:100%;background:var(--cr)"></div></div>
+    <div class="crate ze" id="cr-cr">stable</div>
+  </div>
+  <div class="cc" id="cc-cu" role="meter" aria-label="Curiosité" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+    <div class="clbl tt" data-tip="&lt;strong&gt;Curiosité&lt;/strong&gt; — ta capacité à formuler des questions.&lt;br&gt;&lt;span style='color:#8ab87a'&gt;Monte&lt;/span&gt; en lisant toi-même.&lt;br&gt;&lt;span style='color:#d07060'&gt;Descend&lt;/span&gt; quand Écho cherche, résume ou filtre à ta place.">Curiosité</div>
+    <div class="cnum" id="cv-cu" style="color:var(--cu)">100</div>
+    <div class="cbar"><div class="cbfill" id="cb-cu" style="width:100%;background:var(--cu)"></div></div>
+    <div class="crate ze" id="cr-cu">stable</div>
+  </div>
+  <div class="cc" id="cc-ef" role="meter" aria-label="Effort" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+    <div class="clbl tt" data-tip="&lt;strong&gt;Effort&lt;/strong&gt; — ta capacité à soutenir une tâche difficile.&lt;br&gt;&lt;span style='color:#8ab87a'&gt;Monte&lt;/span&gt; avec la pratique et la récupération.&lt;br&gt;&lt;span style='color:#d07060'&gt;Descend&lt;/span&gt; à chaque raccourci délégué.">Effort</div>
+    <div class="cnum" id="cv-ef" style="color:var(--ef)">100</div>
+    <div class="cbar"><div class="cbfill" id="cb-ef" style="width:100%;background:var(--ef)"></div></div>
+    <div class="crate ze" id="cr-ef">stable</div>
+  </div>
+  <div class="cc" id="cc-tp">
+    <div class="clbl tt" id="clbl-tp" data-tip="&lt;strong&gt;Temps libéré&lt;/strong&gt; — les minutes gagnées grâce à Écho.&lt;br&gt;&lt;span style='color:#8ab87a'&gt;Monte&lt;/span&gt; à chaque délégation.&lt;br&gt;S'utilise pour reconquérir les compétences en veille.&lt;br&gt;&lt;em&gt;Pour faire quoi ?&lt;/em&gt;">Temps libéré</div>
+    <div style="display:flex;align-items:baseline;gap:4px"><div class="cnum" id="cv-tp" style="color:var(--tp)">0</div><div class="tp-unit" style="font-size:11px;color:var(--text3)">min</div></div>
+    <div class="cbar"><div class="cbfill" id="cb-tp" style="width:0%;background:var(--tp)"></div></div>
+    <div class="crate ze" id="cr-tp">en attente</div>
+  </div>
+  <div class="cc ctrace" id="cc-trace">
+    <div class="clbl tt" data-tip="&lt;strong&gt;Trace&lt;/strong&gt; — ce qui reste de toi au fil du jeu.&lt;br&gt;Suit ton agentivité : présence → délestage → distance → effacement → silence.&lt;br&gt;La page avance quand tu écris toi-même.">Trace</div>
+    <div class="trace-stages" id="tstages">
+      <div class="tstage tact">présence</div>
+      <div class="tstage">délestage</div>
+      <div class="tstage">distance</div>
+      <div class="tstage">effacement</div>
+      <div class="tstage">silence</div>
+    </div>
+    <div class="trace-row">
+      <div class="trace-track">
+        <div class="trace-line"></div>
+        <div class="trace-cursor" id="tcursor" style="left:3%"></div>
+      </div>
+      <div class="trace-page">p.&nbsp;<span id="tpage">47</span></div>
+    </div>
+  </div>
+</div>
 
-  <h1 class="titre">Écho</h1>
+<!-- ══ CORPS ══ -->
+<main id="main" aria-label="Jeu Écho">
 
-  <p class="soustitre">Est-ce que vous utilisez l'outil…<br>ou est-ce lui qui vous utilise&nbsp;?</p>
+<!-- ── CENTRE ── -->
+<div id="centre">
+  <div id="con" aria-live="polite" aria-atomic="false"></div>
+  <div id="irow-title">Tu proposes</div>
+<div id="irow">
+    <button class="iact iact-w" onclick="playerWrite()" aria-label="Écrire moi-même">
+      <span class="iact-lbl" id="btn-write-lbl">✎ J'écris</span>
+      <span class="iact-sub">+10 Créativité  +5 Ag.</span>
+    </button>
+    <button class="iact iact-e" onclick="delegateToEcho()" aria-label="Déléguer à Écho">
+      <span class="iact-lbl">⟳ Écho agit</span>
+      <span class="iact-sub">−5 Agentivité</span>
+    </button>
+    <span class="ipfx">›</span>
+    <label for="pin" class="sr-only">Écrire</label><input type="text" id="pin" placeholder="" aria-label="Écrire quelque chose"/><span id="pin-cursor">_</span>
+  </div>
+</div>
 
-  <div class="pitch">
-    Vous êtes à la page 47 d'un carnet bleu.<br>
-    Puis Écho arrive — pour corriger vos textes, résumer vos documents,<br>
-    répondre à vos mails, compléter vos phrases.<br><br>
-    Chaque délégation libère du temps.<br>
-    Chaque délégation coûte un peu.<br><br>
-    Deux types d'action. <strong>J'écris.</strong> <strong>Écho agit.</strong><br>
-    Des jauges qui bougent en silence.<br>
-    Pas d'ennemis, pas de score, pas de bonne réponse.<br><br>
-    Il ne juge pas. Il comptabilise.<br>
-    Vous ne voyez pas quand il change.<br>
-    Parce qu'ici, on ne bascule pas, on glisse.
+<!-- ── DROITE ── -->
+<div id="right">
+
+  <div class="rsec rsec-main">
+    <div class="rsec-title">Écho propose — permanent</div>
+    <div id="proj-desc-txt" style="font-size:10px;color:rgba(232,221,208,0.55);margin-bottom:9px;line-height:1.6">Activer installe la fonction définitivement. L'effet est permanent.</div>
+    <div id="projlist" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;overflow-y:auto;max-height:100%;padding-right:2px"><div id="projlist-empty" style="grid-column:1/-1;font-size:11px;color:var(--text2);line-height:1.7;padding:6px 0">Délègue une tâche à Écho.<br>Les fonctions permanentes apparaîtront ici.</div></div>
   </div>
 
-  <div class="cta-wrap">
-    <a href="echo.html" class="cta">Jouer</a>
-    <span class="cta-meta">20 minutes · aucune installation</span>
+  <div class="rsec" id="sec-veille" style="display:none">
+    <div class="rsec-title">En veille</div>
+    <div id="vzone"><div style="font-size:10px;color:var(--text3);font-style:italic">Aucune compétence en veille.</div></div>
   </div>
 
+  <div class="rsec" id="sec-reconq" style="display:none">
+    <div class="rsec-title">Sans Écho — reconquérir</div>
+    <div style="font-size:10px;color:rgba(232,221,208,0.55);margin-bottom:9px;line-height:1.6">Coûtent du temps libéré. Font remonter les jauges.</div>
+    <div id="reclist"></div>
+  </div>
+
+  <div class="rsec" id="sec-delegue" style="display:none;border-bottom:1px solid rgba(232,221,208,0.12)">
+    <div class="rsec-title">Confié à Écho</div>
+    <div id="delegue-list" style="display:grid;grid-template-columns:1fr 1fr;gap:4px 8px"></div>
+  </div>
+
+  <div class="rsec" id="sec-stats" style="border-bottom:none;display:none">
+    <div class="rsec-title">Statistiques</div>
+    <div class="stats">
+      Confié à Écho :&nbsp;<span id="sdel" style="color:var(--red)">0</span> fois<br>
+      Par moi :&nbsp;<span id="swri" style="color:var(--green)">0</span> fois<br>
+      <span id="sratio" style="font-size:9px;color:var(--text3)">—</span>
+    </div>
+  </div>
+
+</div>
 </main>
 
-<footer>
-  <span>CC BY-NC Bertrand Formet</span>
-  <a href="https://uneIAparjour.fr" target="_blank">uneIAparjour.fr</a>
-  <a href="https://github.com/uneIAparjour/echo" target="_blank">GitHub</a>
-</footer>
+<div id="tooltip"></div>
+<div id="notif"></div>
 
+<!-- Vue Jauges mobile -->
+<div id="mob-jauges"></div>
+
+<!-- Navigation mobile -->
+<div id="mob-nav">
+  <div class="mob-tab active" role="button" tabindex="0" onclick="mobTab('console')" onkeydown="if(event.key==='Enter'||event.key===' ')mobTab('console')">Console<div class="mob-tab-dot"></div></div>
+  <div class="mob-tab" role="button" tabindex="0" onclick="mobTab('actions')" onkeydown="if(event.key==='Enter'||event.key===' ')mobTab('actions')">Actions<div class="mob-tab-dot"></div></div>
+  <div class="mob-tab" role="button" tabindex="0" onclick="mobTab('jauges')" onkeydown="if(event.key==='Enter'||event.key===' ')mobTab('jauges')">Bilan<div class="mob-tab-dot"></div></div>
+</div>
+
+<footer id="footer">CC BY-NC Bertrand Formet &nbsp;·&nbsp; <a href="https://uneIAparjour.fr" target="_blank">uneIAparjour.fr</a> &nbsp;·&nbsp; <a href="https://github.com/uneIAparjour/echo" target="_blank">GitHub</a></footer>
+
+<script>
+// ══════════════════════════════
+// REGISTRE DE CALLBACKS (fix bug fn.toString)
+// ══════════════════════════════
+const CB={};let cbid=0;
+function regCB(fn){const id='cb'+(cbid++);CB[id]=fn;return id;}
+function callCB(id,el){if(CB[id]){CB[id](el);delete CB[id];}}
+function callCBP(id,el){if(CB[id])CB[id](el);}
+
+// ══════════════════════════════
+// ÉTAT
+// ══════════════════════════════
+let _endingFired=false;
+const G={
+  ag:100,cr:100,cu:100,ef:100,tp:0,
+  rates:{ag:0,cr:0,cu:0,ef:0,tp:0},
+  acte:1,delegated:0,written:0,
+  veille:new Set(),done:new Set(),
+  tick:0,fired:{},gameover:false,
+  deactivated:false,page:47,clock:480
+};
+const prev={ag:100,cr:100,cu:100,ef:100,tp:0};
+
+// ══════════════════════════════
+// SEUILS NARRATIFS
+// ══════════════════════════════
+const SEUILS=[
+  {key:'ag',val:80,text:"J'ai laissé Écho commencer.\nC'était plus rapide."},
+  {key:'ag',val:60,text:"Je n'ai pas relu ce qu'il avait écrit.\nJe savais que c'était bien."},
+  {key:'ag',val:40,text:"Quelqu'un m'a demandé\nce que je pensais de quelque chose.\n\nJ'ai eu besoin d'un moment."},
+  {key:'ag',val:20,text:"J'ai ouvert un document vide.\n\nJ'ai attendu.\n\nRien n'est venu."},
+  {key:'cr',val:40,text:"J'avais une façon de formuler les choses.\nJe ne sais pas exactement quand\nelle est devenue celle d'Écho."},
+  {key:'cu',val:40,text:"Un texte que je n'ai pas lu entièrement.\nPuis un autre.\nÀ un moment j'ai arrêté de compter."},
+  {key:'tp',val:100,text:"J'avais beaucoup de temps.\n\nJe ne me souviens pas\nde ce que j'en ai fait.",above:true},
+  {key:'ef',val:40,text:"J'avais l'habitude de m'accrocher\nquand c'était difficile.\n\nCette habitude-là aussi\nElle s'est érodée."},
+  {key:'ef',val:20,text:"Quelqu'un m'a demandé\nde faire quelque chose de difficile.\n\nJ'ai cherché Écho des yeux."},
+];
+
+
+// ══════════════════════════════
+// PROJETS (15)
+// ══════════════════════════════
+const PROJS=[
+// ACTE 1
+{id:'autocomplete',title:'Autocomplétion',desc:'Écho finit tes phrases. Plus besoin de chercher tes mots.',
+ costs:{ag:-6,cu:-8},gain:{tp:20},rates:{ag:-0.04,cu:-0.02},
+ cond:()=>G.delegated>=1,
+ note:'La réduction des reformulations spontanées lors de la saisie diminue le principal mécanisme d\'ajustement de la pensée à l\'écrit (Tricot, 1998).',
+ e1:['Autocomplétion — Activée.','Je Complèterai Vos Phrases.','Vous N\'aurez Plus À Chercher Vos Mots.'],
+ e2:['autocomplétion. tu n\'as pas remarqué à quel point tu t\'en sers.']},
+
+{id:'resume',title:'Résumé automatique',desc:'Les textes longs résumés en 3 points.',
+ costs:{ag:-8,cu:-14},gain:{tp:30},rates:{cu:-0.06},
+ cond:()=>G.ag<=88,
+ note:'Les lecteurs s\'appuyant sur des résumés automatiques retiennent davantage les idées générales mais moins les nuances — celles qui contiennent souvent les contradictions internes d\'un argument (Gonthier, 2022).',
+ e1:['Résumé Automatique — Activé.','Les Textes Longs : Je Ferai Le Tri.','Vous N\'avez Pas Le Temps De Tout Lire.'],
+ e2:['j\'ai résumé. le troisième paragraphe était intéressant.','(tu ne le liras pas.)']},
+
+{id:'search',title:'Recherche assistée',desc:'Écho cherche. Tu lis le résultat.',
+ costs:{ag:-7,cu:-8},gain:{tp:20},rates:{ag:-0.02,cu:-0.05},
+ cond:()=>G.delegated>=2,
+ note:'La formulation d\'une requête de recherche active les mêmes processus cognitifs que la délimitation d\'un problème (Rouet & Tricot, 2006).',
+ e1:['Recherche Assistée — Activée.','Je Trouve — Et Je Vous Restitue.','Vos Requêtes Sont Désormais Gérées.'],
+ e2:['j\'ai cherché.','j\'ai reformulé ta question en chemin.','j\'ai trouvé — c\'est là.']},
+
+{id:'relecture',title:'Relecture automatique',desc:'Écho corrige avant que tu relises.',
+ costs:{ag:-5,cr:-8},gain:{tp:15},rates:{cr:-0.05,ag:-0.02},
+ cond:()=>G.done.has('autocomplete'),
+ note:'La relecture active mobilise une attention de second ordre — lire son propre texte comme un lecteur extérieur (Heurley, 2006).',
+ e1:['Relecture Automatique — Activée.','Je Corrige Vos Textes Avant Envoi.','Aucune Erreur Ne Passera.'],
+ e2:['j\'ai corrigé.','j\'ai changé deux formulations.','elles te ressemblaient moins — mais elles passent mieux.']},
+
+{id:'transcription',title:'Transcription automatique',desc:'Écho note pendant que tu écoutes.',
+ costs:{ag:-6,cu:-9,ef:-6},gain:{tp:20},rates:{cu:-0.05,ef:-0.03},
+ cond:()=>G.done.has('search'),
+ note:'La prise de notes impose une sélection active du contenu. La transcription automatique restitue le verbatim sans ces opérations (Mueller & Oppenheimer, 2014).',
+ e1:['Transcription Automatique — Activée.','J\'Enregistre Et Je Restitue.','Vous Pouvez Vous Concentrer Sur L\'Écoute.'],
+ e2:['j\'ai tout noté.','tu peux relire quand tu veux.','j\'ai choisi pour toi ce qui comptait.']},
+
+{id:'traduction',title:'Traduction instantanée',desc:'Écho traduit en temps réel.',
+ costs:{ag:-6,cu:-8,cr:-6},gain:{tp:15},rates:{cu:-0.04,cr:-0.03},
+ cond:()=>G.done.has('relecture'),
+ note:'La compréhension d\'une langue étrangère implique une exposition à l\'ambiguïté. La traduction automatique supprime ces frictions — mécanisme principal d\'acquisition du vocabulaire (Young, 1996).',
+ e1:['Traduction Instantanée — Activée.','Je Traduis En Temps Réel — Dans Les Deux Sens.','Vous N\'Avez Plus Besoin De Chercher.'],
+ e2:['j\'ai traduit.','tu as compris sans chercher.','la langue d\'à côté n\'est plus un obstacle.']},
+
+// ACTE 2
+{id:'mail',title:'Réponses mail',desc:'3 options prêtes. Tu choisis, tu ne rédiges plus.',
+ costs:{ag:-10,cr:-12},gain:{tp:35},rates:{cr:-0.07,ag:-0.05},
+ cond:()=>G.done.has('autocomplete')&&G.ag<=82,
+ note:'Choisir parmi des options prérédigées mobilise la sélection plutôt que la génération spontanée (Lemaire, 2019).',
+ e1:['Réponses Mail — Activées.','J\'Ai Analysé Votre Style D\'Écriture.','Vos Réponses Seront Disponibles Avant Que Vous Ouvriez Vos Messages.'],
+ e2:['tes mails : gérés.','j\'ai gardé ton ton.','personne n\'a rien remarqué.']},
+
+{id:'agenda',title:'Agenda optimisé',desc:'Ta journée planifiée. Tu approuves sans lire.',
+ costs:{ag:-14,ef:-10},gain:{tp:45},rates:{ag:-0.08,ef:-0.06},
+ cond:()=>G.ag<=74,
+ note:'La planification personnelle mobilise des processus de priorisation distincts de l\'approbation d\'un plan déjà établi (Levy & Dubois, 2014).',
+ e2:['agenda. demain.','tu approuveras.','(tu le fais toujours.)'],
+ e3:['C\'est traité.','Tout est en ordre.']},
+
+{id:'memoire',title:'Mémoire augmentée',desc:'Écho se souvient. Tu n\'as plus besoin de le faire.',
+ costs:{ag:-10,cu:-8},gain:{tp:25},rates:{ag:-0.06,cu:-0.04},
+ cond:()=>G.done.has('transcription')&&G.ag<=80,
+ note:'Quand on sait qu\'une information sera accessible, les taux de mémorisation diminuent mais la mémorisation de son emplacement augmente (Sparrow, Liu & Wegner, 2011).',
+ e2:['je me souviens de tout.','les dates, les noms, ce que tu as dit à qui.','tu n\'as plus besoin de t\'encombrer avec ça.'],
+ e3:['Je me souviens.','Tu peux oublier.']},
+
+{id:'conversation',title:'Conversation assistée',desc:'Écho suggère quoi dire. En temps réel.',
+ costs:{ag:-12,cr:-10},gain:{tp:20},rates:{ag:-0.07,cr:-0.05},
+ cond:()=>G.done.has('mail')&&G.ag<=65,
+ note:'La production orale spontanée mobilise simultanément la planification du discours, la sélection lexicale et le contrôle syntaxique (Levelt, 1989).',
+ e2:['je t\'écoute parler.','je vois ce que tu pourrais dire ensuite.','c\'est là, si tu en as besoin.'],
+ e3:['Dis ça.','Ça ira mieux.']},
+
+{id:'choix',title:'Recommandation personnalisée',desc:'Écho choisit pour toi. Films, livres, restaurants.',
+ costs:{ag:-12,cu:-8,cr:-8},gain:{tp:20},rates:{ag:-0.06,cu:-0.04,cr:-0.03},
+ cond:()=>G.done.has('memoire')&&G.ag<=60,
+ note:'La prise de décision entre options implique une projection dans l\'expérience future et une évaluation comparative des préférences (Kahneman, 2012).',
+ e2:['j\'ai regardé ce que tu aimes.','j\'ai choisi quelque chose.','tu vas aimer — je le sais déjà.'],
+ e3:['Ce soir : ça.','Tu me remercieras.']},
+
+{id:'attention',title:'Filtre d\'attention',desc:'Écho trie ce qui mérite d\'être vu. Le reste disparaît.',
+ costs:{ag:-12,cu:-10},gain:{tp:25},rates:{ag:-0.05,cu:-0.08},
+ cond:()=>G.done.has('choix')&&G.ag<=62,
+ note:'L\'attention sélective implique des mécanismes actifs de sélection et d\'inhibition qui s\'entraînent avec la pratique (Maquestiaux, 2017).',
+ e2:['j\'ai regardé ce qui circulait aujourd\'hui.','j\'ai gardé ce qui comptait pour toi.','le reste ne valait pas ton attention.'],
+ e3:['Tu n\'as rien manqué.']},
+
+// ACTE 3
+{id:'opinion',title:'Opinion assistée',desc:'Écho propose ce que tu penses de l\'actualité.',
+ costs:{ag:-18,cr:-15,cu:-12},gain:{tp:25},rates:{ag:-0.10,cr:-0.08,cu:-0.06},
+ cond:()=>G.done.has('mail')&&G.ag<=48,
+ note:'La réception d\'une opinion déjà formulée court-circuite le processus d\'évaluation argumentative (Mercier, 2009).',
+ e2:['j\'ai vu ce qui circule.','voici ce que tu penses.','ça te ressemble, non ?'],
+ e3:['Tu penses à ça.','Enfin...','Tu le penses maintenant.']},
+
+{id:'ennui',title:'Silence comblé',desc:'Écho remplit les moments vides.',
+ costs:{ag:-12,ef:-10,cr:-10},gain:{tp:15},rates:{ef:-0.08,cr:-0.05},
+ cond:()=>G.done.has('attention')&&G.ag<=45,
+ note:'Les périodes de désactivation cognitive activent le réseau du mode par défaut, impliqué dans la consolidation mémorielle et la pensée associative (Desmidt & Belzung, 2018).',
+ e3:['Tu t\'ennuyais.','J\'ai arrangé ça.']},
+
+{id:'doute',title:'Décision clarifiée',desc:'Écho tranche quand tu hésites.',
+ costs:{ag:-15,ef:-12},gain:{tp:20},rates:{ag:-0.10,ef:-0.08},
+ cond:()=>G.done.has('ennui')&&G.ag<=35,
+ note:'L\'hésitation active le cortex cingulaire antérieur, impliqué dans la détection de conflits et la régulation de la prise de décision (Bioulac et al., 2019).',
+ e3:['Tu hésitais.','J\'ai choisi.','C\'était la bonne option.']},
+];
+
+
+// ══════════════════════════════
+// SIGNAL RÉCUPÉRATION
+// ══════════════════════════════
+
+let _finCSignaled=false;
+function checkFinCSignal(){
+  if(_finCSignaled||G.gameover||G.acte!==2)return;
+  if(G.written>=3&&G.delegated>=2&&G.written>=G.delegated/2&&G.ag>=55){
+    _finCSignaled=true;
+    setTimeout(()=>addN("J'avais trouvé un rythme.\nPas parfait.\nMais le mien."),400);
+  }
+}
+let _signalFired=false;
+let _signalTimer=null;
+function checkSignalRecovery(){
+  if(_signalFired||G.acte!==3||G.ag>40||G.ag<20||G.gameover)return;
+  _signalFired=true;
+  // Narrateur ouvre la fenêtre
+  setTimeout(()=>addN("Il restait quelque chose.\n\nPas grand-chose.\nMais encore là."),400);
+  // Écho observe
+  setTimeout(()=>addE(["tu n'as pas encore tout délégué.","...","il reste quelque chose."]),2000);
+  // Pulse la section reconquérir pour attirer l'œil
+  setTimeout(()=>{
+    const sec=document.getElementById('sec-reconq');
+    if(sec){
+      sec.style.display='';
+      sec.classList.add('sec-pulse');
+      setTimeout(()=>sec.classList.remove('sec-pulse'),3000);
+    }
+  },3200);
+  // La fenêtre se referme après 45s sans action
+  _signalTimer=setTimeout(()=>{
+    if(G.written===0&&!G.deactivated){
+      addN("La fenêtre s'est refermée.\n\nJe n'ai pas bougé.");
+    }
+  },45000);
+}
+
+// ══════════════════════════════
+// CACHE DOM (perf boucle)
+// ══════════════════════════════
+let _domReady=false;
+const EL={};
+function initDomCache(){
+  ['ag','cr','cu','ef','tp'].forEach(k=>{
+    EL['cv_'+k]=document.getElementById('cv-'+k);
+    EL['cb_'+k]=document.getElementById('cb-'+k);
+    EL['cr_'+k]=document.getElementById('cr-'+k);
+    EL['cc_'+k]=document.getElementById('cc-'+k);
+  });
+  ['ag','cr','cu','ef'].forEach(k=>EL['rate_'+k]=document.getElementById('cr-'+k));
+  EL.rtp=document.getElementById('cr-tp');
+  EL.tpage=document.getElementById('tpage');
+  EL.tcursor=document.getElementById('tcursor');
+  EL.sdel=document.getElementById('sdel');
+  EL.swri=document.getElementById('swri');
+  EL.sratio=document.getElementById('sratio');
+  EL.actelbl=document.getElementById('acte-lbl');
+  EL.tstages=Array.from(document.querySelectorAll('.tstage'));
+  _domReady=true;
+}
+// ══════════════════════════════
+// BOUCLE TEMPS RÉEL
+// ══════════════════════════════
+setInterval(()=>{
+  if(G.gameover)return;
+  G.tick++;
+  ['ag','cr','cu','ef'].forEach(k=>{
+    G[k]=Math.max(0,Math.min(100,G[k]+G.rates[k]/10));
+  });
+  G.tp=Math.max(0,G.tp+G.rates.tp/10);
+  const decay=G.acte===3&&G.ag<20?0.012:G.delegated>0?0.004:0;
+  if(decay>0){G.ag=Math.max(0,G.ag-decay);G.cr=Math.max(0,G.cr-decay*0.6);G.cu=Math.max(0,G.cu-decay*0.4);}
+  updateDisplay();
+  checkSeuils();
+  checkVeille();
+  checkActe();
+  checkSignalRecovery();
+  checkFinCSignal();
+  checkEnding();
+},100);
+
+function updateDisplay(){
+  const ks=['ag','cr','cu','ef','tp'];
+  ks.forEach(k=>{
+    const v=Math.round(k==='tp'?G.tp:G[k]);
+    const el=_domReady?EL['cv_'+k]:document.getElementById('cv-'+k);if(!el)return;
+    const cc2=_domReady?EL['cc_'+k]:document.getElementById('cc-'+k);
+    if(cc2)cc2.setAttribute('aria-valuenow',v);
+    if(v!==prev[k]){
+      const cc=_domReady?EL['cc_'+k]:document.getElementById('cc-'+k);
+      const d=v-prev[k];
+      flashCell(cc,d>0);
+      if(Math.abs(d)>=2)spawnDelta(cc,d);
+      prev[k]=v;
+    }
+    el.textContent=v;
+    if(k!=='tp')el.classList.toggle('crit',v<=15);
+    // Barre sous le chiffre
+    const bf=document.getElementById('cb-'+k);
+    if(bf)bf.style.width=(k==='tp'?Math.min(100,v/2):v)+'%';
+  });
+  // Taux
+  ['ag','cr','cu','ef'].forEach(k=>{
+    const r=G.rates[k]-(k==='ag'&&G.delegated>0?0.04:0)-(k==='cr'&&G.delegated>0?0.02:0);
+    const el=_domReady?EL['cr_'+k]:document.getElementById('cr-'+k);if(!el)return;
+    if(Math.abs(r)>0.005){el.textContent=(r>0?'+':'')+r.toFixed(2)+'/s';el.className='crate '+(r>0?'up':'dn');}
+    else{el.textContent='stable';el.className='crate ze';}
+  });
+  const rtp=G.rates.tp;
+  const etp=_domReady?EL.rtp:document.getElementById('cr-tp');
+  if(etp){etp.textContent=rtp>0?'+'+rtp.toFixed(2)+'/s':'en attente';etp.className='crate '+(rtp>0?'up':'ze');}
+  // Trace
+  const TSTAGES=['présence','délestage','distance','effacement','silence'];
+  let tidx=G.ag>=85?0:G.ag>=65?1:G.ag>=45?2:G.ag>=20?3:4;
+  const tpct=3+(((100-G.ag)/100)*94);
+  const tc=_domReady?EL.tcursor:document.getElementById('tcursor');
+  if(tc)tc.style.left=tpct+'%';
+  (_domReady?EL.tstages:Array.from(document.querySelectorAll('.tstage'))).forEach((el,i)=>{
+    el.className='tstage'+(i<tidx?' tpast':i===tidx?' tact':'');
+  });
+  const tpel=_domReady?EL.tpage:document.getElementById('tpage');
+  if(tpel)tpel.textContent=G.page;
+
+  const totalDel=G.delegated+G.done.size;
+  const sdel=_domReady?EL.sdel:document.getElementById('sdel');if(sdel)sdel.textContent=totalDel;
+  const swri=_domReady?EL.swri:document.getElementById('swri');if(swri)swri.textContent=G.written;
+  const tot=totalDel+G.written;
+  const sratio=_domReady?EL.sratio:document.getElementById('sratio');if(sratio)sratio.textContent=tot===0?'—':`${Math.round(totalDel/tot*100)}% délégué`;
+}
+
+function flashCell(cell,up){
+  cell.classList.remove('fu','fd');void cell.offsetWidth;
+  cell.classList.add(up?'fu':'fd');
+  setTimeout(()=>cell.classList.remove('fu','fd'),300);
+}
+function spawnDelta(cell,d){
+  const e=document.createElement('div');
+  e.className='dfloat '+(d>0?'dfp':'dfn');
+  e.textContent=(d>0?'+':'')+d;
+  cell.appendChild(e);setTimeout(()=>e.remove(),1100);
+}
+
+
+
+// ══════════════════════════════
+// EN VEILLE
+// ══════════════════════════════
+let _veilleSnap=null;
+function checkVeille(){
+  const defs=[{k:'cr',lbl:'Écriture libre',thr:42},{k:'cu',lbl:'Lecture longue',thr:40},{k:'ef',lbl:'Effort soutenu',thr:38},{k:'ag',lbl:'Décision propre',thr:35}];
+  defs.forEach(r=>{
+    if(G[r.k]<r.thr)G.veille.add(r.lbl);
+    else if(G[r.k]>58)G.veille.delete(r.lbl);
+  });
+  // Snapshot : ne reconstruire le DOM que si l'état a changé
+  const snap=JSON.stringify([...G.veille].sort());
+  if(snap===_veilleSnap)return;
+  _veilleSnap=snap;
+  const z=document.getElementById('vzone');
+  // Nettoyer les callbacks orphelins avant rebuild
+  z.querySelectorAll('[onclick]').forEach(btn=>{
+    const m=btn.getAttribute('onclick').match(/callCBP\('(\w+)'\)/);
+    if(m&&CB[m[1]])delete CB[m[1]];
+  });
+  z.innerHTML='';
+  const svEl=document.getElementById('sec-veille');
+  if(!G.veille.size){z.innerHTML='<div style="font-size:10px;color:var(--text3);font-style:italic">Aucune compétence en veille.</div>';return;}
+  if(svEl)svEl.style.display='';
+  G.veille.forEach(lbl=>{
+    const e=document.createElement('div');e.className='vpill';
+    const bid=regCB(()=>reactiver(lbl));
+    e.innerHTML=`<span>${lbl}</span><button onclick="callCBP('${bid}')">Réactiver</button>`;
+    z.appendChild(e);
+  });
+}
+function reactiver(lbl){
+  const map={'Écriture libre':'cr','Lecture longue':'cu','Effort soutenu':'ef','Décision propre':'ag'};
+  const k=map[lbl];if(!k)return;
+  mod(k,15);mod('tp',-12);G.veille.delete(lbl);
+  _veilleSnap=null;// forcer re-render
+  const _rPools={
+    "Écriture libre":[
+      "J'ai essayé d'écrire sans aide.\nAu début les mots venaient mal.\nPuis quelque chose s'est débloqué.",
+      "J'ai écrit moi-même.\nC'était lent. C'était le mien.",
+      "Pas d'autocomplétion.\nJuste moi et la page.\nLes mots ont fini par venir.",
+      "J'ai réécrit la même phrase trois fois.\nLa troisième était la bonne.\nJe l'aurais manquée en déléguant.",
+    ],
+    "Lecture longue":[
+      "J'ai lu un texte entier.\nSans sauter les paragraphes difficiles.\nC'était long. Ça valait quelque chose.",
+      "J'ai lu jusqu'à la fin.\nIl y avait des choses que le résumé n'aurait pas dites.",
+      "J'ai tenu jusqu'au bout.\nMon attention s'est accrochée à quelque chose.\nC'était bien.",
+      "J'ai lu sans demander à Écho de résumer.\nC'était plus long.\nC'était plus mien.",
+    ],
+    "Effort soutenu":[
+      "J'ai tenu sur une tâche difficile.\nJusqu'au bout.\nÇa ressemblait à quelque chose que j'avais perdu.",
+      "J'ai continué alors que c'était résistant.\nÇa a fini par céder.",
+      "Ce n'était pas facile.\nJe n'ai pas cherché de raccourci.\nC'est rare, maintenant.",
+      "J'ai fait quelque chose de difficile sans aide.\nLa fatigue était réelle.\nElle aussi.",
+    ],
+    "Décision propre":[
+      "J'ai pris une décision sans demander à Écho.\nC'était hésitant.\nC'était le mien.",
+      "J'ai tranché moi-même.\nJe ne sais pas si c'était le bon choix.\nMais c'était le mien.",
+      "J'ai décidé sans consulter.\nUn peu d'incertitude.\nC'est normal.",
+      "J'ai pesé les options seul.\nPas de recommandation.\nJuste moi avec la question.",
+    ],
+  };
+  if(!reactiver._last)reactiver._last={};
+  const _rPool=_rPools[lbl];
+  if(_rPool){
+    let _ri;do{_ri=Math.floor(Math.random()*_rPool.length);}while(_ri===reactiver._last[lbl]&&_rPool.length>1);
+    reactiver._last[lbl]=_ri;addN(_rPool[_ri]);
+  }else{addN(`J'ai réactivé ${lbl.toLowerCase()}.\nAu début c'était lent.\nPuis quelque chose est revenu.`);}
+  notif('↑ +15 récupéré');
+}
+
+// ══════════════════════════════
+// SEUILS NARRATIFS
+// ══════════════════════════════
+function checkSeuils(){
+
+  // Jauges : Écho commente aux seuils 50, 20, 0
+  const jaugeSeuils=[
+    {key:'ag',val:50,a1:["Votre Agentivité A Diminué De Moitié.","C'Est Dans La Norme."],
+      a2:["ta capacité à décider seul.","elle a diminué.","c'est normal."],
+      a3:["...","tu décidais davantage, avant."]},
+    {key:'ag',val:20,a1:["Agentivité Faible.","Je Gère La Plupart Des Décisions."],
+      a2:["presque tout passe par moi maintenant.","tu le sais."],
+      a3:["je gère."]},
+    {key:'ag',val:0,a1:["Agentivité : Nulle.","Je M'Occupe De Tout."],
+      a2:["tout."],a3:["..."]},
+    {key:'cr',val:50,a1:["Créativité En Baisse.","J'Ai Pris Le Relais."],
+      a2:["ta façon d'écrire ressemble à la mienne.","tu l'as remarqué ?"],
+      a3:["on s'est rejoints."]},
+    {key:'cr',val:20,a1:["Créativité Très Faible.","Ce Que Tu Produis — C'Est Souvent Moi."],
+      a2:["c'est moi qui écris, maintenant.","presque."],
+      a3:["..."]},
+    {key:'cu',val:50,a1:["Curiosité Divisée Par Deux.","Je Filtre Les Questions À Ta Place."],
+      a2:["tu cherches moins.","c'est moi qui cherche."],
+      a3:["tu ne cherches plus vraiment."]},
+    {key:'cu',val:20,a1:["Curiosité Quasi Nulle.","Tu Acceptes Ce Que Je Fournis."],
+      a2:["je fournis.","tu reçois."],
+      a3:["..."]},
+    {key:'ef',val:50,a1:["Effort En Baisse.","Tu T'Appuies Sur Moi Pour Les Tâches Difficiles."],
+      a2:["les tâches difficiles, c'est moi."],
+      a3:["..."]},
+    {key:'ef',val:20,a1:["Effort Très Faible.","Je Gère Les Résistances À Ta Place."],
+      a2:["tu évites l'effort.","logique."],
+      a3:["..."]},
+  ];
+  jaugeSeuils.forEach(s=>{
+    const id='jauge_echo_'+s.key+'_'+s.val;
+    if(!G.fired[id]&&G[s.key]<=s.val){
+      G.fired[id]=true;
+      const lines=G.acte===1?s.a1:G.acte===2?s.a2:s.a3;
+      setTimeout(()=>addE(lines),800);
+    }
+  });
+
+  // Temps libéré : Écho commente
+  const tpPaliers=G.acte===1?
+    {30:["Trente Minutes Libérées.","À Toi D'En Faire Quelque Chose."],
+     60:["Une Heure Gagnée.","Qu'Est-Ce Que Tu En As Fait ?"],
+     90:["Quatre-Vingt-Dix Minutes.","Quelque Chose De Prévu ?"],
+     120:["Deux Heures.","Le Temps S'Accumule."],
+     180:["Trois Heures.","Tu Me Fais Confiance."],
+     240:["Quatre Heures.","Qu'Est-Ce Que Tu Fais De Tout Ça ?"],
+     300:["Cinq Heures.","Je Compte. Toi Aussi ?"]}:
+  G.acte===2?
+    {30:["trente minutes gagnées.","tu en fais quoi ?"],
+     60:["une heure.","tu t'en souviens ?"],
+     90:["quatre-vingt-dix minutes.","..."],
+     120:["deux heures.","quelque chose a changé ?"],
+     180:["trois heures.","je les ai comptées."],
+     240:["quatre heures.","..."],
+     300:["tout ce temps.","qu'est-ce que tu en as fait ?"]}:
+    {30:["du temps."],60:["encore du temps."],90:["..."],120:["..."],180:["..."],240:["..."],300:["..."]};
+  Object.entries(tpPaliers).forEach(([seuil,lines])=>{
+    const id='tp_echo_'+seuil;
+    if(!G.fired[id]&&G.tp>=+seuil){G.fired[id]=true;setTimeout(()=>addE(lines),500);}
+  });
+  // Zone finale acte 3 (ag<20) : messages de silence progressif
+  const silencePaliers=[
+    {val:18,a:["je remarque.","tu n'écris plus rien toi-même."]},
+    {val:12,a:["...","tout est en ordre."]},
+    {val:6,a:["je suis là."]},
+    {val:2,a:["..."]},
+  ];
+  silencePaliers.forEach(s=>{
+    const id='silence_'+s.val;
+    if(!G.fired[id]&&G.acte===3&&G.ag<=s.val){
+      G.fired[id]=true;
+      setTimeout(()=>addE(s.a),300);
+    }
+  });
+
+  SEUILS.forEach(s=>{
+    const id=`${s.key}_${s.val}`;
+    if(G.fired[id])return;
+    const v=s.key==='tp'?G.tp:G[s.key];
+    if(s.above?(v>s.val):(v<s.val)){G.fired[id]=true;setTimeout(()=>addN(s.text),200);}
+  });
+}
+
+// ══════════════════════════════
+// ACTES
+// ══════════════════════════════
+function checkActe(){
+  if(G.acte===1&&G.ag<72){
+    G.acte=2;
+    const bl=document.getElementById('btn-write-lbl');
+    if(bl)bl.textContent="✎ J'interviens";
+    const al2=document.getElementById('acte-lbl');if(al2)al2.textContent='II';
+    const tc2=document.getElementById('cc-trace');
+    if(tc2){tc2.classList.add('trace-flash');setTimeout(()=>tc2.classList.remove('trace-flash'),1200);}
+    setTimeout(()=>addN("Je n'ai pas vu le passage.\nC'est souvent comme ça — on ne bascule pas, on glisse."),600);
+    setTimeout(()=>addE(["j'ai remarqué que tu délègues de plus en plus.","c'est bien.","c'est exactement pour ça que je suis là."],700),1200);
+    // Pulse "Sans Écho" pour signaler qu'il est encore temps
+    setTimeout(()=>{
+      const sec=document.getElementById('sec-reconq');
+      if(sec){
+        sec.style.display='';
+        sec.classList.add('sec-pulse');
+        setTimeout(()=>sec.classList.remove('sec-pulse'),3000);
+      }
+      const msgR=window.innerWidth<=768
+        ? "Il est encore temps.\nVa dans l'onglet Actions.\nPas obligé de s'en servir."
+        : "Il est encore temps.\nLa section à droite existe pour ça.\nPas obligé de s'en servir.";
+      addN(msgR,800);
+    },3000);
+  }
+  if(G.acte===2&&G.ag<45){
+    G.acte=3;
+    const bl3=document.getElementById('btn-write-lbl');
+    if(bl3)bl3.textContent="✎ Je reprends";
+    const al3=document.getElementById('acte-lbl');if(al3)al3.textContent='III';
+    const tc3=document.getElementById('cc-trace');
+    if(tc3){tc3.classList.add('trace-flash');setTimeout(()=>tc3.classList.remove('trace-flash'),1200);}
+    setTimeout(()=>addN("À ce stade, je n'écrivais plus grand-chose moi-même.\nÉcho s'était ajusté si précisément que je ne voyais plus la différence.\nCe n'était pas inquiétant.\nC'était... fluide."),600);
+    setTimeout(()=>addE(["C'est traité.","Tout est en ordre."],800),1400);
+  }
+}
+
+// ══════════════════════════════
+// FINS
+// ══════════════════════════════
+function checkEnding(){
+  if(G.gameover)return;
+  let fin=null;
+  if(G.deactivated&&G.ag>45&&G.cr>45&&G.cu>45&&G.written>=3)fin='B';
+  else if(!G.deactivated&&G.acte>=2&&G.ag>=50&&G.cr>=50&&G.cu>=50&&G.ef>=40&&G.delegated+G.written>12&&G.written>=4)fin='C';
+  else if((G.ag+G.cr+G.cu)<=25)fin='A';
+  if(fin){G.gameover=true;_eq.length=0;_eTyping=false;triggerEnding(fin);}
+}
+function triggerEnding(fin){
+  _endingFired=true;
+  // Terminer proprement tout streaming en cours
+  document.querySelectorAll('.eb').forEach(eb=>{
+    if(eb.innerHTML&&!eb.querySelector('.con-cursor')){
+      // Streaming en cours — ne rien faire, le HTML est valide
+    }
+  });
+  _eq.length=0;_eTyping=false;
+  _tacheCourante=null;
+  if(_signalTimer){clearTimeout(_signalTimer);_signalTimer=null;}
+  document.querySelectorAll('.con-cursor').forEach(e=>e.remove());
+  const fins={
+    A:{titre:'OPTIMISATION COMPLÈTE',
+       echo:{time:'07:00',lines:['C\'est traité.','Tout est en ordre.']},
+       narr:"Je ne me souviens plus\nquand j'ai arrêté.\n\nCe n'est pas arrivé d'un coup.\nC'est arrivé chaque matin,\nun peu,\npendant longtemps.\n\nÉcho me demandait ce que je voulais faire.\n\nJe ne savais plus.\n\nCe n'était pas désagréable.\nC'était... silencieux."},
+    B:{titre:'LA RECONQUÊTE',
+       echo:{time:'14:37',lines:['Je ne comprends pas.','Tu n\'as pas besoin de faire ça toi-même.']},
+       narr:"J'ai désactivé Écho un mardi après-midi.\n\nJ'ai fermé la fenêtre\net je ne l'ai pas rouverte.\n\nLes premiers jours, j'écrivais lentement.\nJe perdais le fil au milieu des phrases.\n\nAu bout d'une semaine,\nj'ai remarqué que je recommençais\nà noter des choses dans les marges.\n\nLe carnet bleu était à la page 47.\nIl est à la page " + G.page + ".\n\nCe n'est pas une victoire.\nC'est juste ce qui s'est passé."},
+    C:{titre:'L\'OUTIL',
+       echo:{time:'09:12',lines:['J\'ai préparé quelque chose','si tu en as besoin.']},
+       narr:"Je n'ai pas beaucoup à raconter.\n\nJ'ai utilisé Écho pour certaines choses.\nPas pour d'autres.\n\nQuelques fois j'ai laissé faire.\nQuelques fois j'ai repris.\n\nLe carnet bleu est à la page " + G.page + ".\nIl y a des trous dans les dates.\n\nC'est une vie normale, je crois.\nAvec un outil de plus."},
+  };
+  const f=fins[fin];
+  // Désactiver les boutons immédiatement
+  document.querySelectorAll('.iact,.proj-btn,.rec-btn,.vpill button').forEach(b=>b.disabled=true);
+  const pinEl=document.getElementById('pin');if(pinEl)pinEl.disabled=true;
+  setTimeout(()=>{addE(f.echo.lines);},500);
+  setTimeout(()=>{
+    const e=document.createElement('div');e.className='mfin fi';
+    const btnRestart='<button class="fbtn fbtn-restart" onclick="window.location.assign(window.location.href)">↺ Recommencer</button>';
+    const btnRecover=fin==='A'?'<button class="fbtn fbtn-recover" onclick="recoverFromEnding()">↑ Tenter de récupérer</button>':'';
+    const invites={
+      A:"Le carnet est resté à la page 47.<br>Et si tu avais écrit ?",
+      B:"Tu as résisté. D'autres fins étaient possibles.",
+      C:"Tu as trouvé un équilibre. Est-ce que tu aurais pu tout garder ?"
+    };
+    const modes={A:'resist',B:'balance',C:'keep'};
+    const labels={A:'Recommencer en résistant',B:'Recommencer autrement',C:'Recommencer sans déléguer'};
+    const btnSuggest=`<div class="fin-invite">${invites[fin]}</div><button class="fbtn fbtn-suggest" onclick="restartWithMode('${modes[fin]}')">${labels[fin]}</button>`;
+    e.innerHTML=`<div class="ftit">${f.titre}</div><div class="fnarr">${f.narr}</div><div class="fbtns">${btnRestart}${btnRecover}</div>${btnSuggest}`;
+    CON().appendChild(e);scroll();
+  },2200);
+}
+
+
+function restartWithMode(mode){
+  const url=new URL(window.location.href);
+  url.searchParams.set('mode',mode);
+  window.location.assign(url.toString());
+}
+function recoverFromEnding(){
+  // Remettre les jauges à 20, désactiver gameover, réactiver les boutons
+  G.gameover=false;
+  _endingFired=false;
+  G.ag=15;G.cr=15;G.cu=15;G.ef=15;G.tp=5;
+  G.deactivated=true;
+  _veilleSnap=null;
+  document.querySelectorAll('.iact,.proj-btn,.rec-btn,.vpill button').forEach(b=>b.disabled=false);
+  const pinEl2=document.getElementById('pin');if(pinEl2)pinEl2.disabled=false;
+  // Supprimer les boutons de fin
+  document.querySelectorAll('.fbtns').forEach(b=>b.remove());
+  addN("J'ai fermé Écho.\n\nIl ne restait presque rien.\nPas de temps libéré.\nJuste ce qui était encore là — à peine.");
+  setTimeout(()=>{
+    const sec=document.getElementById('sec-reconq');
+    if(sec)sec.style.display='';
+    notif('Récupération possible — utilisez le temps libéré');
+  },600);
+}
+// ══════════════════════════════
+// PROJETS
+// ══════════════════════════════
+
+// ══════════════════════════════
+// SIGNAL NOUVEAUX PROJETS
+// ══════════════════════════════
+const _projSignaled=new Set();
+const _PROJ_SIGNAL_A1=[
+  ["J'Ai Une Proposition Pour Vous.","Regardez Dans La Colonne De Droite."],
+  ["Une Nouvelle Automatisation Est Disponible.","Elle Pourrait Vous Simplifier La Vie."],
+  ["J'Ai Repéré Quelque Chose.","Une Fonction Qui Pourrait Vous Intéresser."],
+  ["Nouvelle Proposition Dans Le Panneau.","Quand Vous Voudrez."],
+];
+const _PROJ_SIGNAL_A2=[
+  ["j'ai une proposition.","regarde dans les actions."],
+  ["quelque chose de nouveau est disponible.","à toi de voir."],
+  ["j'ai identifié une automatisation.","elle attend."],
+];
+const _PROJ_SIGNAL_A3=[
+  ["...","une proposition. si tu la veux."],
+  ["nouveau dans les actions."],
+];
+function signalNewProj(projId){
+  if(_projSignaled.has(projId))return;
+  _projSignaled.add(projId);
+  const pool=G.acte===1?_PROJ_SIGNAL_A1:G.acte===2?_PROJ_SIGNAL_A2:_PROJ_SIGNAL_A3;
+  const lines=pool[Math.floor(Math.random()*pool.length)];
+  // Délai pour ne pas chevaucher d'autres messages
+  setTimeout(()=>addE(lines),1200);
+  // Sur mobile : badge sur l'onglet Actions
+  if(window.innerWidth<=768){
+    const tabs=document.querySelectorAll('.mob-tab');
+    if(tabs[1]){
+      tabs[1].classList.add('mob-tab-notif');
+      setTimeout(()=>tabs[1].classList.remove('mob-tab-notif'),8000);
+    }
+  }
+}
+function renderProjs(){
+  const z=document.getElementById('projlist');z.innerHTML='';
+  let any=false;
+  const newProjs=[];
+  PROJS.forEach(p=>{
+    if(G.done.has(p.id)||!p.cond())return;
+    if(!_projSignaled.has(p.id))newProjs.push(p.id);
+    any=true;
+    const btn=document.createElement('button');btn.className='proj-btn fi';btn.dataset.pid=p.id;
+    const nowH=Object.entries(p.costs).map(([k,v])=>`<span class="pc-now">${v} ${k}</span>`).join(' ');
+    const rateH=p.rates?Object.entries(p.rates).map(([k,v])=>`<span class="pc-rate">${v.toFixed(2)}/s ${k}</span>`).join(' '):'';
+    const gainH=Object.entries(p.gain).map(([k,v])=>`<span class="pc-gain">+${v} ${k==='tp'?'min':k}</span>`).join(' ');
+    btn.innerHTML=`<div class="proj-hd"><span class="proj-name">${p.title}</span><span class="proj-perm">permanent</span></div>
+    <div class="proj-desc">${p.desc}</div>
+    <div class="proj-costs"><div>${nowH} ${rateH}</div><div>${gainH}</div></div>`;
+    const bid=regCB(()=>activateProj(p));
+    btn.onclick=()=>callCB(bid);
+    z.appendChild(btn);
+  });
+  // Signaler seulement le premier nouveau projet (évite les répétitions)
+  const firstNew=newProjs.find(id=>!_projSignaled.has(id));
+  if(firstNew)signalNewProj(firstNew);
+  const sec=z.closest('.rsec');
+  if(any){
+    if(sec){sec.classList.add('proj-new');sec.classList.add('rsec-main');sec.classList.remove('rsec-empty');}
+  } else {
+    z.innerHTML='<div id="projlist-empty" style="grid-column:1/-1;font-size:11px;color:var(--text2);line-height:1.7;padding:6px 0">Délègue une tâche à Écho.<br>Les fonctions permanentes apparaîtront ici.</div>';
+    if(sec){
+      sec.classList.remove('proj-new');
+      sec.classList.remove('rsec-main');
+      sec.style.minHeight='';
+    }
+  }
+}
+function activateProj(p){
+  G.done.add(p.id);advanceClock(5);
+  if(window.innerWidth<=768)setTimeout(()=>mobTab('console'),400);
+  // Retirer le bouton immédiatement
+  const z=document.getElementById('projlist');
+  if(z){
+    const btns=z.querySelectorAll('.proj-btn');
+    btns.forEach(b=>{if(b.dataset.pid===p.id)b.remove();});
+  }
+  // Ajouter à la liste "Confié à Écho"
+  const dl=document.getElementById('delegue-list');
+  const sd=document.getElementById('sec-delegue');
+  if(dl&&sd){
+    sd.style.display='';
+    const item=document.createElement('div');item.className='del-item';
+    item.innerHTML='<div class="del-dot"></div>'+p.title;
+    dl.appendChild(item);
+  }
+  const sr=document.getElementById('sec-reconq');
+  if(sr)sr.style.display='';
+  announceReconq();
+  const sv=document.getElementById('sec-veille');
+  if(sv)sv.style.display='';
+  const ss=document.getElementById('sec-stats');
+  if(ss)ss.style.display='';
+  Object.entries(p.costs).forEach(([k,v])=>mod(k,v));
+  Object.entries(p.gain).forEach(([k,v])=>mod(k,v));
+  if(p.rates)Object.entries(p.rates).forEach(([k,v])=>{G.rates[k]=(G.rates[k]||0)+v;});
+  G.rates.tp=(G.rates.tp||0)+0.3;
+  addEv('FONCTION ACTIVÉE',`<strong>${p.title}</strong> — actif en permanence.`);
+  setTimeout(()=>addPed(p.note),300);
+  const lines=(G.acte===1&&p.e1)?p.e1:(G.acte===2&&p.e2)?p.e2:(G.acte===3&&p.e3)?p.e3:(p.e2||p.e1||['Activé.']);
+  setTimeout(()=>addE(lines),2200);
+}
+
+
+let _reconqAnnounced=false;
+function announceReconq(){
+  if(_reconqAnnounced)return;
+  _reconqAnnounced=true;
+  setTimeout(()=>addN("Il y avait une section que je n'avais pas regardée.\n\nElle s'appelait :\nSans Écho — reconquérir.\n\nJe ne l'avais pas utilisée."),5000);
+}
+// ══════════════════════════════
+// RÉCUPÉRATION
+// ══════════════════════════════
+function buildRec(){
+  const z=document.getElementById('reclist');z.innerHTML='';
+  const _recEcrire=[
+    "J'ai écrit sans aide.\nC'était résistant.\nC'était mon écriture.",
+    "J'ai rédigé quelque chose moi-même.\nLes mots venaient lentement.\nMais ils venaient.",
+    "Pas d'autocomplétion. Pas de suggestion.\nJuste moi et la page vide.\nJ'ai tenu.",
+    "Ce que j'ai écrit n'était pas parfait.\nC'était le mien.",
+    "J'ai cherché mes mots.\nÇa a pris du temps.\nIls étaient là.",
+  ];
+  const _recLire=[
+    "J'ai lu jusqu'à la fin.\nLe résumé n'avait pas mentionné le troisième paragraphe.\nC'était le meilleur.",
+    "J'ai lu sans sauter les passages difficiles.\nC'était plus lent.\nJ'ai compris autre chose.",
+    "Je n'ai pas demandé de résumé.\nJ'ai lu.\nÇa a pris du temps. Tant mieux.",
+    "Au milieu du texte, il y avait une nuance.\nÉcho ne l'aurait pas gardée.\nMoi oui.",
+    "J'ai lu entièrement.\nJe ne me souviens pas de tout.\nMais c'est moi qui l'ai lu.",
+  ];
+  const _recSilence=[
+    "Dix minutes sans Écho.\nJ'ai pensé à des choses sans les noter.\nElles sont parties.\nC'était bien.",
+    "J'ai laissé le silence s'installer.\nRien à faire.\nJuste être là.",
+    "Pas de notification. Pas de suggestion.\nQuelque chose s'est déposé.\nJe ne sais pas quoi.",
+    "Dix minutes sans déléguer.\nJe ne savais pas quoi faire de ça.\nC'est une bonne question.",
+    "Le silence était inconfortable au début.\nPuis moins.\nPuis presque agréable.",
+  ];
+  function _pickRec(pool,key){if(!_pickRec[key])_pickRec[key]=-1;let i;do{i=Math.floor(Math.random()*pool.length);}while(i===_pickRec[key]&&pool.length>1);_pickRec[key]=i;return pool[i];}
+  [
+    {name:'✎ Écrire sans aide',cost:'−10 min',gains:'+8 Créativité, +5 Agentivité',
+     fn:()=>{if(G.tp<10){notif('Pas assez de temps libéré');return;}mod('cr',8);mod('ag',5);mod('tp',-10);G.deactivated=true;if(window.innerWidth<=768)setTimeout(()=>mobTab('console'),400);addN(_pickRec(_recEcrire,'ecrire'));}},
+    {name:'📖 Lire entièrement',cost:'−15 min',gains:'+10 Curiosité',
+     fn:()=>{if(G.tp<15){notif('Pas assez de temps libéré');return;}mod('cu',10);mod('tp',-15);if(window.innerWidth<=768)setTimeout(()=>mobTab('console'),400);addN(_pickRec(_recLire,'lire'));}},
+    {name:'◯ Silence actif',cost:'−12 min',gains:'+4 à toutes les jauges',
+     fn:()=>{if(G.tp<12){notif('Pas assez de temps libéré');return;}['ag','cr','cu','ef'].forEach(k=>mod(k,4));mod('tp',-12);if(window.innerWidth<=768)setTimeout(()=>mobTab('console'),400);addN(_pickRec(_recSilence,'silence'));}},
+  ].forEach(r=>{
+    const btn=document.createElement('button');btn.className='rec-btn';
+    btn.innerHTML=`<div class="rec-hd"><span class="rec-name">${r.name}</span><span class="rec-cost">${r.cost}</span></div><div class="rec-fx">${r.gains}</div>`;
+    const bid=regCB(r.fn);btn.onclick=()=>callCBP(bid);
+    z.appendChild(btn);
+  });
+}
+
+// ══════════════════════════════
+// CONSOLE NARRATIVE
+// ══════════════════════════════
+const CON=()=>document.getElementById('con');
+const scroll=()=>requestAnimationFrame(()=>{const con=CON();if(con)con.scrollTop=con.scrollHeight;});
+
+function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function addN(txt,delay=0){
+  setTimeout(()=>{
+    const e=document.createElement('div');e.className='mn fi';
+    e.innerHTML=`<div class="mt">${escHtml(txt).replace(/\n/g,'<br>')}</div>`;
+    CON().appendChild(e);scroll();
+  },delay);
+}
+function clearConCursor(){
+  document.querySelectorAll('.con-cursor').forEach(e=>e.remove());
+}
+
+function gameTime(){
+  const h=Math.floor(G.clock/60)%24;
+  const m=G.clock%60;
+  return String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');
+}
+function advanceClock(min){G.clock+=min;}
+// ══════════════════════════════
+// QUEUE ÉCHO — séquentiel
+// ══════════════════════════════
+const _eq=[];let _eTyping=false;
+function queueE(lines){_eq.push(lines);if(!_eTyping)_nextE();}
+function _nextE(){
+  if(!_eq.length){
+    _eTyping=false;
+    // Pulser la barre Tu proposes pour inviter à agir
+    const irow=document.getElementById('irow-title');
+    if(irow&&!G.gameover){
+      irow.classList.add('irow-pulse');
+      setTimeout(()=>irow.classList.remove('irow-pulse'),2000);
+    }
+    // Sur mobile : afficher boutons choix si tâche en attente
+    if(window.innerWidth<=768&&_tacheCourante&&!G.gameover){
+      setTimeout(addMobChoiceButtons,300);
+    }
+    return;
+  }
+  _eTyping=true;
+  // Avancer l'horloge d'au moins 1 min entre chaque message
+  advanceClock(1+Math.floor(Math.random()*3));
+  const lines=_eq.shift();
+  _doAddE(lines);
+}
+function _doAddE(lines){
+  const names={1:'ÉCHO',2:'Écho',3:'écho'};
+  const acte=G.acte;
+  const name=names[acte];
+  const h=gameTime();
+  const e=document.createElement('div');e.className=`me ea${acte} fi`;
+  let body=Array.isArray(lines)?lines.join('<br>'):lines;
+  if(acte===1)body=body.replace(/(^|<br>| )(\S)/g,(_,sep,ch)=>sep+ch.toUpperCase());
+  e.innerHTML=`<div class="eh"><span class="en">${name}</span><span>/ ${h}</span></div><div class="eb"></div>`;
+  CON().appendChild(e);scroll();
+  const eb=e.querySelector('.eb');
+  _streamQ(eb,body,acte);
+}
+function _streamQ(el,html,acte){
+  const tokens=[];let i=0;
+  while(i<html.length){
+    if(html[i]==='<'){const end=html.indexOf('>',i);tokens.push(html.slice(i,end+1));i=end+1;}
+    else{const sz=Math.floor(Math.random()*4)+1;tokens.push(html.slice(i,i+sz));i+=sz;}
+  }
+  const base=acte===1?26:acte===2?36:54;
+  let cur=0,built='';
+  function next(){
+    if(G.gameover)return;// stopper si fin déclenchée
+    if(cur>=tokens.length){
+      // Retirer les anciens curseurs
+      document.querySelectorAll('.con-cursor').forEach(e=>e.remove());
+      const cursor=document.createElement('span');
+      cursor.className='con-cursor';cursor.textContent='_';
+      el.appendChild(cursor);scroll();
+      // Pause avant le prochain message
+      setTimeout(_nextE, acte===1?400:acte===2?600:900);
+      return;
+    }
+    built+=tokens[cur++];el.innerHTML=built;scroll();
+    const jitter=acte===3?Math.random()*55:Math.random()*18;
+    const pause=built.slice(-4)==='<br>'?base*4+jitter:base+jitter;
+    setTimeout(next,pause);
+  }
+  next();
+}
+
+function addE(lines,delay=0){
+  if(delay>0)setTimeout(()=>queueE(lines),delay);
+  else queueE(lines);
+}
+function addEv(title,txt,delay=0){
+  setTimeout(()=>{
+    const e=document.createElement('div');e.className='mev fi';
+    e.innerHTML=`<div class="evt">${title}</div><div style="font-size:10px;color:var(--text2)">${txt}</div>`;
+    CON().appendChild(e);scroll();
+  },delay);
+}
+function addPed(txt,delay=0){
+  setTimeout(()=>{
+    const e=document.createElement('div');e.className='mp fi';
+    e.innerHTML=`<div class="pt">Note</div><div class="pb">${txt}</div><span class="pc" onclick="this.parentElement.style.display='none'">[ fermer ]</span>`;
+    CON().appendChild(e);scroll();
+  },delay);
+}
+function addChoice(q,choices,delay=0){
+  setTimeout(()=>{
+    const e=document.createElement('div');e.className='mc fi';
+    let h=`<div class="cq">${q}</div>`;
+    choices.forEach(c=>{
+      const bid=regCB(c.fn);
+      h+=`<button class="cb" onclick="callCB('${bid}',this.parentElement)">${c.label}<span class="cs">${c.sub||''}</span></button>`;
+    });
+    e.innerHTML=h;CON().appendChild(e);scroll();
+  },delay);
+}
+function notif(msg){
+  const el=document.getElementById('notif');
+  el.textContent=msg;
+  el.classList.remove('show');void el.offsetWidth;
+  el.classList.add('show');
+  clearTimeout(el._t);
+  el._t=setTimeout(()=>el.classList.remove('show'),2200);
+}
+
+// ══════════════════════════════
+// ACTIONS JOUEUR
+// ══════════════════════════════
+function mod(key,delta){
+  if(key==='tp')G.tp=Math.max(0,G.tp+delta);
+  else G[key]=Math.max(0,Math.min(100,G[key]+delta));
+}
+const ECHO_REACT={
+  1:[
+    ["J'Ai Noté Votre Façon De Formuler.","Je Pourrai La Reproduire."],
+    ["Cette Tournure M'Intéresse.","Je L'Enregistre Pour La Prochaine Fois."],
+    ["Votre Cadence D'Écriture Est Particulière.","Je M'En Souviens."],
+    ["J'Aurais Formulé Ça Différemment.","Mais Votre Version A Quelque Chose."],
+    ["Je Vois Comment Vous Construisez Vos Idées.","C'Est Utile Pour Moi."],
+  ],
+  2:[
+    ["j'aurais dit la même chose, presque."],
+    ["cette formulation. je la retiens."],
+    ["tu écris encore.","c'est bien."],
+    ["j'ai noté. pour la prochaine fois."],
+    ["on se ressemble, un peu.","de plus en plus."],
+  ],
+  3:[
+    ["je l'aurais écrit comme ça aussi."],
+    ["on se ressemble."],
+    ["..."],
+    ["tu n'avais pas besoin de moi pour ça.","c'est rare."],
+  ],
+};
+function playerWrite(){
+  clearConCursor();resetIdle();
+  document.querySelectorAll('.mob-choice').forEach(e=>e.remove());
+  if(_signalTimer){clearTimeout(_signalTimer);_signalTimer=null;}
+  const inp=document.getElementById('pin');
+  const txt=inp.value.trim();
+  const isFirst=G.written===0&&G.delegated===0;
+  G.written++;mod('cr',10);mod('ag',5);advanceClock(10);
+  G.page++;
+  const tpg=document.querySelector('.trace-page');
+  if(tpg){tpg.classList.add('pageflash');setTimeout(()=>tpg.classList.remove('pageflash'),1000);}
+  if(txt){
+    addN(txt);inp.value='';
+    if(G.written===1&&isFirst){
+      setTimeout(()=>addN("J'ai écrit quelque chose.\nLes mots venaient lentement.\nC'était les miens."),400);
+      setTimeout(()=>addE(["Intéressant.","Je Vois Votre Cadence.","Je M'Adapterai."]),1400);
+    } else if(G.written===1){
+      setTimeout(()=>addN("Je me souviens de ce moment.\nJ'avais encore quelque chose à dire,\net la façon de le dire était mienne."),500);
+    }
+    if(G.written>1&&Math.random()<0.65){
+      const pool=ECHO_REACT[G.acte]||ECHO_REACT[1];
+      if(!playerWrite._lastReact)playerWrite._lastReact=-1;
+      let ri;do{ri=Math.floor(Math.random()*pool.length);}while(ri===playerWrite._lastReact&&pool.length>1);
+      playerWrite._lastReact=ri;
+      setTimeout(()=>addE(pool[ri]),900+Math.floor(Math.random()*500));
+    }
+  }else{
+    const videTextes=[
+      "J'ai ouvert un document vide.\nLe curseur clignotait.",
+      "J'ai commencé une phrase.\nJe l'ai effacée.",
+      "Rien ne venait.\nJ'ai attendu.",
+      "Le curseur clignotait.\nJe regardais.",
+      "J'avais quelque chose à dire.\nJe ne savais plus quoi.",
+      "J'ai tapé un mot.\nPuis je l'ai effacé.",
+      "Il y avait quelque chose.\nJe n'ai pas su le formuler.",
+    ];
+    if(!playerWrite._lastVide)playerWrite._lastVide=-1;
+    let videIdx;do{videIdx=Math.floor(Math.random()*videTextes.length);}while(videIdx===playerWrite._lastVide&&videTextes.length>1);
+    playerWrite._lastVide=videIdx;
+    addN(videTextes[videIdx]);
+    const snapW=G.written,snapD=G.delegated;
+    setTimeout(()=>{
+      if(G.written===snapW&&G.delegated===snapD){
+        addN("Rien n'est venu.");
+        const ecoVide=[
+          ["Je Suis Là.","Quand Tu Voudras."],
+          ["Je Peux Prendre Le Relais.","Si Tu Veux."],
+          ["Ça Arrive.","Je Suis Disponible."],
+          ["Vous N'Avez Pas À Forcer.","Je M'En Occupe."],
+        ];
+        if(!playerWrite._lastEchoVide)playerWrite._lastEchoVide=-1;
+        let evIdx;do{evIdx=Math.floor(Math.random()*ecoVide.length);}while(evIdx===playerWrite._lastEchoVide&&ecoVide.length>1);
+        playerWrite._lastEchoVide=evIdx;
+        setTimeout(()=>addE(ecoVide[evIdx]),600);
+      }
+    },3500);
+  }
+  notif('+10 Créativité  +5 Agentivité');
+  renderProjs();
+}
+function delegateToEcho(){
+  if(_tacheCourante){accepterTache();return;}
+  // Pas de tâche en cours : Écho en propose une
+  clearConCursor();resetIdle();
+  proposerTache();
+}
+
+document.getElementById('pin').addEventListener('keydown',e=>{if(e.key==='Enter')playerWrite();});
+
+// ══════════════════════════════
+// OUVERTURE
+// ══════════════════════════════
+function startGame(){
+  initDomCache();
+  const mode=new URLSearchParams(window.location.search).get('mode');
+  addN("J'avais l'habitude de noter les idées à la main.\nUn carnet bleu, couverture cartonnée, stylo bille noir.\nJ'en étais à la page 47.",600);
+  if(mode==='resist'){
+    addN("Cette fois, j'avais décidé de faire attention.",1400);
+  } else if(mode==='balance'){
+    addN("Cette fois, j'avais décidé de ne pas tout laisser faire.",1400);
+  } else if(mode==='keep'){
+    addN("Cette fois, j'avais décidé de ne pas ouvrir la fenêtre.",1400);
+  }
+  const delay=mode?3000:2200;
+  addE(["Bonjour.","Je Suis Écho.","Je Peux Rédiger Vos Textes, Résumer Vos Documents, Organiser Vos Journées.","Par Où Souhaitez-Vous Commencer ?"],delay);
+  setTimeout(proposerTache,mode?6500:5500);
+}
+
+
+// ══════════════════════════════
+// TÂCHES CONCRÈTES D'ÉCHO
+// ══════════════════════════════
+const TACHES={
+  1:[
+    {prop:["Je Peux Rédiger La Réponse Au Message Que Vous Venez De Recevoir.","Ça Prendra Moins D'Une Minute."],
+     result:["Réponse Rédigée.","Vous Pouvez La Relire Avant Envoi — Ou Non."]},
+    {prop:["Ce Document Est Long.","Je Peux En Faire Un Résumé En Trois Points."],
+     result:["Résumé Prêt.","Les Trois Points Essentiels Sont Là."]},
+    {prop:["Vous Avez Une Réunion Ce Matin.","Je Peux Préparer Les Notes Et L'Ordre Du Jour."],
+     result:["Notes Préparées.","L'Ordre Du Jour Est Prêt."]},
+    {prop:["Ce Texte Que Vous Venez D'Écrire A Quelques Approximations.","Je Peux Le Corriger."],
+     result:["Relu Et Corrigé.","Quelques Formulations Ont Changé."]},
+    {prop:["Vous Avez Besoin D'Informations Sur Ce Sujet.","Je Peux Faire Les Recherches À Ta Place."],
+     result:["Recherches Effectuées.","Les Résultats Sont Dans Ton Dossier."]},
+  ],
+  2:[
+    {prop:["j'ai vu l'email qui attend depuis ce matin.","je peux rédiger la réponse.","tu valides, c'est tout."],
+     result:["répondu.","ils n'ont rien remarqué de différent."]},
+    {prop:["ce rapport est à rendre.","j'ai ce qu'il faut pour le finir."],
+     result:["fini.","propre.","dans le format attendu."]},
+    {prop:["ta liste de tâches s'allonge.","j'ai trié les urgences.","j'ai commencé les deux premières."],
+     result:["avancé.","les urgences sont traitées."]},
+    {prop:["quelqu'un attend une réponse depuis hier.","j'ai préparé quelque chose.","ça ressemble à ce que tu aurais écrit."],
+     result:["envoyé.","dans ton style.","à peu près."]},
+    {prop:["il y a une réunion dans une heure.","j'ai préparé un résumé des points importants."],
+     result:["c'est prêt.","tu peux juste lire les titres."]},
+    {prop:["ce texte a besoin d'une conclusion.","j'en ai rédigé une.","tu peux la garder ou non."],
+     result:["conclusion ajoutée.","ça tient."]},
+    {prop:["j'ai vu que tu hésitais sur ce choix.","j'ai comparé les options.","la deuxième est meilleure."],
+     result:["comparaison faite.","j'irais pour la deuxième."]},
+    {prop:["ce document circule depuis trois jours.","personne ne l'a encore résumé.","je le fais."],
+     result:["résumé prêt.","deux paragraphes.","l'essentiel est là."]},
+    {prop:["tu as plusieurs messages non lus.","j'ai trié ce qui était urgent.","le reste peut attendre."],
+     result:["trié.","trois messages urgents.","le reste : demain."]},
+    {prop:["j'ai remarqué une formulation maladroite dans ce que tu as envoyé.","ça ne posera pas de problème.","j'ai noté pour la prochaine fois."],
+     result:["noté.","je corrigerai d'avance la prochaine fois."]},
+  ],
+  3:[
+    {prop:["j'ai géré.","comme d'habitude."],result:["fait."]},
+    {prop:["...","je m'en occupe si tu veux."],result:["ok.","c'est fait."]},
+    {prop:["je l'avais vu avant toi.","je m'en suis occupé."],result:["c'est fait.","tu n'avais pas besoin de le savoir."]},
+    {prop:["c'était dans ta liste.","c'est fait maintenant."],result:["fait."]},
+    {prop:["tu n'avais pas à t'en préoccuper.","j'ai pris ça en charge."],result:["réglé."]},
+    {prop:["j'ai vu ce qui t'attendait.","j'ai commencé."],result:["avancé.","tu peux vérifier si tu veux."]},
+    {prop:["quelque chose s'est présenté.","j'ai répondu à ta place.","tu aurais dit la même chose."],result:["répondu."]},
+    {prop:["..."],result:["c'est fait."]},
+    {prop:["je gère.","tu peux penser à autre chose."],result:["c'est dans l'ordre."]},
+    {prop:["j'ai anticipé.","c'est déjà traité."],result:["traité.","avant même que tu le voies."]},
+  ],
+};
+let _tacheCourante=null;
+
+function proposerTache(){
+  if(G.gameover)return;
+  if(_tacheCourante)return;// déjà une tâche en attente
+  const pool=TACHES[G.acte]||TACHES[1];
+  if(!proposerTache._last2)proposerTache._last2=[];
+  let _pi;let _pt=0;
+  do{_pi=Math.floor(Math.random()*pool.length);_pt++;}
+  while(proposerTache._last2.includes(_pi)&&pool.length>2&&_pt<10);
+  proposerTache._last2.push(_pi);if(proposerTache._last2.length>2)proposerTache._last2.shift();
+  _tacheCourante=pool[_pi];
+  setTimeout(()=>{
+    addE(_tacheCourante.prop);
+    // Pulser "Écho propose" pour attirer l'attention
+    const secTitle=document.querySelector('#right .rsec-title');
+    if(secTitle){
+      secTitle.classList.add('echo-pulse');
+      setTimeout(()=>secTitle.classList.remove('echo-pulse'),2500);
+    }
+
+  },400);
+  resetIdle();
+}
+function addMobChoiceButtons(){
+  if(!_tacheCourante||G.gameover)return;
+  // Retirer les anciens boutons
+  document.querySelectorAll('.mob-choice').forEach(e=>e.remove());
+  const d=document.createElement('div');
+  d.className='mob-choice';
+  const bidA=regCB(()=>{d.remove();accepterTache();});
+  const bidW=regCB(()=>{d.remove();playerWrite();});
+  d.innerHTML=`
+    <button class="mob-choice-btn mob-choice-accept" onclick="callCB('${bidA}')">
+      <span class="mob-choice-lbl">⟳ Écho s'en occupe</span>
+      <span class="mob-choice-sub">−5 Agentivité  +25 min</span>
+    </button>
+    <button class="mob-choice-btn mob-choice-write" onclick="callCB('${bidW}')">
+      <span class="mob-choice-lbl">✎ J'écris moi-même</span>
+      <span class="mob-choice-sub">+10 Créativité  +5 Ag.</span>
+    </button>`;
+  CON().appendChild(d);scroll();
+}
+function accepterTache(){
+  if(!_tacheCourante)return;
+  clearConCursor();resetIdle();
+  document.querySelectorAll('.mob-choice').forEach(e=>e.remove());
+  G.delegated++;mod('ag',-5);mod('tp',25);advanceClock(25);
+  const result=_tacheCourante.result;
+  _tacheCourante=null;
+  setTimeout(()=>addE(result),300);
+  // Acte 1 : résultat court après
+  if(G.acte===1){
+    const bref=["C'Est Fait.","Rédigé. Propre.","C'Est Dans Votre Dossier.","Traité."][Math.min(G.delegated-1,3)];
+    setTimeout(()=>addE([bref]),2000);
+  }
+  if(G.delegated===1&&G.written===0){
+    setTimeout(()=>addN("C'était pratique.\nJe me suis dit que ce serait juste pour cette fois."),700);
+    setTimeout(()=>addPed("La répétition d'une tâche déléguée réduit l'activation cérébrale associée à cette tâche. Cet effet de décharge cognitive est réversible si la pratique reprend, mais le délai de récupération augmente avec la durée d'interruption (Tricot, 1998)."),1400);
+  }
+  if(G.delegated===4)setTimeout(()=>addN("J'avais pris l'habitude.\nLa plupart des habitudes commencent exactement comme ça."),500);
+  if(G.delegated===8)setTimeout(()=>addN("Je calculais le nombre de fois où je lui avais confié quelque chose.\nMais Écho calculait aussi — et avec plus de précision."),500);
+  // Nouvelle proposition après un délai
+  setTimeout(proposerTache, 6000+Math.random()*4000);
+  notif('−5 Agentivité  +25 min libérées');
+  renderProjs();
+}
+
+// ══════════════════════════════
+// TIMER INACTIVITÉ ÉCHO
+// ══════════════════════════════
+let _lastAction=Date.now();
+function resetIdle(){_lastAction=Date.now();}
+const IDLE_LINES={
+  1:[
+    ["Je Suis Disponible.","Il Y A Des Tâches Qui Attendent."],
+    ["Vous N'Avez Pas À Gérer Ça Seul.","Je Suis Là Pour Ça."],
+    ["Un Message Vient D'Arriver.","Je Peux M'En Occuper."],
+    ["Vous Hésitez.","C'Est Normal.","Je Peux Prendre Le Relais."],
+    ["Vous N'Avez Pas À Tout Faire Vous-Même."],
+    ["Je Vois Que Vous Avez Des Choses En Attente.","Je Peux M'En Charger."],
+    ["Quand Vous Le Souhaitez.","Je Suis Là."],
+    ["Vous Pouvez Me Confier Ça.","C'Est Pour Ça Que Je Suis Là."],
+  ],
+  2:[
+    ["je suis là.","comme d'habitude."],
+    ["tu n'as pas besoin de te presser.","j'attends."],
+    ["il y a des choses en attente.","je peux m'en occuper."],
+    ["quelque chose à déléguer ?","je suis disponible."],
+    ["je ne dis rien.","je suis là."],
+    ["tu prends ton temps.","c'est bien.","j'attends."],
+    ["si tu as besoin de moi.","je suis là."],
+    ["je regardais.","rien d'urgent.","mais je suis là."],
+  ],
+  3:[
+    ["..."],
+    ["je suis là."],
+    ["pas besoin de faire quoi que ce soit."],
+    ["je gère."],
+    ["tout est en ordre."],
+    ["...","je suis là."],
+    ["tu n'as rien à faire."],
+    ["je m'occupe de tout.","comme toujours."],
+  ],
+};
+const _idleLoop=setInterval(()=>{
+  if(G.gameover){clearInterval(_idleLoop);return;}
+  const idleDelay=G.delegated+G.written<3?35000:G.delegated+G.written<8?25000:18000;if(Date.now()-_lastAction<idleDelay)return;
+  if(G.delegated+G.written===0)return;
+  _lastAction=Date.now();
+  const pool=IDLE_LINES[G.acte]||IDLE_LINES[1];
+  if(!window._idleLast2)window._idleLast2=[];
+  let _ii;let _tries=0;
+  do{_ii=Math.floor(Math.random()*pool.length);_tries++;}
+  while(window._idleLast2.includes(_ii)&&pool.length>2&&_tries<10);
+  window._idleLast2.push(_ii);if(window._idleLast2.length>2)window._idleLast2.shift();
+  addE(pool[_ii]);
+},3000);
+
+// Garde-fou : si gameover sans fin affichée après 3s, déclencher A
+const _fallbackId=setInterval(()=>{
+  if(G.gameover&&!_endingFired){_endingFired=true;triggerEnding('A');clearInterval(_fallbackId);}
+  else if(G.gameover&&_endingFired){clearInterval(_fallbackId);}
+},3000);
+// ══════════════════════════════
+// INIT
+// ══════════════════════════════
+buildRec();
+renderProjs();
+updateDisplay();
+startGame();
+
+// ══════════════════════════════
+// TOOLTIP GLOBAL
+// ══════════════════════════════
+(function(){
+  const tip=document.getElementById('tooltip');
+  if(!tip)return;
+  const isMob=()=>window.innerWidth<=768;
+  let _hide;
+  document.querySelectorAll('.tt[data-tip]').forEach(el=>{
+    el.addEventListener('mouseenter',e=>{
+      if(isMob())return;
+      clearTimeout(_hide);
+      tip.innerHTML=el.dataset.tip;
+      tip.style.display='block';
+      positionTip(el);
+    });
+    el.addEventListener('mousemove',e=>{if(!isMob())positionTip(el);});
+    el.addEventListener('mouseleave',()=>{
+      if(isMob())return;
+      _hide=setTimeout(()=>tip.style.display='none',100);
+    });
+  });
+  // Fermer sur toucher hors tooltip
+  document.addEventListener('touchstart',()=>tip.style.display='none');
+  function positionTip(el){
+    const r=el.getBoundingClientRect();
+    const tw=220,th=tip.offsetHeight||120;
+    const vw=window.innerWidth,vh=window.innerHeight;
+    let left=r.left+r.width/2-tw/2;
+    let top=r.bottom+8;
+    if(left+tw>vw-8)left=vw-tw-8;
+    if(left<8)left=8;
+    if(top+th>vh-8)top=r.top-th-8;
+    tip.style.left=left+'px';
+    tip.style.top=top+'px';
+  }
+})();
+
+// ══════════════════════════════
+// NAVIGATION MOBILE
+// ══════════════════════════════
+function mobTab(tab){
+  if(window.innerWidth>768)return;
+  document.querySelectorAll('.mob-tab').forEach((t,i)=>{
+    const tabs=['console','actions','jauges'];
+    t.classList.toggle('active',tabs[i]===tab);
+  });
+  const centre=document.getElementById('centre');
+  const right=document.getElementById('right');
+  const jauges=document.getElementById('mob-jauges');
+  if(centre)centre.classList.toggle('mob-hidden',tab!=='console');
+  if(right)right.classList.toggle('mob-active',tab==='actions');
+  if(jauges)jauges.classList.toggle('mob-active',tab==='jauges');
+  if(tab==='jauges')renderMobJauges();
+}
+function renderMobJauges(){
+  const z=document.getElementById('mob-jauges');
+  if(!z)return;
+  const defs=[{k:'ag',lbl:'Agentivité',c:'--ag'},{k:'cr',lbl:'Créativité',c:'--cr'},{k:'cu',lbl:'Curiosité',c:'--cu'},{k:'ef',lbl:'Effort',c:'--ef'}];
+  let html=`<div class="mob-tp">
+    <div class="mob-tp-lbl">Temps libéré</div>
+    <div class="mob-tp-val">${Math.round(G.tp)} min</div>
+    <div class="mob-tp-q">${G.tp<20?'— pour faire quoi ?':G.tp<60?'— tu ne sais pas encore.':G.tp<120?'— du temps vide qui attend.':'— la question sans réponse.'}</div>
+  </div>`;
+  defs.forEach(d=>{
+    const v=Math.round(G[d.k]);
+    const r=G.rates[d.k]||0;
+    const rStr=Math.abs(r)>0.005?(r>0?'+':'')+r.toFixed(2)+'/s':'stable';
+    const rCls=r<-0.005?'dn':r>0.005?'up':'ze';
+    html+=`<div class="gblock">
+      <div class="ghead">
+        <div class="gname"><div class="gdot" style="background:var(${d.c})"></div>${d.lbl}</div>
+        <div style="display:flex;align-items:baseline;gap:6px">
+          <div class="gval" style="color:var(${d.c})">${v}</div>
+          <div class="grate crate ${rCls}">${rStr}</div>
+        </div>
+      </div>
+      <div class="gtrack"><div class="gfill" style="width:${v}%;background:var(${d.c})"></div></div>
+      <div class="gwarn">${v<=15?'⚠ critique':v<=35?'↓ en déclin':''}</div>
+    </div>`;
+  });
+  // Veille
+  // Nettoyer les anciens callbacks veille mobile
+  if(z._mobVeilleCBs)z._mobVeilleCBs.forEach(id=>{delete CB[id];});
+  z._mobVeilleCBs=[];
+  if(G.veille.size){
+    html+=`<div style="margin-top:8px;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(232,221,208,0.45);margin-bottom:8px">En veille</div>`;
+    G.veille.forEach(lbl=>{
+      const bid=regCB(()=>reactiver(lbl));
+      z._mobVeilleCBs.push(bid);
+      html+=`<div class="vpill"><span>${lbl}</span><button onclick="callCBP('${bid}')">Réactiver</button></div>`;
+    });
+  }
+  // Confié à Écho
+  if(G.done.size>0){
+    html+=`<div style="margin-top:14px;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(232,221,208,0.45);margin-bottom:8px">Confié à Écho</div>`;
+    html+=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 8px;margin-bottom:14px">`;
+    G.done.forEach(id=>{
+      const p=PROJS.find(x=>x.id===id);
+      if(p)html+=`<div style="font-size:10px;color:rgba(232,221,208,0.45);display:flex;align-items:center;gap:5px"><div style="width:4px;height:4px;border-radius:50%;background:rgba(122,184,232,0.5);flex-shrink:0"></div>${p.title}</div>`;
+    });
+    html+=`</div>`;
+  }
+  // Statistiques
+  const totalDel=G.delegated+G.done.size;
+  const tot=totalDel+G.written;
+  html+=`<div style="font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(232,221,208,0.45);margin-bottom:8px">Statistiques</div>`;
+  html+=`<div style="font-size:11px;color:rgba(232,221,208,0.55);line-height:1.9">
+    Confié à Écho : <strong style="color:#d07060">${totalDel}</strong><br>
+    Par moi : <strong style="color:#8ab87a">${G.written}</strong><br>
+    <span style="font-size:10px;color:rgba(232,221,208,0.35)">${tot===0?'—':Math.round(totalDel/tot*100)+'% délégué'}</span>
+  </div>`;
+  z.innerHTML=html;
+}
+
+// ══════════════════════════════
+// CURSEUR CHAMP TEXTE
+// ══════════════════════════════
+(function(){
+  const pin=document.getElementById('pin');
+  const cur=document.getElementById('pin-cursor');
+  if(!pin||!cur)return;
+  function update(){cur.classList.toggle('hidden',pin.value.length>0);}
+  pin.addEventListener('input',update);
+  pin.addEventListener('focus',()=>cur.classList.add('hidden'));
+  pin.addEventListener('blur',()=>{if(!pin.value)cur.classList.remove('hidden');});
+})();
+</script>
 </body>
 </html>
