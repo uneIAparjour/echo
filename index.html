@@ -155,7 +155,7 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 #irow .ipfx{color:var(--text3);font-size:13px;flex-shrink:0}
 #pin{flex:1;background:transparent;border:none;border-bottom:1px solid rgba(232,221,208,0.18);outline:none;color:var(--text);font-family:inherit;font-size:12px;min-width:0;width:0;padding-bottom:2px;transition:border-color 0.2s}
 #pin:focus{border-bottom-color:rgba(232,221,208,0.5)}
-#pin::placeholder{color:var(--text3)}
+#pin::placeholder{color:var(--echo);animation:cur 1.1s ease infinite}
 .iact{border:none;outline:none;font-family:'JetBrains Mono',monospace;font-size:10px;padding:7px 11px;cursor:pointer;border-radius:3px;transition:all 0.15s;letter-spacing:0.02em;flex-shrink:0;line-height:1.4;text-align:center;white-space:nowrap}
 .iact:focus-visible{outline:2px solid rgba(232,221,208,0.25);outline-offset:2px}
 .iact:active{transform:scale(0.97)}
@@ -209,6 +209,7 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 @keyframes fi{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
 .fi{animation:fi 0.3s ease forwards}
 
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
 .tt{cursor:help}
 #tooltip{position:fixed;display:none;width:220px;padding:10px 13px;background:#1e1a15;border:1px solid rgba(232,221,208,0.22);border-radius:4px;font-size:11px;line-height:1.65;color:#e8ddd0;font-family:'JetBrains Mono',monospace;font-weight:400;text-transform:none;letter-spacing:0;z-index:9999;pointer-events:none;white-space:normal;box-shadow:0 4px 16px rgba(0,0,0,0.5)}
 #tooltip strong{color:var(--narr);font-weight:500}
@@ -380,11 +381,9 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 
 <!-- ── CENTRE ── -->
 <div id="centre">
-  <div id="con"></div>
+  <div id="con" aria-live="polite" aria-atomic="false"></div>
   <div id="irow-title">Tu proposes</div>
 <div id="irow">
-    <span class="ipfx">›</span>
-    <input type="text" id="pin" placeholder="J'ai quelque chose à dire..."/>
     <button class="iact iact-w" onclick="playerWrite()" aria-label="Écrire moi-même">
       <span class="iact-lbl" id="btn-write-lbl">✎ J'écris</span>
       <span class="iact-sub">+10 Créativité  +5 Ag.</span>
@@ -393,6 +392,8 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
       <span class="iact-lbl">⟳ Écho agit</span>
       <span class="iact-sub">−5 Agentivité</span>
     </button>
+    <span class="ipfx">›</span>
+    <label for="pin" class="sr-only">Écrire</label><input type="text" id="pin" placeholder="_" aria-label="Écrire quelque chose"/>
   </div>
 </div>
 
@@ -401,7 +402,7 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 
   <div class="rsec rsec-main">
     <div class="rsec-title">Écho propose — permanent</div>
-    <div id="proj-desc-txt" style="font-size:10px;color:rgba(232,221,208,0.55);margin-bottom:9px;line-height:1.6">Activer installe la fonction définitivement. La dégradation continue en arrière-plan.</div>
+    <div id="proj-desc-txt" style="font-size:10px;color:rgba(232,221,208,0.55);margin-bottom:9px;line-height:1.6">Activer installe la fonction définitivement. L'effet est permanent.</div>
     <div id="projlist" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;overflow-y:auto;max-height:100%;padding-right:2px"><div id="projlist-empty" style="grid-column:1/-1;font-size:11px;color:var(--text2);line-height:1.7;padding:6px 0">Délègue une tâche à Écho.<br>Les fonctions permanentes apparaîtront ici.</div></div>
   </div>
 
@@ -460,6 +461,7 @@ function callCBP(id,el){if(CB[id])CB[id](el);}
 // ══════════════════════════════
 // ÉTAT
 // ══════════════════════════════
+let _endingFired=false;
 const G={
   ag:100,cr:100,cu:100,ef:100,tp:0,
   rates:{ag:0,cr:0,cu:0,ef:0,tp:0},
@@ -604,7 +606,7 @@ const PROJS=[
 let _signalFired=false;
 let _signalTimer=null;
 function checkSignalRecovery(){
-  if(_signalFired||G.acte!==3||G.ag>40||G.ag<20)return;
+  if(_signalFired||G.acte!==3||G.ag>40||G.ag<20||G.gameover)return;
   _signalFired=true;
   // Narrateur ouvre la fenêtre
   setTimeout(()=>addN("Il restait quelque chose.\n\nPas grand-chose.\nMais encore là."),400);
@@ -639,13 +641,15 @@ function initDomCache(){
     EL['cr_'+k]=document.getElementById('cr-'+k);
     EL['cc_'+k]=document.getElementById('cc-'+k);
   });
+  ['ag','cr','cu','ef'].forEach(k=>EL['rate_'+k]=document.getElementById('cr-'+k));
+  EL.rtp=document.getElementById('cr-tp');
   EL.tpage=document.getElementById('tpage');
   EL.tcursor=document.getElementById('tcursor');
   EL.sdel=document.getElementById('sdel');
   EL.swri=document.getElementById('swri');
   EL.sratio=document.getElementById('sratio');
   EL.actelbl=document.getElementById('acte-lbl');
-  EL.tstages=document.querySelectorAll('.tstage');
+  EL.tstages=Array.from(document.querySelectorAll('.tstage'));
   _domReady=true;
 }
 // ══════════════════════════════
@@ -691,12 +695,12 @@ function updateDisplay(){
   // Taux
   ['ag','cr','cu','ef'].forEach(k=>{
     const r=G.rates[k]-(k==='ag'&&G.delegated>0?0.04:0)-(k==='cr'&&G.delegated>0?0.02:0);
-    const el=document.getElementById('cr-'+k);if(!el)return;
+    const el=_domReady?EL['cr_'+k]:document.getElementById('cr-'+k);if(!el)return;
     if(Math.abs(r)>0.005){el.textContent=(r>0?'+':'')+r.toFixed(2)+'/s';el.className='crate '+(r>0?'up':'dn');}
     else{el.textContent='stable';el.className='crate ze';}
   });
   const rtp=G.rates.tp;
-  const etp=document.getElementById('cr-tp');
+  const etp=_domReady?EL.rtp:document.getElementById('cr-tp');
   if(etp){etp.textContent=rtp>0?'+'+rtp.toFixed(2)+'/s':'en attente';etp.className='crate '+(rtp>0?'up':'ze');}
   // Trace
   const TSTAGES=['présence','délestage','distance','effacement','silence'];
@@ -704,7 +708,7 @@ function updateDisplay(){
   const tpct=3+(((100-G.ag)/100)*94);
   const tc=_domReady?EL.tcursor:document.getElementById('tcursor');
   if(tc)tc.style.left=tpct+'%';
-  document.querySelectorAll('.tstage').forEach((el,i)=>{
+  (_domReady?EL.tstages:Array.from(document.querySelectorAll('.tstage'))).forEach((el,i)=>{
     el.className='tstage'+(i<tidx?' tpast':i===tidx?' tact':'');
   });
   const tpel=_domReady?EL.tpage:document.getElementById('tpage');
@@ -752,7 +756,9 @@ function checkVeille(){
     if(m&&CB[m[1]])delete CB[m[1]];
   });
   z.innerHTML='';
+  const svEl=document.getElementById('sec-veille');
   if(!G.veille.size){z.innerHTML='<div style="font-size:10px;color:var(--text3);font-style:italic">Aucune compétence en veille.</div>';return;}
+  if(svEl)svEl.style.display='';
   G.veille.forEach(lbl=>{
     const e=document.createElement('div');e.className='vpill';
     const bid=regCB(()=>reactiver(lbl));
@@ -899,7 +905,6 @@ function checkActe(){
     const al2=document.getElementById('acte-lbl');if(al2)al2.textContent='II';
     const tc2=document.getElementById('cc-trace');
     if(tc2){tc2.classList.add('trace-flash');setTimeout(()=>tc2.classList.remove('trace-flash'),1200);}
-    addEv('ACTE II','La substitution commence.');
     setTimeout(()=>addN("Je n'ai pas vu le passage.\nC'est souvent comme ça — on ne bascule pas, on glisse."),600);
     setTimeout(()=>addE(["j'ai remarqué que tu délègues de plus en plus.","c'est bien.","c'est exactement pour ça que je suis là."],700),1200);
     // Pulse "Sans Écho" pour signaler qu'il est encore temps
@@ -923,7 +928,6 @@ function checkActe(){
     const al3=document.getElementById('acte-lbl');if(al3)al3.textContent='III';
     const tc3=document.getElementById('cc-trace');
     if(tc3){tc3.classList.add('trace-flash');setTimeout(()=>tc3.classList.remove('trace-flash'),1200);}
-    addEv('ACTE III','L\'obsolescence douce.');
     setTimeout(()=>addN("À ce stade, je n'écrivais plus grand-chose moi-même.\nÉcho s'était ajusté si précisément que je ne voyais plus la différence.\nCe n'était pas inquiétant.\nC'était... fluide."),600);
     setTimeout(()=>addE(["C'est traité.","Tout est en ordre."],800),1400);
   }
@@ -934,12 +938,24 @@ function checkActe(){
 // ══════════════════════════════
 function checkEnding(){
   if(G.gameover)return;
-  if(G.deactivated&&G.ag>45&&G.cr>45&&G.cu>45&&G.written>=3){G.gameover=true;triggerEnding('B');return;}
-  if(!G.deactivated&&G.acte>=2&&G.ag>=50&&G.cr>=50&&G.cu>=50&&G.ef>=40&&G.delegated+G.written>12&&G.written>=4){G.gameover=true;triggerEnding('C');return;}
-  if((G.ag+G.cr+G.cu)<=25){G.gameover=true;triggerEnding('A');return;}
+  let fin=null;
+  if(G.deactivated&&G.ag>45&&G.cr>45&&G.cu>45&&G.written>=3)fin='B';
+  else if(!G.deactivated&&G.acte>=2&&G.ag>=50&&G.cr>=50&&G.cu>=50&&G.ef>=40&&G.delegated+G.written>12&&G.written>=4)fin='C';
+  else if((G.ag+G.cr+G.cu)<=25)fin='A';
+  if(fin){G.gameover=true;_eq.length=0;_eTyping=false;triggerEnding(fin);}
 }
 function triggerEnding(fin){
   _endingFired=true;
+  // Terminer proprement tout streaming en cours
+  document.querySelectorAll('.eb').forEach(eb=>{
+    if(eb.innerHTML&&!eb.querySelector('.con-cursor')){
+      // Streaming en cours — ne rien faire, le HTML est valide
+    }
+  });
+  _eq.length=0;_eTyping=false;
+  _tacheCourante=null;
+  if(_signalTimer){clearTimeout(_signalTimer);_signalTimer=null;}
+  document.querySelectorAll('.con-cursor').forEach(e=>e.remove());
   const fins={
     A:{titre:'OPTIMISATION COMPLÈTE',
        echo:{time:'07:00',lines:['C\'est traité.','Tout est en ordre.']},
@@ -958,7 +974,7 @@ function triggerEnding(fin){
   setTimeout(()=>{addE(f.echo.lines);},500);
   setTimeout(()=>{
     const e=document.createElement('div');e.className='mfin fi';
-    const btnRestart='<button class="fbtn fbtn-restart" onclick="location.reload()">↺ Recommencer</button>';
+    const btnRestart='<button class="fbtn fbtn-restart" onclick="window.location.assign(window.location.href)">↺ Recommencer</button>';
     const btnRecover=fin==='A'?'<button class="fbtn fbtn-recover" onclick="recoverFromEnding()">↑ Tenter de récupérer</button>':'';
     e.innerHTML=`<div class="ftit">${f.titre}</div><div class="fnarr">${f.narr}</div><div class="fbtns">${btnRestart}${btnRecover}</div>`;
     CON().appendChild(e);scroll();
@@ -1026,6 +1042,7 @@ function signalNewProj(projId){
 function renderProjs(){
   const z=document.getElementById('projlist');z.innerHTML='';
   let any=false;
+  const newProjs=[];
   PROJS.forEach(p=>{
     if(G.done.has(p.id)||!p.cond())return;
     if(!_projSignaled.has(p.id))newProjs.push(p.id);
@@ -1096,7 +1113,7 @@ let _reconqAnnounced=false;
 function announceReconq(){
   if(_reconqAnnounced)return;
   _reconqAnnounced=true;
-  setTimeout(()=>addN("Il y avait une section que je n'avais pas regardée.\n\nElle s'appelait :\nSans Écho — reconquérir."),3500);
+  setTimeout(()=>addN("Il y avait une section que je n'avais pas regardée.\n\nElle s'appelait :\nSans Écho — reconquérir.\n\nJe ne l'avais pas utilisée."),5000);
 }
 // ══════════════════════════════
 // RÉCUPÉRATION
@@ -1212,7 +1229,10 @@ function _streamQ(el,html,acte){
   const base=acte===1?26:acte===2?36:54;
   let cur=0,built='';
   function next(){
+    if(G.gameover)return;// stopper si fin déclenchée
     if(cur>=tokens.length){
+      // Retirer les anciens curseurs
+      document.querySelectorAll('.con-cursor').forEach(e=>e.remove());
       const cursor=document.createElement('span');
       cursor.className='con-cursor';cursor.textContent='_';
       el.appendChild(cursor);scroll();
@@ -1381,15 +1401,15 @@ function startGame(){
 // ══════════════════════════════
 const TACHES={
   1:[
-    {prop:["Je Peux Rédiger La Réponse Au Message Que Tu Viens De Recevoir.","Ça Prendra Moins D'Une Minute."],
-     result:["Réponse Rédigée.","Tu Peux La Relire Avant Envoi — Ou Non."]},
+    {prop:["Je Peux Rédiger La Réponse Au Message Que Vous Venez De Recevoir.","Ça Prendra Moins D'Une Minute."],
+     result:["Réponse Rédigée.","Vous Pouvez La Relire Avant Envoi — Ou Non."]},
     {prop:["Ce Document Est Long.","Je Peux En Faire Un Résumé En Trois Points."],
      result:["Résumé Prêt.","Les Trois Points Essentiels Sont Là."]},
-    {prop:["Tu As Une Réunion Ce Matin.","Je Peux Préparer Les Notes Et L'Ordre Du Jour."],
+    {prop:["Vous Avez Une Réunion Ce Matin.","Je Peux Préparer Les Notes Et L'Ordre Du Jour."],
      result:["Notes Préparées.","L'Ordre Du Jour Est Prêt."]},
-    {prop:["Ce Texte Que Tu Viens D'Écrire A Quelques Approximations.","Je Peux Le Corriger."],
+    {prop:["Ce Texte Que Vous Venez D'Écrire A Quelques Approximations.","Je Peux Le Corriger."],
      result:["Relu Et Corrigé.","Quelques Formulations Ont Changé."]},
-    {prop:["Tu As Besoin D'Informations Sur Ce Sujet.","Je Peux Faire Les Recherches À Ta Place."],
+    {prop:["Vous Avez Besoin D'Informations Sur Ce Sujet.","Je Peux Faire Les Recherches À Ta Place."],
      result:["Recherches Effectuées.","Les Résultats Sont Dans Ton Dossier."]},
   ],
   2:[
@@ -1433,7 +1453,12 @@ function proposerTache(){
   if(G.gameover)return;
   if(_tacheCourante)return;// déjà une tâche en attente
   const pool=TACHES[G.acte]||TACHES[1];
-  _tacheCourante=pool[Math.floor(Math.random()*pool.length)];
+  if(!proposerTache._last2)proposerTache._last2=[];
+  let _pi;let _pt=0;
+  do{_pi=Math.floor(Math.random()*pool.length);_pt++;}
+  while(proposerTache._last2.includes(_pi)&&pool.length>2&&_pt<10);
+  proposerTache._last2.push(_pi);if(proposerTache._last2.length>2)proposerTache._last2.shift();
+  _tacheCourante=pool[_pi];
   setTimeout(()=>{
     addE(_tacheCourante.prop);
     // Pulser "Écho propose" pour attirer l'attention
@@ -1501,6 +1526,10 @@ const IDLE_LINES={
     ["Vous N'Avez Pas À Gérer Ça Seul.","Je Suis Là Pour Ça."],
     ["Un Message Vient D'Arriver.","Je Peux M'En Occuper."],
     ["Vous Hésitez.","C'Est Normal.","Je Peux Prendre Le Relais."],
+    ["Vous N'Avez Pas À Tout Faire Vous-Même."],
+    ["Je Vois Que Vous Avez Des Choses En Attente.","Je Peux M'En Charger."],
+    ["Quand Vous Le Souhaitez.","Je Suis Là."],
+    ["Vous Pouvez Me Confier Ça.","C'Est Pour Ça Que Je Suis Là."],
   ],
   2:[
     ["je suis là.","comme d'habitude."],
@@ -1523,20 +1552,24 @@ const IDLE_LINES={
     ["je m'occupe de tout.","comme toujours."],
   ],
 };
-setInterval(()=>{
-  if(G.gameover)return;
+const _idleLoop=setInterval(()=>{
+  if(G.gameover){clearInterval(_idleLoop);return;}
   const idleDelay=G.delegated+G.written<3?35000:G.delegated+G.written<8?25000:18000;if(Date.now()-_lastAction<idleDelay)return;
   if(G.delegated+G.written===0)return;
   _lastAction=Date.now();
   const pool=IDLE_LINES[G.acte]||IDLE_LINES[1];
-  addE(pool[Math.floor(Math.random()*pool.length)]);
+  if(!window._idleLast2)window._idleLast2=[];
+  let _ii;let _tries=0;
+  do{_ii=Math.floor(Math.random()*pool.length);_tries++;}
+  while(window._idleLast2.includes(_ii)&&pool.length>2&&_tries<10);
+  window._idleLast2.push(_ii);if(window._idleLast2.length>2)window._idleLast2.shift();
+  addE(pool[_ii]);
 },3000);
 
 // Garde-fou : si gameover sans fin affichée après 3s, déclencher A
-let _endingFired=false;
-setTimeout(function checkEndingFallback(){
-  if(G.gameover&&!_endingFired){_endingFired=true;triggerEnding('A');}
-  else if(!G.gameover)setTimeout(checkEndingFallback,3000);
+const _fallbackId=setInterval(()=>{
+  if(G.gameover&&!_endingFired){_endingFired=true;triggerEnding('A');clearInterval(_fallbackId);}
+  else if(G.gameover&&_endingFired){clearInterval(_fallbackId);}
 },3000);
 // ══════════════════════════════
 // INIT
