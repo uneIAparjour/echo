@@ -465,3 +465,35 @@ Deux fichiers : `index.html` (page d'ouverture) et `echo.html` (jeu). Le jeu est
 L'inspiration structurelle vient de [*Universal Paperclips*](https://www.decisionproblem.com/paperclips/) (Frank Lantz, 2017) : la progression par ressources, l'accumulation silencieuse, le moment où le jeu bascule. Le sujet, les textes, les projets, les personnages et le code sont entièrement originaux. Ce qui unit les deux œuvres, c'est une question commune (jusqu'où une optimisation peut-elle aller ?), pas une ressemblance de surface.
 
 La recherche en psychologie cognitive (Tricot, Maquestiaux, Sparrow, Kahneman et al.) accompagne les mécaniques de jeu : chaque projet délégué à Écho correspond à un mécanisme documenté. Écho n'illustre pas une thèse, il aspire à la faire vivre.
+
+## 14. Utilisation et déploiement
+
+### Mode facilitateur
+Accessible via `echo.html?fac=1`. Panneau de contrôle fixe en bas de l'écran, invisible pour les joueurs normaux. Fonctions disponibles :
+- Forcer les transitions d'actes (I → II → III)
+- Sliders sur les 5 jauges (Ag, Cr, Cu, Ef, Tp)
+- Déclenchement manuel des 8 seuils narratifs
+- Activation de n'importe quel projet sans conditions
+- Déclenchement direct des fins A, B, C
+- Reset complet sans rechargement de page
+- Panneau sources avec les 15 notes pédagogiques
+
+Le lien est visible discrètement sur la page d'ouverture (`index.html`).
+
+### Intégration en iframe
+Le jeu est autonome et peut être intégré dans n'importe quelle page web.
+
+Dimensions minimales : **900 × 600 px**. En dessous de 900 px de largeur, le jeu bascule en version mobile (3 onglets). Dimensions recommandées : 1100 × 700 px.
+
+```html
+<iframe
+  src="https://uneiaparjour.github.io/echo/echo.html"
+  width="1100"
+  height="700"
+  style="border:none"
+  title="Écho — jeu narratif"
+></iframe>
+```
+
+### Absence de sauvegarde — décision intentionnelle
+Le jeu n'utilise pas `localStorage`. Fermer la fenêtre efface la partie. Ce choix est narrativement cohérent avec le propos du jeu : on ne revient pas en arrière. La durée courte (20–30 min) rend la reprise peu nécessaire. Cette décision est définitive pour la v1.
