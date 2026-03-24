@@ -5,11 +5,11 @@
 
 **Jouer directement :** [uneiaparjour.github.io/echo/echo.html](https://uneiaparjour.github.io/echo/echo.html)
 
-**Version facilitateur :** [uneiaparjour.github.io/echo/echo.html?fac=1](https://uneiaparjour.github.io/echo/echo.html?fac=1)
+**Mode facilitation :** [uneiaparjour.github.io/echo/echo.html?fac=1](https://uneiaparjour.github.io/echo/echo.html?fac=1)
 
 ---
 
-Vous êtes à la page 47 d'un carnet bleu. Écho arrive : il peut corriger vos textes, résumer vos documents, répondre à vos mails, gérer votre agenda, compléter vos phrases. Chaque délégation libère du temps. Chaque délégation coûte un peu.
+Vous êtes à la page 47 d'un carnet bleu. Écho arrive et propose de corriger vos textes, résumer vos documents, répondre à vos mails, gérer votre agenda, compléter vos phrases. Chaque délégation libère du temps. Chaque délégation coûte un peu.
 
 Le jeu dure vingt à trente minutes. Il n'y a pas d'ennemis, pas de score, pas de bonne réponse. Vous ne voyez pas quand Écho change. C'est souvent comme ça, on ne bascule pas, on glisse.
 
@@ -32,13 +32,13 @@ Le jeu dure vingt à trente minutes. Il n'y a pas d'ennemis, pas de score, pas d
 
 Écho s'adresse à tout public. Aucune connaissance technique n'est requise.
 
-Une utilisation en contexte éducatif est possible — le jeu cite des travaux de recherche en psychologie cognitive et neurosciences (Tricot, Maquestiaux, Sparrow, Kahneman et al.) et peut servir de point de départ à une discussion sur la délégation cognitive aux outils d'IA.
+Une utilisation en contexte éducatif est possible via le mode facilitation et le jeu cite des travaux de recherche en psychologie cognitive et neurosciences (Tricot, Maquestiaux, Sparrow, Kahneman et al.). Ce mode et ces sources peuvent servir de point de départ à une discussion sur la délégation cognitive aux outils d'IA.
 
 ---
 
 ## Utilisation avancée
 
-### Mode facilitateur
+### Mode facilitation
 
 Destiné aux animateurs qui souhaitent piloter une démonstration en formation. Accessible via :
 
