@@ -6,6 +6,7 @@
 **Jouer directement :** [uneiaparjour.github.io/echo/echo.html](https://uneiaparjour.github.io/echo/echo.html)
 
 **Version facilitateur :** [uneiaparjour.github.io/echo/echo.html?fac=1](https://uneiaparjour.github.io/echo/echo.html?fac=1)
+
 ---
 
 Vous êtes à la page 47 d'un carnet bleu. Puis Écho arrive. Il peut corriger vos textes, résumer vos documents, répondre à vos mails, gérer votre agenda, compléter vos phrases. Chaque délégation libère du temps. Chaque délégation coûte un peu.
