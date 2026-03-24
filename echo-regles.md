@@ -1,7 +1,10 @@
 # Écho — Règles de conception
 Document de référence. Version 0.9.0.
+
 Page d'ouverture : `index.html` — https://uneiaparjour.github.io/echo/
+
 Fichier de jeu : `echo.html` — https://uneiaparjour.github.io/echo/echo.html
+
 Version facilitateur : `echo.html?fac=1` — https://uneiaparjour.github.io/echo/echo.html?fac=1
 
 ---
