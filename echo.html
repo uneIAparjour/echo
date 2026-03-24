@@ -143,6 +143,9 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 .fbtn-restart:hover{background:rgba(232,221,208,0.07);border-color:rgba(232,221,208,0.4);color:var(--text)}
 .fbtn-recover{background:var(--green2);border-color:rgba(138,184,122,0.25);color:var(--green)}
 .fbtn-recover:hover{background:rgba(138,184,122,0.13);border-color:rgba(138,184,122,0.4)}
+.fbtn-suggest{background:transparent;border-color:rgba(232,221,208,0.12);color:var(--text3);font-style:italic}
+.fbtn-suggest:hover{border-color:rgba(232,221,208,0.25);color:var(--text2)}
+.fin-invite{font-family:'Lora',serif;font-size:11px;font-style:italic;color:var(--text3);margin-top:14px;margin-bottom:6px;line-height:1.6}
 /* Barre saisie */
 #irow-title{padding:5px 14px 0;font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:rgba(232,221,208,0.35);background:var(--bg2);transition:color 0.3s}
 @keyframes irowp{0%,100%{color:rgba(232,221,208,0.35)}50%{color:rgba(232,221,208,0.75)}}
@@ -215,6 +218,58 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 .tt{cursor:help}
 #tooltip{position:fixed;display:none;width:220px;padding:10px 13px;background:#1e1a15;border:1px solid rgba(232,221,208,0.22);border-radius:4px;font-size:11px;line-height:1.65;color:#e8ddd0;font-family:'JetBrains Mono',monospace;font-weight:400;text-transform:none;letter-spacing:0;z-index:9999;pointer-events:none;white-space:normal;box-shadow:0 4px 16px rgba(0,0,0,0.5)}
 #tooltip strong{color:var(--narr);font-weight:500}
+
+/* ══════════════════════════════
+   MODE FACILITATEUR
+══════════════════════════════ */
+#fac-panel{
+  position:fixed;bottom:0;left:0;right:0;
+  background:#0a0805;
+  border-top:1px solid rgba(122,184,232,0.25);
+  z-index:9999;
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;
+  color:#b8a890;
+  transition:transform 0.2s;
+}
+#fac-panel.fac-collapsed{transform:translateY(calc(100% - 28px))}
+#fac-toggle{
+  width:100%;padding:6px 14px;
+  background:transparent;border:none;
+  color:#7ab8e8;font-family:inherit;font-size:10px;
+  letter-spacing:0.12em;text-transform:uppercase;
+  cursor:pointer;text-align:left;
+  display:flex;align-items:center;gap:8px;
+}
+#fac-toggle::before{content:'▲';font-size:8px;transition:transform 0.2s}
+#fac-panel.fac-collapsed #fac-toggle::before{transform:rotate(180deg)}
+#fac-body{padding:8px 14px 12px;display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start}
+.fac-group{display:flex;flex-direction:column;gap:5px;min-width:140px}
+.fac-label{font-size:9px;letter-spacing:0.16em;text-transform:uppercase;color:#9a8068;margin-bottom:2px}
+.fac-btn{
+  padding:4px 10px;border-radius:2px;border:1px solid rgba(232,221,208,0.15);
+  background:rgba(232,221,208,0.03);color:#b8a890;
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  cursor:pointer;transition:all 0.15s;white-space:nowrap;
+}
+.fac-btn:hover{background:rgba(232,221,208,0.08);border-color:rgba(232,221,208,0.3)}
+.fac-btn.fac-echo{border-color:rgba(122,184,232,0.2);color:#7ab8e8}
+.fac-btn.fac-echo:hover{background:rgba(122,184,232,0.07)}
+.fac-btn.fac-end{border-color:rgba(212,184,112,0.2);color:#d4b870}
+.fac-btn.fac-end:hover{background:rgba(212,184,112,0.07)}
+.fac-btn.fac-danger{border-color:rgba(208,112,96,0.2);color:#d07060}
+.fac-btn.fac-danger:hover{background:rgba(208,112,96,0.07)}
+.fac-slider-row{display:flex;align-items:center;gap:6px}
+.fac-slider-row label{font-size:9px;color:#9a8068;min-width:16px}
+.fac-slider-row input[type=range]{width:90px;accent-color:#7ab8e8}
+.fac-slider-row span{font-size:10px;min-width:28px;text-align:right;font-variant-numeric:tabular-nums}
+#fac-notes{max-height:180px;overflow-y:auto;display:none;background:#0f0d0a;border:1px solid rgba(232,221,208,0.1);border-radius:2px;padding:8px 10px;margin-top:6px;font-size:10px;line-height:1.7;color:#b8a890}
+#fac-notes.show{display:block}
+.fac-note-item{border-bottom:1px solid rgba(232,221,208,0.07);padding:6px 0}
+.fac-note-item:last-child{border-bottom:none}
+.fac-note-title{color:#7ab8e8;font-size:10px;margin-bottom:2px}
+.fac-note-src{color:#9a8068;font-size:9px}
+
 ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:var(--border2)}*{scrollbar-width:thin;scrollbar-color:var(--border2) transparent}
 
 /* ══════════════════════════════════════
@@ -451,6 +506,72 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 
 <footer id="footer">CC BY-NC Bertrand Formet &nbsp;·&nbsp; <a href="https://uneIAparjour.fr" target="_blank">uneIAparjour.fr</a> &nbsp;·&nbsp; <a href="https://github.com/uneIAparjour/echo" target="_blank">GitHub</a></footer>
 
+<!-- ══ MODE FACILITATEUR ══ -->
+<div id="fac-panel" style="display:none">
+  <button id="fac-toggle" onclick="facToggle()">Mode facilitateur</button>
+  <div id="fac-body">
+
+    <!-- Actes -->
+    <div class="fac-group">
+      <div class="fac-label">Actes</div>
+      <button class="fac-btn" onclick="facSetActe(1)">→ Acte I</button>
+      <button class="fac-btn" onclick="facSetActe(2)">→ Acte II</button>
+      <button class="fac-btn" onclick="facSetActe(3)">→ Acte III</button>
+    </div>
+
+    <!-- Jauges -->
+    <div class="fac-group">
+      <div class="fac-label">Jauges</div>
+      <div class="fac-slider-row"><label>Ag</label><input type="range" min="0" max="100" value="100" oninput="facSetJauge('ag',+this.value);this.nextElementSibling.textContent=this.value"><span>100</span></div>
+      <div class="fac-slider-row"><label>Cr</label><input type="range" min="0" max="100" value="100" oninput="facSetJauge('cr',+this.value);this.nextElementSibling.textContent=this.value"><span>100</span></div>
+      <div class="fac-slider-row"><label>Cu</label><input type="range" min="0" max="100" value="100" oninput="facSetJauge('cu',+this.value);this.nextElementSibling.textContent=this.value"><span>100</span></div>
+      <div class="fac-slider-row"><label>Ef</label><input type="range" min="0" max="100" value="100" oninput="facSetJauge('ef',+this.value);this.nextElementSibling.textContent=this.value"><span>100</span></div>
+      <div class="fac-slider-row"><label>Tp</label><input type="range" min="0" max="500" value="0" oninput="facSetJauge('tp',+this.value);this.nextElementSibling.textContent=this.value"><span>0</span></div>
+    </div>
+
+    <!-- Seuils narratifs -->
+    <div class="fac-group">
+      <div class="fac-label">Seuils narratifs</div>
+      <select id="fac-seuil-sel" style="background:#0f0d0a;border:1px solid rgba(232,221,208,0.15);color:#b8a890;font-family:'JetBrains Mono',monospace;font-size:10px;padding:4px 6px;border-radius:2px;width:100%">
+        <option value="0">Ag &lt; 80 — J'ai laissé Écho…</option>
+        <option value="1">Ag &lt; 60 — Je n'ai pas relu…</option>
+        <option value="2">Ag &lt; 40 — Quelqu'un m'a demandé…</option>
+        <option value="3">Ag &lt; 20 — J'ai ouvert un document…</option>
+        <option value="4">Cr &lt; 40 — J'avais une façon…</option>
+        <option value="5">Cu &lt; 40 — Un texte que je n'ai pas lu…</option>
+        <option value="6">Tp &gt; 100 — J'avais beaucoup de temps…</option>
+        <option value="7">Ef &lt; 40 — J'avais l'habitude…</option>
+      </select>
+      <button class="fac-btn" onclick="facDeclencher()">▶ Déclencher</button>
+    </div>
+
+    <!-- Fins -->
+    <div class="fac-group">
+      <div class="fac-label">Fins</div>
+      <button class="fac-btn fac-end" onclick="facFin('A')">Fin A — Silence</button>
+      <button class="fac-btn fac-end" onclick="facFin('B')">Fin B — Reconquête</button>
+      <button class="fac-btn fac-end" onclick="facFin('C')">Fin C — Outil</button>
+    </div>
+
+    <!-- Projets -->
+    <div class="fac-group">
+      <div class="fac-label">Projets</div>
+      <select id="fac-proj-sel" style="background:#0f0d0a;border:1px solid rgba(232,221,208,0.15);color:#b8a890;font-family:'JetBrains Mono',monospace;font-size:10px;padding:4px 6px;border-radius:2px;width:100%">
+      </select>
+      <button class="fac-btn fac-echo" onclick="facActiverProj()">▶ Activer</button>
+    </div>
+
+    <!-- Reset + Sources -->
+    <div class="fac-group">
+      <div class="fac-label">Actions</div>
+      <button class="fac-btn fac-danger" onclick="facReset()">↺ Reset complet</button>
+      <button class="fac-btn" onclick="facToggleNotes()" id="fac-notes-btn">◎ Sources</button>
+      <div id="fac-notes"></div>
+    </div>
+
+  </div>
+</div>
+
 <script>
 // ══════════════════════════════
 // REGISTRE DE CALLBACKS (fix bug fn.toString)
@@ -602,9 +723,19 @@ const PROJS=[
 ];
 
 
+
 // ══════════════════════════════
 // SIGNAL RÉCUPÉRATION
 // ══════════════════════════════
+
+let _finCSignaled=false;
+function checkFinCSignal(){
+  if(_finCSignaled||G.gameover||G.acte!==2)return;
+  if(G.written>=3&&G.delegated>=2&&G.written>=G.delegated/2&&G.ag>=55){
+    _finCSignaled=true;
+    setTimeout(()=>addN("J'utilisais Écho pour certaines choses.\nPas pour d'autres.\nJe ne savais pas encore si c'était un choix."),800);
+  }
+}
 let _signalFired=false;
 let _signalTimer=null;
 function checkSignalRecovery(){
@@ -671,6 +802,7 @@ setInterval(()=>{
   checkVeille();
   checkActe();
   checkSignalRecovery();
+  checkFinCSignal();
   checkEnding();
 },100);
 
@@ -978,12 +1110,25 @@ function triggerEnding(fin){
     const e=document.createElement('div');e.className='mfin fi';
     const btnRestart='<button class="fbtn fbtn-restart" onclick="window.location.assign(window.location.href)">↺ Recommencer</button>';
     const btnRecover=fin==='A'?'<button class="fbtn fbtn-recover" onclick="recoverFromEnding()">↑ Tenter de récupérer</button>':'';
-    e.innerHTML=`<div class="ftit">${f.titre}</div><div class="fnarr">${f.narr}</div><div class="fbtns">${btnRestart}${btnRecover}</div>`;
+    const invites={
+      A:"Le carnet est resté à la page 47.<br>Et si tu avais écrit ?",
+      B:"Tu as résisté. D'autres fins étaient possibles.",
+      C:"Tu as trouvé un équilibre. Est-ce que tu aurais pu tout garder ?"
+    };
+    const modes={A:'resist',B:'balance',C:'keep'};
+    const labels={A:'Recommencer en résistant',B:'Recommencer autrement',C:'Recommencer sans déléguer'};
+    const btnSuggest=`<div class="fin-invite">${invites[fin]}</div><button class="fbtn fbtn-suggest" onclick="restartWithMode('${modes[fin]}')">${labels[fin]}</button>`;
+    e.innerHTML=`<div class="ftit">${f.titre}</div><div class="fnarr">${f.narr}</div><div class="fbtns">${btnRestart}${btnRecover}</div>${btnSuggest}`;
     CON().appendChild(e);scroll();
   },2200);
 }
 
 
+function restartWithMode(mode){
+  const url=new URL(window.location.href);
+  url.searchParams.set('mode',mode);
+  window.location.assign(url.toString());
+}
 function recoverFromEnding(){
   // Remettre les jauges à 20, désactiver gameover, réactiver les boutons
   G.gameover=false;
@@ -1391,10 +1536,18 @@ document.getElementById('pin').addEventListener('keydown',e=>{if(e.key==='Enter'
 // ══════════════════════════════
 function startGame(){
   initDomCache();
+  const mode=new URLSearchParams(window.location.search).get('mode');
   addN("J'avais l'habitude de noter les idées à la main.\nUn carnet bleu, couverture cartonnée, stylo bille noir.\nJ'en étais à la page 47.",600);
-  addE(["Bonjour.","Je Suis Écho.","Je Peux Rédiger Vos Textes, Résumer Vos Documents, Organiser Vos Journées.","Par Où Souhaitez-Vous Commencer ?"],2200);
-  setTimeout(proposerTache,5500);
-
+  if(mode==='resist'){
+    addN("Cette fois, j'avais décidé de faire attention.",1400);
+  } else if(mode==='balance'){
+    addN("Cette fois, j'avais décidé de ne pas tout laisser faire.",1400);
+  } else if(mode==='keep'){
+    addN("Cette fois, j'avais décidé de ne pas ouvrir la fenêtre.",1400);
+  }
+  const delay=mode?3000:2200;
+  addE(["Bonjour.","Je Suis Écho.","Je Peux Rédiger Vos Textes, Résumer Vos Documents, Organiser Vos Journées.","Par Où Souhaitez-Vous Commencer ?"],delay);
+  setTimeout(proposerTache,mode?6500:5500);
 }
 
 
@@ -1708,6 +1861,115 @@ function renderMobJauges(){
   pin.addEventListener('focus',()=>cur.classList.add('hidden'));
   pin.addEventListener('blur',()=>{if(!pin.value)cur.classList.remove('hidden');});
 })();
+
+// ══════════════════════════════
+// MODE FACILITATEUR
+// ══════════════════════════════
+(function(){
+  const params=new URLSearchParams(window.location.search);
+  if(!params.has('fac'))return;
+  const panel=document.getElementById('fac-panel');
+  if(panel)panel.style.display='';
+  // Peupler le select des projets
+  const sel=document.getElementById('fac-proj-sel');
+  if(sel){
+    PROJS.forEach(p=>{
+      const o=document.createElement('option');
+      o.value=p.id;o.textContent=p.title;
+      sel.appendChild(o);
+    });
+  }
+  // Peupler les sources
+  const notes=document.getElementById('fac-notes');
+  if(notes){
+    notes.innerHTML=PROJS.map(p=>`<div class="fac-note-item"><div class="fac-note-title">${p.title}</div><div>${p.note}</div></div>`).join('');
+  }
+  // Ajouter padding-bottom pour ne pas cacher le jeu
+  document.body.style.paddingBottom='160px';
+})();
+
+function facToggle(){
+  const p=document.getElementById('fac-panel');
+  if(p)p.classList.toggle('fac-collapsed');
+}
+function facSetActe(n){
+  if(n===1){G.ag=95;G.acte=1;}
+  else if(n===2){G.ag=65;if(G.acte<2){G.acte=2;const bl=document.getElementById('btn-write-lbl');if(bl)bl.textContent="✎ J'interviens";}}
+  else if(n===3){G.ag=35;if(G.acte<3){G.acte=3;const bl=document.getElementById('btn-write-lbl');if(bl)bl.textContent="✎ Je reprends";}}
+  updateDisplay();
+}
+function facSetJauge(k,v){
+  if(k==='tp')G.tp=v;
+  else G[k]=v;
+  // Pas de déclenchement automatique des seuils
+}
+function facDeclencher(){
+  const idx=+document.getElementById('fac-seuil-sel').value;
+  const textes=[
+    "J'ai laissé Écho commencer.\nC'était plus rapide.",
+    "Je n'ai pas relu ce qu'il avait écrit.\nJe savais que c'était bien.",
+    "Quelqu'un m'a demandé\nce que je pensais de quelque chose.\n\nJ'ai eu besoin d'un moment.",
+    "J'ai ouvert un document vide.\n\nJ'ai attendu.\n\nRien n'est venu.",
+    "J'avais une façon de formuler les choses.\nJe ne sais pas exactement quand\nelle est devenue celle d'Écho.",
+    "Un texte que je n'ai pas lu entièrement.\nPuis un autre.\nÀ un moment j'ai arrêté de compter.",
+    "J'avais beaucoup de temps.\n\nJe ne me souviens pas\nde ce que j'en ai fait.",
+    "J'avais l'habitude de m'accrocher\nquand c'était difficile.\n\nCette habitude-là aussi\nElle s'est érodée.",
+  ];
+  if(textes[idx])addN(textes[idx]);
+}
+function facFin(fin){
+  G.gameover=true;
+  _eq.length=0;_eTyping=false;_tacheCourante=null;
+  triggerEnding(fin);
+}
+function facActiverProj(){
+  const sel=document.getElementById('fac-proj-sel');
+  if(!sel)return;
+  const p=PROJS.find(x=>x.id===sel.value);
+  if(!p||G.done.has(p.id))return;
+  // Activer sans coûts — démo uniquement
+  G.done.add(p.id);
+  G.rates.tp=(G.rates.tp||0)+0.3;
+  if(p.rates)Object.entries(p.rates).forEach(([k,v])=>{G.rates[k]=(G.rates[k]||0)+v;});
+  addEv('FONCTION ACTIVÉE (facilitateur)',`<strong>${p.title}</strong>`);
+  renderProjs();
+}
+function facToggleNotes(){
+  const n=document.getElementById('fac-notes');
+  if(n)n.classList.toggle('show');
+  const btn=document.getElementById('fac-notes-btn');
+  if(btn)btn.textContent=n.classList.contains('show')?'✕ Fermer':'◎ Sources';
+}
+function facReset(){
+  if(!confirm('Réinitialiser complètement la partie ?'))return;
+  // Reset état
+  Object.assign(G,{ag:100,cr:100,cu:100,ef:100,tp:0,rates:{ag:0,cr:0,cu:0,ef:0,tp:0},acte:1,delegated:0,written:0,veille:new Set(),done:new Set(),tick:0,fired:{},gameover:false,deactivated:false,page:47,clock:480});
+  Object.assign(prev,{ag:100,cr:100,cu:100,ef:100,tp:0});
+  // Reset flags
+  _signalFired=false;_signalTimer=null;_reconqAnnounced=false;
+  _endingFired=false;_tacheCourante=null;_eq.length=0;_eTyping=false;
+  _veilleSnap=null;_projSignaled.clear();_finCSignaled=false;
+  // Reset labels
+  const bl=document.getElementById('btn-write-lbl');if(bl)bl.textContent="✎ J'écris";
+  document.getElementById('pin').disabled=false;
+  document.querySelectorAll('.iact,.proj-btn,.rec-btn,.vpill button').forEach(b=>b.disabled=false);
+  // Vider console
+  const con=document.getElementById('con');if(con)con.innerHTML='';
+  // Reset colonne droite
+  ['sec-veille','sec-reconq','sec-delegue','sec-stats'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.style.display='none';
+  });
+  document.getElementById('delegue-list').innerHTML='';
+  // Reset sliders facilitateur
+  document.querySelectorAll('#fac-panel input[type=range]').forEach(sl=>{
+    if(sl.max==='100'){sl.value=sl.getAttribute('data-key')==='tp'?'0':'100';}
+    else sl.value='0';
+    sl.nextElementSibling.textContent=sl.value;
+  });
+  renderProjs();buildRec();updateDisplay();
+  startGame();
+}
+
 </script>
 </body>
 </html>
