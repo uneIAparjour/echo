@@ -605,6 +605,7 @@ const PROJS=[
 ];
 
 
+
 // ══════════════════════════════
 // SIGNAL RÉCUPÉRATION
 // ══════════════════════════════
@@ -614,7 +615,7 @@ function checkFinCSignal(){
   if(_finCSignaled||G.gameover||G.acte!==2)return;
   if(G.written>=3&&G.delegated>=2&&G.written>=G.delegated/2&&G.ag>=55){
     _finCSignaled=true;
-    setTimeout(()=>addN("J'avais trouvé un rythme.\nPas parfait.\nMais le mien."),400);
+    setTimeout(()=>addN("J'utilisais Écho pour certaines choses.\nPas pour d'autres.\nJe ne savais pas encore si c'était un choix."),800);
   }
 }
 let _signalFired=false;
