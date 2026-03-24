@@ -48,8 +48,9 @@ Le lien est accessible depuis la page d'ouverture.
 
 ### Intégration en iframe
 
-Le jeu peut être intégré dans une page web ou un espace de formation via une balise `<iframe>`. Les deux fichiers (`index.html` et `echo.html`) doivent être accessibles depuis le même serveur.
+Les deux fichiers sont intégrables indépendamment.
 
+**Le jeu seul** (`echo.html`) :
 ```html
 <iframe
   src="https://uneiaparjour.github.io/echo/echo.html"
@@ -57,6 +58,17 @@ Le jeu peut être intégré dans une page web ou un espace de formation via une 
   height="700"
   style="border:none"
   title="Écho — jeu narratif"
+></iframe>
+```
+
+**La page de présentation** (`index.html`), si on souhaite proposer le contexte avant d'entrer dans le jeu :
+```html
+<iframe
+  src="https://uneiaparjour.github.io/echo/"
+  width="1100"
+  height="700"
+  style="border:none"
+  title="Écho"
 ></iframe>
 ```
 
