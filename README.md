@@ -9,7 +9,7 @@
 
 ---
 
-Vous êtes à la page 47 d'un carnet bleu. Puis Écho arrive. Il peut corriger vos textes, résumer vos documents, répondre à vos mails, gérer votre agenda, compléter vos phrases. Chaque délégation libère du temps. Chaque délégation coûte un peu.
+Vous êtes à la page 47 d'un carnet bleu. Écho arrive : il peut corriger vos textes, résumer vos documents, répondre à vos mails, gérer votre agenda, compléter vos phrases. Chaque délégation libère du temps. Chaque délégation coûte un peu.
 
 Le jeu dure vingt à trente minutes. Il n'y a pas d'ennemis, pas de score, pas de bonne réponse. Vous ne voyez pas quand Écho change. C'est souvent comme ça, on ne bascule pas, on glisse.
 
