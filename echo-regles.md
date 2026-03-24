@@ -2,6 +2,7 @@
 Document de référence. Version 0.9.0.
 Page d'ouverture : `index.html` — https://uneiaparjour.github.io/echo/
 Fichier de jeu : `echo.html` — https://uneiaparjour.github.io/echo/echo.html
+Version facilitateur : `echo.html?fac=1` — https://uneiaparjour.github.io/echo/echo.html?fac=1
 
 ---
 
@@ -39,7 +40,7 @@ Jeu incremental classique : déléguer → tout augmente
 
 **Ressources humaines (0–100, baissent)**
 
-| Ressource | Ce qu'elle mesure | Monte quand | Descend quand |
+| Ressource | Ce qu'elle mesure | Augmente quand | Descend quand |
 |---|---|---|---|
 | Agentivité | Capacité à décider par soi-même | Le joueur écrit lui-même | Chaque délégation + fonctions passives actives |
 | Créativité | Capacité à produire de l'original | Le joueur écrit lui-même | Écho génère à sa place |
@@ -71,10 +72,10 @@ Le joueur dispose de trois actions permanentes dans la barre du bas :
 - **Champ texte + Entrée** — écriture avec contenu personnel, bonus supérieur (+10 Cr, +5 Ag, page avance)
 - **⟳ Écho agit** — accepte la tâche proposée par Écho (−5 Ag, +25 min)
 
-Le titre de la barre "Tu proposes" fait écho à "Écho propose" dans la colonne droite — deux espaces, deux agents.
+Le titre de la barre "Tu proposes" fait écho à "Écho propose" dans la colonne droite : deux espaces, deux agents.
 
 ### 3.6 La récupération
-Toujours possible, toujours coûteuse. Les actions de récupération consomment du Temps libéré. La section "Sans Écho — reconquérir" n'apparaît qu'après la première activation de projet.
+Toujours possible, toujours coûteuse en temps et en effort. Les actions de récupération consomment du Temps libéré. La section "Sans Écho — reconquérir" n'apparaît qu'après la première activation de projet.
 
 ### 3.7 L'horloge narrative
 `G.clock` démarre à 08:00 (480 min). Avance à chaque action :
@@ -230,7 +231,7 @@ Le joueur ne reçoit pas un cours sur l'agentivité. **Il la perd en jouant.**
 
 ---
 
-## 8. Les seuils narratifs (textes validés)
+## 8. Les seuils narratifs
 
 Déclenchés automatiquement quand une jauge franchit un seuil.
 
@@ -478,19 +479,9 @@ Accessible via `echo.html?fac=1`. Panneau de contrôle fixe en bas de l'écran, 
 Le lien est visible discrètement sur la page d'ouverture (`index.html`).
 
 ### Intégration en iframe
-Le jeu est autonome et peut être intégré dans n'importe quelle page web.
+Les deux fichiers sont intégrables indépendamment. `echo.html` pour le jeu seul, `index.html` pour la page de présentation avec le bouton d'entrée.
 
 Dimensions minimales : **900 × 600 px**. En dessous de 900 px de largeur, le jeu bascule en version mobile (3 onglets). Dimensions recommandées : 1100 × 700 px.
-
-```html
-<iframe
-  src="https://uneiaparjour.github.io/echo/echo.html"
-  width="1100"
-  height="700"
-  style="border:none"
-  title="Écho — jeu narratif"
-></iframe>
-```
 
 ### Absence de sauvegarde — décision intentionnelle
 Le jeu n'utilise pas `localStorage`. Fermer la fenêtre efface la partie. Ce choix est narrativement cohérent avec le propos du jeu : on ne revient pas en arrière. La durée courte (20–30 min) rend la reprise peu nécessaire. Cette décision est définitive pour la v1.
