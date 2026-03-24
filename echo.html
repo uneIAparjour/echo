@@ -450,7 +450,8 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
       <span class="iact-sub">−5 Agentivité</span>
     </button>
     <span class="ipfx">›</span>
-    <label for="pin" class="sr-only">Écrire</label><input type="text" id="pin" placeholder="" aria-label="Écrire quelque chose"/><span id="pin-cursor">_</span>
+    <span id="pin-cursor">_</span>
+    <label for="pin" class="sr-only">Écrire</label><input type="text" id="pin" placeholder="" aria-label="Écrire quelque chose"/>
   </div>
 </div>
 
@@ -508,7 +509,7 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 
 <!-- ══ MODE FACILITATEUR ══ -->
 <div id="fac-panel" style="display:none">
-  <button id="fac-toggle" onclick="facToggle()">Mode facilitateur</button>
+  <button id="fac-toggle" onclick="facToggle()">Mode facilitation</button>
   <div id="fac-body">
 
     <!-- Actes -->
@@ -1934,7 +1935,7 @@ function facActiverProj(){
   G.done.add(p.id);
   G.rates.tp=(G.rates.tp||0)+0.3;
   if(p.rates)Object.entries(p.rates).forEach(([k,v])=>{G.rates[k]=(G.rates[k]||0)+v;});
-  addEv('FONCTION ACTIVÉE (facilitateur)',`<strong>${p.title}</strong>`);
+  addEv('FONCTION ACTIVÉE (facilitation)',`<strong>${p.title}</strong>`);
   renderProjs();
 }
 function facToggleNotes(){
@@ -1963,7 +1964,7 @@ function facReset(){
     const el=document.getElementById(id);if(el)el.style.display='none';
   });
   document.getElementById('delegue-list').innerHTML='';
-  // Reset sliders facilitateur
+  // Reset sliders facilitation
   document.querySelectorAll('#fac-panel input[type=range]').forEach(sl=>{
     if(sl.max==='100'){sl.value=sl.getAttribute('data-key')==='tp'?'0':'100';}
     else sl.value='0';
