@@ -5,7 +5,7 @@ Page d'ouverture : `index.html` — https://uneiaparjour.github.io/echo/
 
 Fichier de jeu : `echo.html` — https://uneiaparjour.github.io/echo/echo.html
 
-Version facilitateur : `echo.html?fac=1` — https://uneiaparjour.github.io/echo/echo.html?fac=1
+Mode facilitation : `echo.html?fac=1` — https://uneiaparjour.github.io/echo/echo.html?fac=1
 
 ---
 
@@ -19,19 +19,16 @@ Le jeu est une exploration de l'**agentivité humaine face à l'automatisation c
 **Uchronie "douce" à quelques mois.** Pas de robots, pas de catastrophe. Un monde où les outils IA actuels ont été adoptés un peu plus vite, un peu plus profondément. Suffisamment familier pour que le joueur se reconnaisse, suffisamment décalé pour autoriser la fiction.
 ### 1.3 Nom
 Le jeu s'appelle **Écho**. L'IA s'appelle aussi **Écho**. Pas une marque, comme un nom commun devenu nom propre, comme on dit "le frigo". Écho écoute, répond, se souvient. Écho est partout.
-
----
-
----
 ### 1.4 Ce que le jeu n'est pas
 - Ce n'est pas un jeu sur une IA malveillante.
 - Ce n'est pas un jeu qui punit le joueur pour ses choix.
 - Ce n'est pas un cours déguisé.
 - Ce n'est pas une dystopie spectaculaire.
 
+---
 ## 2. Mécanique de jeu
 
-### 3.1 Principe fondamental inversé
+### 3.1 Principe incrémental inversé
 Contrairement aux jeux incrementaux classiques où les ressources augmentent, dans Écho **les ressources humaines baissent** quand le joueur délègue.
 
 ```
@@ -469,7 +466,7 @@ La recherche en psychologie cognitive (Tricot, Maquestiaux, Sparrow, Kahneman et
 
 ## 14. Utilisation et déploiement
 
-### Mode facilitateur
+### Mode facilitation
 Accessible via `echo.html?fac=1`. Panneau de contrôle fixe en bas de l'écran, invisible pour les joueurs normaux. Fonctions disponibles :
 - Forcer les transitions d'actes (I → II → III)
 - Sliders sur les 5 jauges (Ag, Cr, Cu, Ef, Tp)
@@ -486,5 +483,5 @@ Les deux fichiers sont intégrables indépendamment. `echo.html` pour le jeu seu
 
 Dimensions minimales : **900 × 600 px**. En dessous de 900 px de largeur, le jeu bascule en version mobile (3 onglets). Dimensions recommandées : 1100 × 700 px.
 
-### Absence de sauvegarde — décision intentionnelle
-Le jeu n'utilise pas `localStorage`. Fermer la fenêtre efface la partie. Ce choix est narrativement cohérent avec le propos du jeu : on ne revient pas en arrière. La durée courte (20–30 min) rend la reprise peu nécessaire. Cette décision est définitive pour la v1.
+### L'absence de sauvegarde, une décision intentionnelle
+Le jeu n'utilise pas `localStorage`. Fermer la fenêtre efface la partie. Ce choix est narrativement cohérent avec le propos du jeu : on ne revient pas en arrière. La durée courte (20–30 min) rend la reprise peu nécessaire.
