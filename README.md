@@ -1,10 +1,7 @@
 # Écho
 **Version :** 0.9.0
-
 **Écran d'ouverture :** [uneiaparjour.github.io/echo/](https://uneiaparjour.github.io/echo/)
-
 **Jouer directement :** [uneiaparjour.github.io/echo/echo.html](https://uneiaparjour.github.io/echo/echo.html)
-
 **Mode facilitation :** [uneiaparjour.github.io/echo/echo.html?fac=1](https://uneiaparjour.github.io/echo/echo.html?fac=1)
 
 ---
@@ -58,9 +55,8 @@ Les deux fichiers sont intégrables indépendamment.
 ```html
 <iframe
   src="https://uneiaparjour.github.io/echo/echo.html"
-  width="1100"
-  height="700"
-  style="border:none"
+  width="100%"
+  style="border:none;height:700px;max-height:100vh;min-width:900px"
   title="Écho — jeu narratif"
 ></iframe>
 ```
@@ -69,9 +65,8 @@ Les deux fichiers sont intégrables indépendamment.
 ```html
 <iframe
   src="https://uneiaparjour.github.io/echo/"
-  width="1100"
-  height="700"
-  style="border:none"
+  width="100%"
+  style="border:none;height:700px;max-height:100vh;min-width:900px"
   title="Écho"
 ></iframe>
 ```
