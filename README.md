@@ -1,10 +1,6 @@
 # Écho
-
-**Écran d'ouvertre :** [uneiaparjour.github.io/echo/](https://uneiaparjour.github.io/echo/)
-
+**Écran d'ouverture :** [uneiaparjour.github.io/echo/](https://uneiaparjour.github.io/echo/)
 **Jouer directement :** [uneiaparjour.github.io/echo/echo.html](https://uneiaparjour.github.io/echo/echo.html)
-
-Version : v2
 
 ---
 
@@ -32,6 +28,42 @@ Le jeu dure vingt à trente minutes. Il n'y a pas d'ennemis, pas de score, pas d
 Écho s'adresse à tout public. Aucune connaissance technique n'est requise.
 
 Une utilisation en contexte éducatif est possible — le jeu cite des travaux de recherche en psychologie cognitive et neurosciences (Tricot, Maquestiaux, Sparrow, Kahneman et al.) et peut servir de point de départ à une discussion sur la délégation cognitive aux outils d'IA.
+
+---
+
+## Utilisation avancée
+
+### Mode facilitateur
+
+Destiné aux animateurs qui souhaitent piloter une démonstration en formation. Accessible via :
+
+```
+echo.html?fac=1
+```
+
+Un panneau de contrôle apparaît en bas de l'écran. Il permet de forcer les transitions d'actes, manipuler les jauges, déclencher des seuils narratifs, activer des projets sans conditions, et afficher les trois fins directement. Un bouton reset repart de zéro sans recharger la page. Le panneau est invisible pour les joueurs qui accèdent au jeu sans ce paramètre.
+
+Le lien est accessible depuis la page d'ouverture.
+
+### Intégration en iframe
+
+Le jeu peut être intégré dans une page web ou un espace de formation via une balise `<iframe>`. Les deux fichiers (`index.html` et `echo.html`) doivent être accessibles depuis le même serveur.
+
+```html
+<iframe
+  src="https://uneiaparjour.github.io/echo/echo.html"
+  width="1100"
+  height="700"
+  style="border:none"
+  title="Écho — jeu narratif"
+></iframe>
+```
+
+**Dimensions recommandées :** 1100 × 700 px minimum. En dessous de 900 px de largeur, le jeu bascule automatiquement en version mobile.
+
+### Sauvegarde
+
+Le jeu ne sauvegarde pas les parties. C'est un choix intentionnel : fermer la fenêtre efface tout. La durée courte (20–30 min) rend la reprise peu nécessaire, et l'absence de sauvegarde renforce le propos — on ne revient pas en arrière.
 
 ---
 
