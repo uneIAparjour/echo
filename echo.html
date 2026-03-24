@@ -1539,10 +1539,13 @@ function startGame(){
   const mode=new URLSearchParams(window.location.search).get('mode');
   addN("J'avais l'habitude de noter les idées à la main.\nUn carnet bleu, couverture cartonnée, stylo bille noir.\nJ'en étais à la page 47.",600);
   if(mode==='resist'){
-    addN("Cette fois, j'avais décidé de faire attention.",1400);
+    G.ag=Math.min(100,G.ag+5);
+    addN("Cette fois, j'avais gardé le carnet près de moi.",1400);
   } else if(mode==='balance'){
-    addN("Cette fois, j'avais décidé de ne pas tout laisser faire.",1400);
+    G.ef=Math.min(100,G.ef+5);
+    addN("Cette fois, j'avais décidé de garder quelque chose pour moi.",1400);
   } else if(mode==='keep'){
+    G.cr=Math.min(100,G.cr+5);
     addN("Cette fois, j'avais décidé de ne pas ouvrir la fenêtre.",1400);
   }
   const delay=mode?3000:2200;
