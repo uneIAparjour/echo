@@ -1,8 +1,12 @@
 # Écho
 **Version :** 0.9.0
+
 **Écran d'ouverture :** [uneiaparjour.github.io/echo/](https://uneiaparjour.github.io/echo/)
+
 **Jouer directement :** [uneiaparjour.github.io/echo/echo.html](https://uneiaparjour.github.io/echo/echo.html)
+
 **Mode facilitation :** [uneiaparjour.github.io/echo/echo.html?fac=1](https://uneiaparjour.github.io/echo/echo.html?fac=1)
+
 
 ---
 
