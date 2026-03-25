@@ -60,7 +60,7 @@ Les deux fichiers sont intégrables indépendamment.
 <iframe
   src="https://uneiaparjour.github.io/echo/echo.html"
   width="100%"
-  style="border:none;height:700px;max-height:100vh;display:block"
+  style="border:none;height:700px;display:block"
   title="Écho — jeu narratif"
 ></iframe>
 ```
@@ -70,7 +70,7 @@ Les deux fichiers sont intégrables indépendamment.
 <iframe
   src="https://uneiaparjour.github.io/echo/"
   width="100%"
-  style="border:none;height:700px;max-height:100vh;display:block"
+  style="border:none;height:700px;display:block"
   title="Écho"
 ></iframe>
 ```
