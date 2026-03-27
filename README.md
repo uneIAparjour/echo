@@ -23,7 +23,7 @@ Le jeu dure vingt à trente minutes. Il n'y a pas d'ennemis, pas de score, pas d
 | `index.html` | Page d'ouverture |
 | `echo.html` | Le jeu, fichier unique autonome |
 | `echo-regles.md` | Document de conception complet |
-| `echo-porcess.md` | Construction du jeu |
+| `echo-process.md` | Construction du jeu |
 | `LICENSE.txt` | Licence CC BY-NC 4.0 |
 
 → [Règles de conception complètes](echo-regles.md)*
