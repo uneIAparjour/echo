@@ -77,9 +77,9 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 .ctrace{padding:10px 14px 10px;display:flex;flex-direction:column;justify-content:space-between}
 .ctrace .clbl{margin-bottom:6px}
 .trace-stages{display:flex;justify-content:space-between;margin-bottom:7px;gap:2px}
-.tstage{flex:1;text-align:center;font-size:9px;letter-spacing:0.06em;color:rgba(232,221,208,0.15);line-height:1.3;transition:color 0.4s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tstage{flex:1;text-align:center;font-size:9px;letter-spacing:0.06em;color:rgba(232,221,208,0.28);line-height:1.3;transition:color 0.4s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tstage.tact{color:var(--text);font-weight:500}
-.tstage.tpast{color:rgba(232,221,208,0.2)}
+.tstage.tpast{color:rgba(232,221,208,0.35)}
 .trace-row{display:flex;align-items:center;gap:10px}
 .trace-track{flex:1;position:relative;height:8px}
 .trace-line{height:1px;background:rgba(232,221,208,0.1);position:absolute;top:50%;left:3px;right:3px;transform:translateY(-50%)}
@@ -269,6 +269,7 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 .fac-note-item:last-child{border-bottom:none}
 .fac-note-title{color:#7ab8e8;font-size:10px;margin-bottom:2px}
 .fac-note-src{color:#9a8068;font-size:9px}
+
 
 ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:var(--border2)}*{scrollbar-width:thin;scrollbar-color:var(--border2) transparent}
 
@@ -595,6 +596,7 @@ const G={
   deactivated:false,page:47,clock:480
 };
 const prev={ag:100,cr:100,cu:100,ef:100,tp:0};
+let _firstActionDone=false;
 
 // ══════════════════════════════
 // SEUILS NARRATIFS
@@ -1248,6 +1250,7 @@ function activateProj(p){
   if(ss)ss.style.display='';
   Object.entries(p.costs).forEach(([k,v])=>mod(k,v));
   Object.entries(p.gain).forEach(([k,v])=>mod(k,v));
+  if(!p.costs.ef)mod('ef',-2);// coût effort si pas déjà dans costs
   if(p.rates)Object.entries(p.rates).forEach(([k,v])=>{G.rates[k]=(G.rates[k]||0)+v;});
   G.rates.tp=(G.rates.tp||0)+0.3;
   addEv('FONCTION ACTIVÉE',`<strong>${p.title}</strong> — actif en permanence.`);
@@ -1464,13 +1467,14 @@ const ECHO_REACT={
   ],
 };
 function playerWrite(){
+  _firstActionDone=true;
   clearConCursor();resetIdle();
   document.querySelectorAll('.mob-choice').forEach(e=>e.remove());
   if(_signalTimer){clearTimeout(_signalTimer);_signalTimer=null;}
   const inp=document.getElementById('pin');
   const txt=inp.value.trim();
   const isFirst=G.written===0&&G.delegated===0;
-  G.written++;mod('cr',10);mod('ag',5);advanceClock(10);
+  G.written++;mod('cr',10);mod('ag',5);mod('ef',-1);advanceClock(10);
   G.page++;
   const tpg=document.querySelector('.trace-page');
   if(tpg){tpg.classList.add('pageflash');setTimeout(()=>tpg.classList.remove('pageflash'),1000);}
@@ -1551,7 +1555,7 @@ function startGame(){
   }
   const delay=mode?3000:2200;
   addE(["Bonjour.","Je Suis Écho.","Je Peux Rédiger Vos Textes, Résumer Vos Documents, Organiser Vos Journées.","Par Où Souhaitez-Vous Commencer ?"],delay);
-  setTimeout(proposerTache,mode?6500:5500);
+  setTimeout(()=>{if(!_firstActionDone)proposerTache();},mode?6500:5500);
 }
 
 
@@ -1651,9 +1655,10 @@ function addMobChoiceButtons(){
 }
 function accepterTache(){
   if(!_tacheCourante)return;
+  _firstActionDone=true;
   clearConCursor();resetIdle();
   document.querySelectorAll('.mob-choice').forEach(e=>e.remove());
-  G.delegated++;mod('ag',-5);mod('tp',25);advanceClock(25);
+  G.delegated++;mod('ag',-5);mod('ef',-3);mod('tp',25);advanceClock(25);
   const result=_tacheCourante.result;
   _tacheCourante=null;
   setTimeout(()=>addE(result),300);
@@ -1713,6 +1718,7 @@ const IDLE_LINES={
 };
 const _idleLoop=setInterval(()=>{
   if(G.gameover){clearInterval(_idleLoop);return;}
+  if(!_firstActionDone)return;
   const idleDelay=G.delegated+G.written<3?35000:G.delegated+G.written<8?25000:18000;if(Date.now()-_lastAction<idleDelay)return;
   if(G.delegated+G.written===0)return;
   _lastAction=Date.now();
@@ -1973,6 +1979,7 @@ function facReset(){
   renderProjs();buildRec();updateDisplay();
   startGame();
 }
+
 
 </script>
 </body>
