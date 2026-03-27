@@ -7,6 +7,8 @@ Fichier de jeu : `echo.html` — https://uneiaparjour.github.io/echo/echo.html
 
 Mode facilitation : `echo.html?fac=1` — https://uneiaparjour.github.io/echo/echo.html?fac=1
 
+Construction du jeu : `echo-process.md` — https://uneiaparjour.github.io/echo/echo-process.md
+
 ---
 
 ## 1. Identité du projet
