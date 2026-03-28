@@ -73,6 +73,7 @@ Trois actions permanentes sont disponibles dans la barre du bas dans la barre du
 - **✎ J'écris** (acte 1) / **✎ J'interviens** (acte 2) / **✎ Je reprends** (acte 3) — écriture sans contenu, effort minimal
 - **Champ texte + Entrée** — écriture avec contenu personnel, bonus supérieur (+10 Cr, +5 Ag, page avance)
 - **⟳ Écho agit** — accepte la tâche proposée par Écho (−5 Ag, +25 min)
+- **Notes pédagogiques** — apparaissent après chaque activation de projet. Cliquer "lire la note" est un geste délibéré et rapporte +2 Ef +1 Cu. Fermer la note rapporte +2 Ef supplémentaires. La lecture est comptée dans les statistiques "Par moi". Quand une note est ouverte, Écho intervient plus tardivement.
 
 Le titre de la barre "Tu proposes" fait écho à "Écho propose" dans la colonne droite : deux espaces, deux agents.
 
