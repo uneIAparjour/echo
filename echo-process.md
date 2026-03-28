@@ -129,6 +129,8 @@ Ce que j'ai compris en le faisant c'est que garder le contrôle dans un projet a
 C'est exactement la distinction que le jeu essaie de rendre tangible : déléguer l'exécution tout en gardant le jugement. Ce n'est pas binaire. Ce n'est pas « je fais tout » ou « je laisse tout faire ». C'est une posture active de surveillance, de vérification, de recul : même quand on ne maîtrise pas le détail technique.
 
 Est-ce que quelque chose a changé depuis pour moi ? Oui. J'ai acquis une attention encore plus fine à ce que je délègue vraiment. Et une méfiance douce vis-à-vis du confort : quand quelque chose est trop fluide, trop rapide, trop bien formaté, c'est souvent le signe qu'il faut regarder de plus près.
+Un exemple concret est apparu plus tard dans le projet avec les notes pédagogiques. Au départ elles s'affichaient automatiquement, disponibles sans effort. Un retour utilisateur a pointé le problème qu'Écho interrompait leur lecture. La correction apportée par la note à ouvrir a révélé que rendre la lecture explicite, proposer le "coût" de l'ouverture  et le récompenser, c'est finalement transformer un élément décoratif en geste de résistance : lire une source demande un choix et un effort.
+
 
 ### Sur les échanges avec Claude
 
