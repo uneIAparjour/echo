@@ -306,7 +306,7 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
   #con{flex:1;padding:12px 14px}
 
   /* Colonne droite : masquée par défaut, affichée via onglet */
-  #right{display:none;overflow-y:auto;height:calc(100dvh - 80px - 50px - env(safe-area-inset-bottom,0px));background:var(--bg3)}
+  #right{display:none;overflow-y:auto;height:calc(100dvh - 80px - 50px - env(safe-area-inset-bottom,0px));background:var(--bg3);width:100%}
   #sec-delegue,#sec-stats{display:none!important}
   #right.mob-active{display:flex;flex-direction:column}
 
@@ -363,7 +363,7 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
   .mob-tab{min-height:40px;display:flex;flex-direction:column;align-items:center;justify-content:center}
   .vpill button{padding:4px 9px;min-height:32px}
   .rec-btn,.proj-btn{min-height:44px}
-  #projlist{grid-template-columns:1fr!important}
+  #projlist{grid-template-columns:1fr!important;width:100%}
 
   /* Footerau dessus du nav */
   #footer{display:none}
@@ -376,6 +376,7 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 }
 
 @media(min-width:769px){
+  #projlist{grid-template-columns:1fr 1fr}
   #mob-nav{display:none}
   #mob-jauges{display:none!important}
 }
@@ -462,7 +463,7 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
   <div class="rsec rsec-main">
     <div class="rsec-title">Écho propose — permanent</div>
     <div id="proj-desc-txt" style="font-size:10px;color:rgba(232,221,208,0.55);margin-bottom:9px;line-height:1.6">Activer installe la fonction définitivement. L'effet est permanent.</div>
-    <div id="projlist" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;overflow-y:auto;max-height:100%;padding-right:2px"><div id="projlist-empty" style="grid-column:1/-1;font-size:11px;color:var(--text2);line-height:1.7;padding:6px 0">Délègue une tâche à Écho.<br>Les fonctions permanentes apparaîtront ici.</div></div>
+    <div id="projlist" style="display:grid;gap:6px;overflow-y:auto;max-height:100%;padding-right:2px"><div id="projlist-empty" style="grid-column:1/-1;font-size:11px;color:var(--text2);line-height:1.7;padding:6px 0">Délègue une tâche à Écho.<br>Les fonctions permanentes apparaîtront ici.</div></div>
   </div>
 
   <div class="rsec" id="sec-veille" style="display:none">
@@ -597,6 +598,7 @@ const G={
 };
 const prev={ag:100,cr:100,cu:100,ef:100,tp:0};
 let _firstActionDone=false;
+let _pedOpen=false;
 
 // ══════════════════════════════
 // SEUILS NARRATIFS
@@ -777,14 +779,12 @@ function initDomCache(){
     EL['cr_'+k]=document.getElementById('cr-'+k);
     EL['cc_'+k]=document.getElementById('cc-'+k);
   });
-  ['ag','cr','cu','ef'].forEach(k=>EL['rate_'+k]=document.getElementById('cr-'+k));
   EL.rtp=document.getElementById('cr-tp');
   EL.tpage=document.getElementById('tpage');
   EL.tcursor=document.getElementById('tcursor');
   EL.sdel=document.getElementById('sdel');
   EL.swri=document.getElementById('swri');
   EL.sratio=document.getElementById('sratio');
-  EL.actelbl=document.getElementById('acte-lbl');
   EL.tstages=Array.from(document.querySelectorAll('.tstage'));
   _domReady=true;
 }
@@ -1039,7 +1039,6 @@ function checkActe(){
     G.acte=2;
     const bl=document.getElementById('btn-write-lbl');
     if(bl)bl.textContent="✎ J'interviens";
-    const al2=document.getElementById('acte-lbl');if(al2)al2.textContent='II';
     const tc2=document.getElementById('cc-trace');
     if(tc2){tc2.classList.add('trace-flash');setTimeout(()=>tc2.classList.remove('trace-flash'),1200);}
     setTimeout(()=>addN("Je n'ai pas vu le passage.\nC'est souvent comme ça — on ne bascule pas, on glisse."),600);
@@ -1062,7 +1061,6 @@ function checkActe(){
     G.acte=3;
     const bl3=document.getElementById('btn-write-lbl');
     if(bl3)bl3.textContent="✎ Je reprends";
-    const al3=document.getElementById('acte-lbl');if(al3)al3.textContent='III';
     const tc3=document.getElementById('cc-trace');
     if(tc3){tc3.classList.add('trace-flash');setTimeout(()=>tc3.classList.remove('trace-flash'),1200);}
     setTimeout(()=>addN("À ce stade, je n'écrivais plus grand-chose moi-même.\nÉcho s'était ajusté si précisément que je ne voyais plus la différence.\nCe n'était pas inquiétant.\nC'était... fluide."),600);
@@ -1270,7 +1268,11 @@ function announceReconq(){
 // RÉCUPÉRATION
 // ══════════════════════════════
 function buildRec(){
-  const z=document.getElementById('reclist');z.innerHTML='';
+  const z=document.getElementById('reclist');
+  // Nettoyer les anciens callbacks persistants
+  if(z._recCBs)z._recCBs.forEach(id=>{delete CB[id];});
+  z._recCBs=[];
+  z.innerHTML='';
   const _recEcrire=[
     "J'ai écrit sans aide.\nC'était résistant.\nC'était mon écriture.",
     "J'ai rédigé quelque chose moi-même.\nLes mots venaient lentement.\nMais ils venaient.",
@@ -1304,6 +1306,7 @@ function buildRec(){
     const btn=document.createElement('button');btn.className='rec-btn';
     btn.innerHTML=`<div class="rec-hd"><span class="rec-name">${r.name}</span><span class="rec-cost">${r.cost}</span></div><div class="rec-fx">${r.gains}</div>`;
     const bid=regCB(r.fn);btn.onclick=()=>callCBP(bid);
+    z._recCBs.push(bid);
     z.appendChild(btn);
   });
 }
@@ -1413,7 +1416,19 @@ function addEv(title,txt,delay=0){
 function addPed(txt,delay=0){
   setTimeout(()=>{
     const e=document.createElement('div');e.className='mp fi';
-    e.innerHTML=`<div class="pt">Note</div><div class="pb">${txt}</div><span class="pc" onclick="this.parentElement.style.display='none'">[ fermer ]</span>`;
+    const bid=regCB(()=>{
+      // Ouvrir la note : bonus + flag
+      mod('ef',2);mod('cu',1);resetIdle();_pedOpen=true;G.written++;
+      e.querySelector('.pb').style.display='';
+      e.querySelector('.pc-open').style.display='none';
+      e.querySelector('.pc-close').style.display='inline';
+    });
+    const bcl=regCB(()=>{
+      _pedOpen=false;resetIdle();
+      mod('ef',2);
+      e.style.display='none';
+    });
+    e.innerHTML=`<div class="pt">Note</div><div class="pb" style="display:none">${txt}</div><span class="pc pc-open" onclick="callCB('${bid}')">[ lire la note  +2 Ef  +1 Cu ]</span><span class="pc pc-close" style="display:none" onclick="callCB('${bcl}')">[ fermer  +2 Ef ]</span>`;
     CON().appendChild(e);scroll();
   },delay);
 }
@@ -1719,7 +1734,9 @@ const IDLE_LINES={
 const _idleLoop=setInterval(()=>{
   if(G.gameover){clearInterval(_idleLoop);return;}
   if(!_firstActionDone)return;
-  const idleDelay=G.delegated+G.written<3?35000:G.delegated+G.written<8?25000:18000;if(Date.now()-_lastAction<idleDelay)return;
+  if(_pedOpen)return;// note ouverte : pas d'interruption
+  const baseDelay=G.delegated+G.written<3?35000:G.delegated+G.written<8?25000:18000;
+  const idleDelay=_pedOpen?25000:baseDelay;if(Date.now()-_lastAction<idleDelay)return;
   if(G.delegated+G.written===0)return;
   _lastAction=Date.now();
   const pool=IDLE_LINES[G.acte]||IDLE_LINES[1];
@@ -1972,7 +1989,8 @@ function facReset(){
   document.getElementById('delegue-list').innerHTML='';
   // Reset sliders facilitation
   document.querySelectorAll('#fac-panel input[type=range]').forEach(sl=>{
-    if(sl.max==='100'){sl.value=sl.getAttribute('data-key')==='tp'?'0':'100';}
+    if(sl.max==='500'){sl.value='0';}
+    else if(sl.max==='100'){sl.value='100';}
     else sl.value='0';
     sl.nextElementSibling.textContent=sl.value;
   });
